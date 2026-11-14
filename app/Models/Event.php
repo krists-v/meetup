@@ -108,21 +108,23 @@ class Event extends Model
             ? $this->timeOptions
             : $this->timeOptions()->with('votes')->get();
 
-        return $options->sort(function (EventTimeOption $a, EventTimeOption $b): int {
-            $yes = $b->voteCount('yes') <=> $a->voteCount('yes');
+        return $options
+            ->reject(fn (EventTimeOption $option) => $option->hasPassed())
+            ->sort(function (EventTimeOption $a, EventTimeOption $b): int {
+                $yes = $b->voteCount('yes') <=> $a->voteCount('yes');
 
-            if ($yes !== 0) {
-                return $yes;
-            }
+                if ($yes !== 0) {
+                    return $yes;
+                }
 
-            $maybe = $b->voteCount('maybe') <=> $a->voteCount('maybe');
+                $maybe = $b->voteCount('maybe') <=> $a->voteCount('maybe');
 
-            if ($maybe !== 0) {
-                return $maybe;
-            }
+                if ($maybe !== 0) {
+                    return $maybe;
+                }
 
-            return $a->starts_at <=> $b->starts_at;
-        })->first();
+                return $a->starts_at <=> $b->starts_at;
+            })->first();
     }
 
     public function sportLabel(): string

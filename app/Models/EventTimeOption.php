@@ -38,4 +38,9 @@ class EventTimeOption extends Model
     {
         return $this->votes->where('vote', $vote)->count();
     }
+
+    public function hasPassed(): bool
+    {
+        return $this->starts_at->lessThanOrEqualTo(now());
+    }
 }

@@ -179,6 +179,12 @@ class EventController extends Controller
         abort_unless($option->event_id === $event->id, 404);
         abort_unless($event->isPoll(), 403);
 
+        if ($option->hasPassed()) {
+            return back()->withErrors([
+                'vote' => 'That time has already passed.',
+            ]);
+        }
+
         $validated = $request->validate([
             'vote' => ['required', 'in:yes,maybe,no'],
         ]);
@@ -199,6 +205,12 @@ class EventController extends Controller
         $this->authorize('update', $event);
         abort_unless($option->event_id === $event->id, 404);
         abort_unless($event->isPoll(), 403);
+
+        if ($option->hasPassed()) {
+            return back()->withErrors([
+                'option' => 'That time has already passed.',
+            ]);
+        }
 
         $yesVoterIds = $option->votes()
             ->where('vote', 'yes')

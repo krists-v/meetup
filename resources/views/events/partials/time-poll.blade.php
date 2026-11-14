@@ -7,6 +7,7 @@
     <h3 class="font-semibold text-gray-900">Availability</h3>
     <p class="text-sm text-gray-600">Vote Yes, Maybe, or No on each time. The best time is the one with the most Yes votes, then the most Maybe votes.</p>
     <x-input-error :messages="$errors->get('vote')" />
+    <x-input-error :messages="$errors->get('option')" />
 
     @foreach ($event->timeOptions as $option)
         @php
@@ -39,6 +40,9 @@
                 @endforelse
             </ul>
 
+            @if ($option->hasPassed())
+                <p class="text-sm text-gray-500">This time has passed.</p>
+            @else
             <form method="POST" action="{{ route('events.options.vote', [$event, $option]) }}" class="grid grid-cols-3 gap-2">
                 @csrf
                 @foreach (['yes' => 'Yes', 'maybe' => 'Maybe', 'no' => 'No'] as $value => $label)
@@ -56,6 +60,7 @@
                     @csrf
                     <button type="submit" class="w-full px-4 py-3 rounded-md bg-emerald-700 text-white text-sm font-semibold">Lock in this time</button>
                 </form>
+            @endif
             @endif
         </article>
     @endforeach

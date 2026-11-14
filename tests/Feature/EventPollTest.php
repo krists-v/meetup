@@ -192,6 +192,54 @@ class EventPollTest extends TestCase
             ->assertDontSee('Vote on a time');
     }
 
+    public function test_past_poll_times_cannot_be_voted_or_locked(): void
+    {
+        $owner = User::factory()->create();
+        $friend = User::factory()->create();
+        $futureAt = now()->addDay()->startOfMinute();
+
+        $event = Event::factory()->create([
+            'user_id' => $owner->id,
+            'schedule_type' => 'poll',
+            'event_date' => $futureAt,
+            'visibility' => 'public',
+        ]);
+
+        $past = $event->timeOptions()->create([
+            'starts_at' => now()->subHour(),
+            'position' => 0,
+        ]);
+        $future = $event->timeOptions()->create([
+            'starts_at' => $futureAt,
+            'position' => 1,
+        ]);
+
+        $this->actingAs($friend)
+            ->post(route('events.options.vote', [$event, $past]), ['vote' => 'yes'])
+            ->assertSessionHasErrors('vote');
+
+        $this->actingAs($owner)
+            ->post(route('events.options.lock', [$event, $past]))
+            ->assertSessionHasErrors('option');
+
+        $this->assertTrue($event->fresh()->isPoll());
+        $this->assertDatabaseCount('event_time_votes', 0);
+
+        $this->actingAs($owner)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee('This time has passed')
+            ->assertSee('Lock in this time');
+
+        $this->actingAs($friend)
+            ->post(route('events.options.vote', [$event, $future]), ['vote' => 'yes'])
+            ->assertSessionHasNoErrors();
+
+        $event->load('timeOptions.votes');
+
+        $this->assertTrue($event->bestTimeOption()->is($future));
+    }
+
     /**
      * @param  array<string, mixed>  $overrides
      * @return array{0: Event, 1: EventTimeOption, 2: EventTimeOption}
