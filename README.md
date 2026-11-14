@@ -66,8 +66,16 @@ Set these variables on the service:
 | `APP_ENV` | `production` |
 | `APP_DEBUG` | `false` |
 | `APP_URL` | the public https URL Railway gives the service |
+| `APP_NAME` | `Varza` |
+| `QUEUE_CONNECTION` | `sync`. The image already sets this. Do not add a queue worker. |
+| `MAIL_MAILER` | `resend` |
+| `RESEND_API_KEY` | API key from Resend. Leave it empty and mail is written to the log instead of failing. |
+| `MAIL_FROM_ADDRESS` | a sender address on a domain you have verified in Resend |
+| `MAIL_FROM_NAME` | `Varza` |
 
-`APP_URL` is what invite links use, so set it before sharing links.
+`APP_URL` is what invite links and password-reset links use, so set it before sharing links.
+
+Password reset emails use the Varza mail theme. Private games are shared with a link, not an email address, so Varza does not send an invite email.
 
 ### SQLite on a volume
 
