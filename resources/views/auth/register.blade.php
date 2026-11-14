@@ -31,6 +31,13 @@
             <x-ui.error :messages="$errors->get('password_confirmation')" />
         </div>
 
+        <p class="text-sm text-ink-muted">
+            By creating an account you agree to the
+            <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('terms') }}">terms</a>
+            and the
+            <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('privacy') }}">privacy policy</a>.
+        </p>
+
         <x-ui.button type="submit" class="w-full">{{ __('Create account') }}</x-ui.button>
     </form>
 

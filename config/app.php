@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Varza'),
 
+    'contact_email' => env('CONTACT_EMAIL', 'hello@example.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

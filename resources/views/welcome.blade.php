@@ -53,6 +53,7 @@
                 </section>
 
                 <p class="mt-8 text-sm text-ink-muted">Made for a small crew. No feed, no payments, no extra chat.</p>
+                <x-ui.footer class="mt-6" />
             </main>
         </div>
     </body>

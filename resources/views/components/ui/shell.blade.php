@@ -34,6 +34,8 @@
         {{ $slot }}
     </div>
 
+    <x-ui.footer class="mx-auto w-full max-w-5xl px-4 pb-24 pt-2 sm:pb-8" />
+
     <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 backdrop-blur sm:hidden" style="padding-bottom: env(safe-area-inset-bottom)" aria-label="Mobile">
         <div class="grid grid-cols-3">
             <a href="{{ route('dashboard') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('dashboard') ? 'text-pitch-700' : 'text-ink-muted' }}">
