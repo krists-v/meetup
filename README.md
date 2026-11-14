@@ -73,6 +73,10 @@ Set these variables on the service:
 | `MAIL_FROM_ADDRESS` | a sender address on a domain you have verified in Resend |
 | `MAIL_FROM_NAME` | `Varza` |
 | `CONTACT_EMAIL` | address on the privacy and terms pages |
+| `LOG_CHANNEL` | `stderr` in production, so logs show up in Railway. The image sets this, and `docker/entrypoint.sh` falls back to stderr when it is unset. Local `.env` keeps `stack` / `single`, which writes `storage/logs/laravel.log`. |
+| `SENTRY_LARAVEL_DSN` | optional. Leave it empty and Sentry stays off: the app still boots and serves requests, and it does not call Sentry. |
+| `SENTRY_TRACES_SAMPLE_RATE` | `0`. Raise it only if you want performance traces. |
+| `SENTRY_SEND_DEFAULT_PII` | leave unset. It defaults to false, so Sentry does not receive user data, cookies, or IP addresses. |
 
 `APP_URL` is what invite links and password-reset links use, so set it before sharing links. In production the app forces HTTPS URLs and marks the session cookie secure. Railway's proxy headers are trusted, so that HTTPS check sees the original request.
 
@@ -87,6 +91,8 @@ Leave `DATABASE_URL` unset. The container stores the database at `/data/database
 Add the Railway Postgres plugin. It sets `DATABASE_URL`. Do not set `DB_CONNECTION=sqlite`. On boot the app sees `DATABASE_URL`, uses the Postgres connection, and migrates. The Railway URL's `sslmode` is honoured. You do not need the `/data` volume in this mode.
 
 Sessions and cache use the database, so they persist with either option. The health check path is `/up`.
+
+`.github/workflows/uptime.yml` requests that URL every 15 minutes. Set the repository variable `UPTIME_URL` to check a different address. A failure opens a GitHub issue labelled `downtime`, or comments on the open one. The next successful check closes it.
 
 ## Next steps
 
