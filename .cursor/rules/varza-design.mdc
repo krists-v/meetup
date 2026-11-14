@@ -1,0 +1,82 @@
+---
+description: Varza brand, visual language, and copy. Follow on every UI change.
+alwaysApply: true
+---
+
+# Varza design
+
+Varza (Latvian for a crowd, a noisy bunch of people) is a small app for about ten friends who organise pickup sports instead of doing it in WhatsApp. It should feel like a calm modern product: Linear's restraint, Airbnb's warmth, Strava's clarity. Pitch green carries the brand. Do not introduce extra hues for sports, status, or decoration.
+
+## Voice
+
+Short, confident, and friendly. Second person. Plain English. No slang piles, no exclamation marks, no "crush it" or "let's go" energy. Name the thing and the next step.
+
+Spirit: "Get the crew together. Pick a time, lock the pitch, play."
+
+Buttons are verbs: "Plan a game", "Log in", "Lock in this time". Helper text says what happens, not how the database works. Empty states tell the reader what to do next. Flash messages confirm the result in one sentence.
+
+## Color
+
+Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. Channel variables (`--pitch-700: 28 99 59`) feed Tailwind as `rgb(var(--pitch-700) / <alpha-value>)`, so opacity modifiers such as `bg-pitch-950/40` work. The `--color-*` variables are the same colors without an alpha, for plain CSS.
+
+- Pitch green scale `pitch-50`–`pitch-950`. Primary actions, links, and focus rings use `pitch-700`. Hover uses `pitch-800`. Soft fills use `pitch-50` and `pitch-100`.
+- Neutrals: `canvas` page background, `ink` text, `ink-muted` secondary text, `ink-faint` placeholders, `line` borders, `sand` the only warm accent inside illustrations.
+- Status: `success` (same green family), `warn`, `danger`, each with a `soft` background. Do not use Tailwind's rainbow palette (`indigo`, `orange`, `sky`, `rose`, and the rest) on product UI.
+- Subtle green gradients only, via `.bg-pitch-wash`. No multicolor gradients.
+
+## Typography
+
+Inter, self-hosted in `public/fonts`, with the system sans fallback. Weights in use: 400, 500, 600, 700.
+
+Type scale, already mapped onto Tailwind's text sizes: xs 12, sm 14, base 16, lg 18, xl 20, 2xl 24, 3xl 30, 4xl 36. Page titles are `text-2xl` or `text-3xl font-semibold tracking-tight`. Body copy is `text-base` or `text-sm` with `text-ink-muted`. Do not set a font below 16px on inputs (iOS zoom).
+
+## Spacing
+
+Use the 4px scale: 1, 2, 3, 4, 6, 8, 12, 16 (`--space-*`). Stack related items with `gap` or `space-y-*`, not ad-hoc margins between siblings. Page content is `max-w-content` (40rem), padded `px-4` on mobile. Touch targets are at least 44px (`min-h-11`).
+
+## Radius and shadow
+
+- `rounded-control` (12px) on inputs, buttons, and chips.
+- `rounded-card` (16px) on cards, illustrations, and menus.
+- `rounded-full` on badges, avatars, and sport chips.
+- `shadow-card` for resting surfaces. `shadow-lift` for popovers and hovered cards. Prefer a `ring-1 ring-line` over a heavy shadow.
+
+## Icons
+
+One set: Heroicons outline, 24px viewBox, stroke 1.5, `currentColor`. Use `<x-ui.icon name="..." />` only. Do not mix in other icon libraries, emoji as icons, or one-off SVG icons in a page. Add a new name to the icon component when a screen needs a new symbol.
+
+## Motion
+
+Hover and press only. Color transitions are 150ms. Buttons may use `motion-safe:active:scale-[0.98]`. Cards may lift 2px on hover with `motion-safe:hover:-translate-y-0.5`. No looping animation, no bounce, no page-load theatrics. `prefers-reduced-motion: reduce` is handled globally in `app.css`; do not override it.
+
+## Components
+
+Use these Blade components instead of restyling raw elements.
+
+| Component | Use |
+| --- | --- |
+| `x-ui.shell` | Logged-in chrome: wordmark, desktop links, account menu, mobile bottom nav. The app layout already wraps it. |
+| `x-ui.wordmark` | The mark plus the word Varza. Link it home. |
+| `x-ui.page-header` | The title of a screen, with optional subtitle and `actions` slot. |
+| `x-ui.section` | A labeled group on a page. |
+| `x-ui.card` | A white surface for a form, a detail block, or a poll option. |
+| `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Primary is the one next step. |
+| `x-ui.label` | Every control's label. |
+| `x-ui.input` | Text, email, password, number, date. |
+| `x-ui.select` | A native select when there are many short options and chips would wrap into a mess. |
+| `x-ui.textarea` | Notes and descriptions. |
+| `x-ui.error` | Validation messages for one field. |
+| `x-ui.badge` | Status such as "Vote on a time" or "Best time". Tones: `pitch`, `warn`, `neutral`. |
+| `x-ui.sport-chip` | The sport name. Identity comes from the illustration, not a unique color. |
+| `x-ui.avatar` | Initials from a person's name. |
+| `x-ui.empty-state` | A titled empty list with an illustration and an optional action. |
+| `x-ui.icon` | The shared icon set. |
+| `x-illustrations.hero` | Landing hero only. |
+| `x-illustrations.sport` | Event cards and the event page. Pass the sport key. |
+| `x-illustrations.empty` | Empty states. Variants: `games`, `public`, `invites`, `votes`. |
+
+Illustrations are inline SVG, flat, built from pitch green, white, ink, and sand. No stock photos, no hotlinked images, no extra colors per sport.
+
+## Copy checklist
+
+Before shipping a screen, read it aloud. Cut any sentence that restates the heading. Keep the strings the tests look for unless you update the tests in the same change: "My upcoming events", "Public upcoming events", "Vote on a time", "Availability", "Best time", "Your RSVP", "Lock in this time", "This time has passed".

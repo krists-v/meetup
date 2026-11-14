@@ -1,13 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">New event</h2>
+        <x-ui.page-header title="Plan a game" subtitle="A title, a sport, and a place. Set the time, or let the crew vote." />
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6">
-            <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-                @include('events.partials.form')
-            </div>
-        </div>
-    </div>
+    <x-ui.card class="p-4 sm:p-6">
+        @include('events.partials.form')
+    </x-ui.card>
 </x-app-layout>

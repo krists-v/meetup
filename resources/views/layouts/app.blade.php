@@ -1,36 +1,29 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
+        @include('partials.meta', ['title' => $title ?? config('app.name', 'Varza')])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
+        <x-ui.shell>
             @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="border-b border-line bg-white">
+                    <div class="mx-auto max-w-content px-4 py-5 sm:px-6">
                         {{ $header }}
                     </div>
-                </header>
+                </div>
             @endisset
 
-            <!-- Page Content -->
-            <main>
+            <main class="mx-auto max-w-content px-4 py-6 pb-24 sm:px-6 sm:pb-10">
+                @php
+                    $status = session('status');
+                    $quietStatuses = ['profile-updated', 'password-updated', 'verification-link-sent'];
+                @endphp
+                @if (is_string($status) && $status !== '' && ! in_array($status, $quietStatuses, true))
+                    <p class="mb-4 rounded-card bg-success-soft px-4 py-3 text-sm text-pitch-800" role="status">{{ $status }}</p>
+                @endif
                 {{ $slot }}
             </main>
-        </div>
+        </x-ui.shell>
     </body>
 </html>

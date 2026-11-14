@@ -2,6 +2,125 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/inter-400.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/inter-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/inter-600.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/inter-700.woff2') format('woff2');
+}
+
+:root {
+    --pitch-50: 243 250 245;
+    --pitch-100: 227 244 232;
+    --pitch-200: 197 232 208;
+    --pitch-300: 151 212 173;
+    --pitch-400: 95 184 130;
+    --pitch-500: 53 154 94;
+    --pitch-600: 36 124 73;
+    --pitch-700: 28 99 59;
+    --pitch-800: 24 79 49;
+    --pitch-900: 20 65 41;
+    --pitch-950: 10 36 22;
+    --ink: 18 33 23;
+    --ink-muted: 92 107 98;
+    --ink-faint: 139 151 143;
+    --canvas: 244 246 244;
+    --line: 227 235 230;
+    --sand: 231 211 191;
+    --success: 28 99 59;
+    --success-soft: 227 244 232;
+    --warn: 154 103 0;
+    --warn-soft: 255 248 235;
+    --danger: 180 35 24;
+    --danger-soft: 254 243 242;
+    --color-pitch-50: rgb(var(--pitch-50));
+    --color-pitch-100: rgb(var(--pitch-100));
+    --color-pitch-200: rgb(var(--pitch-200));
+    --color-pitch-300: rgb(var(--pitch-300));
+    --color-pitch-400: rgb(var(--pitch-400));
+    --color-pitch-500: rgb(var(--pitch-500));
+    --color-pitch-600: rgb(var(--pitch-600));
+    --color-pitch-700: rgb(var(--pitch-700));
+    --color-pitch-800: rgb(var(--pitch-800));
+    --color-pitch-900: rgb(var(--pitch-900));
+    --color-pitch-950: rgb(var(--pitch-950));
+    --color-ink: rgb(var(--ink));
+    --color-ink-muted: rgb(var(--ink-muted));
+    --color-ink-faint: rgb(var(--ink-faint));
+    --color-canvas: rgb(var(--canvas));
+    --color-line: rgb(var(--line));
+    --color-sand: rgb(var(--sand));
+    --color-success: rgb(var(--success));
+    --color-success-soft: rgb(var(--success-soft));
+    --color-warn: rgb(var(--warn));
+    --color-warn-soft: rgb(var(--warn-soft));
+    --color-danger: rgb(var(--danger));
+    --color-danger-soft: rgb(var(--danger-soft));
+    --radius-control: 0.75rem;
+    --radius-card: 1rem;
+    --shadow-card: 0 1px 2px rgba(18, 33, 23, 0.04), 0 8px 24px rgba(18, 33, 23, 0.05);
+    --shadow-lift: 0 12px 32px rgba(18, 33, 23, 0.08);
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
 [x-cloak] {
     display: none !important;
+}
+
+.sport-picker .sport-custom {
+    display: none;
+}
+
+.sport-picker:has(#sport-other:checked) .sport-custom {
+    display: block;
+}
+
+.bg-pitch-wash {
+    background-image:
+        radial-gradient(120% 80% at 100% 0%, rgba(53, 154, 94, 0.16), transparent 55%),
+        linear-gradient(180deg, var(--color-pitch-100) 0%, var(--color-canvas) 72%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

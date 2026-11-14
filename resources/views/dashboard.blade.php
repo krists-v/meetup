@@ -1,36 +1,44 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-3">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Upcoming</h2>
-            <a href="{{ route('events.create') }}" class="inline-flex items-center px-3 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                New event
-            </a>
-        </div>
+        <x-ui.page-header title="Your games" subtitle="What is coming up, and what the rest of the crew has made public.">
+            <x-slot name="actions">
+                <div class="hidden sm:block">
+                    <x-ui.button :href="route('events.create')">
+                        <x-ui.icon name="plus" />
+                        Plan a game
+                    </x-ui.button>
+                </div>
+            </x-slot>
+        </x-ui.page-header>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 space-y-8">
-            @if (session('status'))
-                <p class="rounded-md bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">{{ session('status') }}</p>
-            @endif
+    <div class="space-y-8">
+        <x-ui.section title="My upcoming events">
+            @forelse ($myEvents as $event)
+                @include('events.partials.card', ['event' => $event])
+            @empty
+                <x-ui.empty-state
+                    illustration="invites"
+                    title="No games yet"
+                    description="Plan one for the crew, or open an invite from the group chat."
+                >
+                    <x-slot name="action">
+                        <x-ui.button :href="route('events.create')">Plan a game</x-ui.button>
+                    </x-slot>
+                </x-ui.empty-state>
+            @endforelse
+        </x-ui.section>
 
-            <section class="space-y-3">
-                <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">My upcoming events</h3>
-                @forelse ($myEvents as $event)
-                    @include('events.partials.card', ['event' => $event])
-                @empty
-                    <p class="bg-white rounded-lg shadow-sm px-4 py-5 text-sm text-gray-600">You have no upcoming events. Create one, or join a public game below.</p>
-                @endforelse
-            </section>
-
-            <section class="space-y-3">
-                <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Public upcoming events</h3>
-                @forelse ($publicEvents as $event)
-                    @include('events.partials.card', ['event' => $event])
-                @empty
-                    <p class="bg-white rounded-lg shadow-sm px-4 py-5 text-sm text-gray-600">No other public games are scheduled.</p>
-                @endforelse
-            </section>
-        </div>
+        <x-ui.section title="Public upcoming events">
+            @forelse ($publicEvents as $event)
+                @include('events.partials.card', ['event' => $event])
+            @empty
+                <x-ui.empty-state
+                    illustration="public"
+                    title="Nothing public right now"
+                    description="When a friend plans a public game, it shows up here."
+                />
+            @endforelse
+        </x-ui.section>
     </div>
 </x-app-layout>

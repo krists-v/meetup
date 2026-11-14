@@ -3,6 +3,10 @@
 
 # Laravel Boost Guidelines
 
+## Design
+
+The product is **Varza**. Before any user-facing change, follow `.cursor/rules/varza-design.mdc` (alwaysApply). Tokens live in `tailwind.config.js` and `resources/css/app.css`. Shared UI is in `resources/views/components/ui`.
+
 ## Foundational Context
 
 This application is a Laravel application running on PHP 8.2. Always use the APIs that match the installed major version of each package — do not assume a version.

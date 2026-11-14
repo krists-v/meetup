@@ -1,6 +1,8 @@
-# Meetup
+# Varza
 
-Meetup is a small web app for organising sports with friends. A group can create a padel, basketball, football, tennis, hockey, volleyball, or other event, paste one invite link into WhatsApp, and collect Going / Maybe / Not going replies. It is meant to be used on a phone.
+Varza is a small web app for organising sports with friends. A group can create a padel, basketball, football, tennis, hockey, volleyball, or other event, paste one invite link into WhatsApp, and collect Going / Maybe / Not going replies. It is meant to be used on a phone.
+
+The default app name is Varza. If a host still has `APP_NAME` set to an older value, change it to `Varza`.
 
 Public events show up for every logged-in user. Private events are visible only to the creator and to people who open the invite link or join.
 

@@ -1,29 +1,24 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
+        <x-ui.page-header title="Profile" subtitle="The name friends see, and the password that keeps your account yours." />
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+    <div class="space-y-4">
+        <x-ui.card class="p-4 sm:p-6">
+            @include('profile.partials.update-profile-information-form')
+        </x-ui.card>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+        <x-ui.card class="p-4 sm:p-6">
+            @include('profile.partials.update-password-form')
+        </x-ui.card>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
-        </div>
+        <x-ui.card class="p-4 sm:p-6">
+            @include('profile.partials.delete-user-form')
+        </x-ui.card>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <x-ui.button type="submit" variant="secondary" class="w-full sm:w-auto">Log out</x-ui.button>
+        </form>
     </div>
 </x-app-layout>

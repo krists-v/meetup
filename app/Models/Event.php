@@ -192,15 +192,7 @@ class Event extends Model
 
     public function sportTone(): string
     {
-        return match ($this->sport ?: $this->sport_type) {
-            'padel' => 'bg-teal-100 text-teal-800',
-            'basketball' => 'bg-orange-100 text-orange-800',
-            'football' => 'bg-emerald-100 text-emerald-800',
-            'tennis' => 'bg-lime-100 text-lime-800',
-            'hockey' => 'bg-sky-100 text-sky-800',
-            'volleyball' => 'bg-rose-100 text-rose-800',
-            default => 'bg-slate-100 text-slate-700',
-        };
+        return 'bg-pitch-100 text-pitch-800';
     }
 
     public function scopePublic($query)
