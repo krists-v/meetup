@@ -17,7 +17,7 @@ Buttons are verbs: "Plan a game", "Log in", "Lock in this time". Helper text say
 
 ## Color
 
-Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`.
+Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. Channel variables (`--pitch-700: 28 99 59`) feed Tailwind as `rgb(var(--pitch-700) / <alpha-value>)`, so opacity modifiers such as `bg-pitch-950/40` work. The `--color-*` variables are the same colors without an alpha, for plain CSS.
 
 - Pitch green scale `pitch-50`–`pitch-950`. Primary actions, links, and focus rings use `pitch-700`. Hover uses `pitch-800`. Soft fills use `pitch-50` and `pitch-100`.
 - Neutrals: `canvas` page background, `ink` text, `ink-muted` secondary text, `ink-faint` placeholders, `line` borders, `sand` the only warm accent inside illustrations.
