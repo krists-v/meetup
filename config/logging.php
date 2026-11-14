@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\AppServiceProvider;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -18,7 +19,10 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => AppServiceProvider::defaultLogChannel(
+        env('LOG_CHANNEL'),
+        (string) env('APP_ENV', 'production'),
+    ),
 
     /*
     |--------------------------------------------------------------------------

@@ -33,5 +33,8 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="SENTRY_LARAVEL_DSN" value=""/>
+        <env name="SENTRY_TRACES_SAMPLE_RATE" value="0"/>
+        <env name="SENTRY_SEND_DEFAULT_PII" value="false"/>
     </php>
 </phpunit>

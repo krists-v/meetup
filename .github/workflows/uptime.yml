@@ -1,0 +1,75 @@
+name: Uptime
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      UPTIME_URL: ${{ vars.UPTIME_URL }}
+    steps:
+      - name: Check the site and update the downtime issue
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          url="${UPTIME_URL:-https://meetup-production-d6dd93aa.up.railway.app/up}"
+          log="$(mktemp)"
+          body="$(mktemp)"
+
+          set +e
+          curl --fail --silent --show-error \
+            --retry 3 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            --connect-timeout 10 \
+            --max-time 20 \
+            --output /dev/null \
+            "$url" >"$log" 2>&1
+          status=$?
+          set -e
+
+          open_issues="$(gh issue list --state open --label downtime --limit 20 --json number --jq '.[].number')"
+
+          if [ "$status" -eq 0 ]; then
+            if [ -n "$open_issues" ]; then
+              while IFS= read -r number; do
+                [ -n "$number" ] || continue
+                gh issue close "$number" --reason completed --comment "The health check succeeded for ${url}. Closing this."
+              done <<< "$open_issues"
+            fi
+            exit 0
+          fi
+
+          gh label create downtime --color B42318 --description "Production health check failed." --force
+
+          excerpt="$(tail -c 1500 "$log" || true)"
+          {
+            printf 'The health check failed for %s at %s.\n\n' "$url" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            printf 'curl exit %s.\n' "$status"
+            if [ -n "$excerpt" ]; then
+              printf '\n```\n%s\n```\n' "$excerpt"
+            fi
+          } > "$body"
+
+          if [ -n "$open_issues" ]; then
+            while IFS= read -r number; do
+              [ -n "$number" ] || continue
+              gh issue comment "$number" --body-file "$body"
+            done <<< "$open_issues"
+          else
+            gh issue create --label downtime --title "Varza is down" --body-file "$body"
+          fi

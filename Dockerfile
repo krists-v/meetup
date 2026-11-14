@@ -45,7 +45,8 @@ ENV DB_CONNECTION=sqlite \
     DB_DATABASE=/data/database.sqlite \
     SESSION_DRIVER=database \
     CACHE_STORE=database \
-    QUEUE_CONNECTION=sync
+    QUEUE_CONNECTION=sync \
+    LOG_CHANNEL=stderr
 
 EXPOSE 8000
 

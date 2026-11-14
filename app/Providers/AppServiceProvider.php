@@ -32,6 +32,18 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Production logs go to stderr so Railway can collect them. Any explicit channel, including the local stack, wins.
+     */
+    public static function defaultLogChannel(?string $channel, string $environment): string
+    {
+        if (filled($channel)) {
+            return $channel;
+        }
+
+        return $environment === 'production' ? 'stderr' : 'stack';
+    }
+
+    /**
      * Use Resend only when a key is present. Otherwise keep the log mailer so a missing key cannot take the app down.
      */
     public static function resolveMailer(?string $mailer, ?string $resendKey): string
