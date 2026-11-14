@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Tests\TestCase;
 
 class SafetyTest extends TestCase
@@ -105,7 +106,14 @@ class SafetyTest extends TestCase
             ->get(route('events.show', $event))
             ->assertForbidden()
             ->assertSee("You can't open this")
-            ->assertSee('Back home');
+            ->assertSee('This page is not available to you.')
+            ->assertDontSee('invite link');
+
+        $this->actingAs($stranger)
+            ->get(route('events.edit', $event))
+            ->assertForbidden()
+            ->assertSee('This page is not available to you.')
+            ->assertDontSee('private');
 
         $this->get('/not-a-real-page')
             ->assertNotFound()
@@ -115,6 +123,7 @@ class SafetyTest extends TestCase
 
         Route::get('/_safety/expired', fn () => abort(419));
         Route::get('/_safety/down', fn () => abort(503));
+        Route::get('/_safety/hour', fn () => throw new TooManyRequestsHttpException(3600));
         Route::get('/_safety/boom', fn () => throw new \RuntimeException('secret boom'));
 
         $this->get('/_safety/expired')
@@ -124,6 +133,11 @@ class SafetyTest extends TestCase
         $this->get('/_safety/down')
             ->assertStatus(503)
             ->assertSee('Varza is briefly down');
+
+        $this->get('/_safety/hour')
+            ->assertStatus(429)
+            ->assertSee('Try again in about an hour.')
+            ->assertDontSee('Wait a minute');
 
         config(['app.debug' => false]);
 
