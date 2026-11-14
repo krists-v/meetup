@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
@@ -17,6 +18,25 @@ class StoreEventRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->prepareSport();
+    }
+
+    protected function prepareSport(): void
+    {
+        if (! $this->filled('sport') && $this->filled('sport_type')) {
+            $this->merge(['sport' => $this->input('sport_type')]);
+        }
+
+        if ($this->input('sport') === 'other') {
+            $custom = trim((string) $this->input('custom_sport', ''));
+            $this->merge(['custom_sport' => $custom === '' ? null : $custom]);
+        } else {
+            $this->merge(['custom_sport' => null]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,7 +46,8 @@ class StoreEventRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'sport_type' => ['required', 'in:football,tennis,basketball,other'],
+            'sport' => ['required', 'in:'.implode(',', array_keys(Event::SPORTS))],
+            'custom_sport' => ['nullable', 'required_if:sport,other', 'string', 'max:50'],
             'schedule_type' => ['nullable', 'in:fixed,poll'],
             'event_date' => ['exclude_if:schedule_type,poll', 'required', 'date', 'after:now'],
             'options' => ['exclude_unless:schedule_type,poll', 'array'],

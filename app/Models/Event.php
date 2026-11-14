@@ -19,6 +19,8 @@ class Event extends Model
         'user_id',
         'title',
         'sport_type',
+        'sport',
+        'custom_sport',
         'event_date',
         'location',
         'max_participants',
@@ -42,6 +44,56 @@ class Event extends Model
                 $event->invite_token = Str::random(32);
             }
         });
+
+        static::saving(function (Event $event) {
+            if (blank($event->sport)) {
+                return;
+            }
+
+            $legacy = ['football', 'tennis', 'basketball', 'other'];
+            $event->sport_type = in_array($event->sport, $legacy, true) ? $event->sport : 'other';
+
+            if ($event->sport !== 'other') {
+                $event->custom_sport = null;
+            }
+        });
+    }
+
+    public const SPORTS = [
+        'padel' => 'Padel',
+        'basketball' => 'Basketball',
+        'football' => 'Football',
+        'tennis' => 'Tennis',
+        'hockey' => 'Hockey',
+        'volleyball' => 'Volleyball',
+        'other' => 'Other',
+    ];
+
+    public function sportSelection(): string
+    {
+        $sport = $this->sport ?: $this->sport_type;
+
+        return array_key_exists((string) $sport, self::SPORTS) ? (string) $sport : 'other';
+    }
+
+    public function customSportInput(): string
+    {
+        if (filled($this->custom_sport)) {
+            return $this->custom_sport;
+        }
+
+        $sport = $this->sport ?: $this->sport_type;
+
+        if (! array_key_exists((string) $sport, self::SPORTS)) {
+            return (string) $sport;
+        }
+
+        return '';
+    }
+
+    public function hasUnspecifiedSport(): bool
+    {
+        return $this->sportSelection() === 'other' && $this->customSportInput() === '';
     }
 
     public function creator(): BelongsTo
@@ -129,11 +181,25 @@ class Event extends Model
 
     public function sportLabel(): string
     {
-        return match ($this->sport_type) {
-            'football' => 'Football',
-            'tennis' => 'Tennis',
-            'basketball' => 'Basketball',
-            default => 'Other',
+        if ($this->sport === 'other' && filled($this->custom_sport)) {
+            return $this->custom_sport;
+        }
+
+        $sport = $this->sport ?: $this->sport_type;
+
+        return self::SPORTS[$sport] ?? (string) $sport;
+    }
+
+    public function sportTone(): string
+    {
+        return match ($this->sport ?: $this->sport_type) {
+            'padel' => 'bg-teal-100 text-teal-800',
+            'basketball' => 'bg-orange-100 text-orange-800',
+            'football' => 'bg-emerald-100 text-emerald-800',
+            'tennis' => 'bg-lime-100 text-lime-800',
+            'hockey' => 'bg-sky-100 text-sky-800',
+            'volleyball' => 'bg-rose-100 text-rose-800',
+            default => 'bg-slate-100 text-slate-700',
         };
     }
 

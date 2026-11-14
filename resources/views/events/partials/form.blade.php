@@ -19,15 +19,7 @@
         <x-input-error class="mt-2" :messages="$errors->get('title')" />
     </div>
 
-    <div>
-        <x-input-label for="sport_type" value="Sport" />
-        <select id="sport_type" name="sport_type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
-            @foreach (['football' => 'Football', 'tennis' => 'Tennis', 'basketball' => 'Basketball', 'other' => 'Other'] as $value => $label)
-                <option value="{{ $value }}" @selected(old('sport_type', $editing ? $event->sport_type : 'football') === $value)>{{ $label }}</option>
-            @endforeach
-        </select>
-        <x-input-error class="mt-2" :messages="$errors->get('sport_type')" />
-    </div>
+    @include('events.partials.sport-picker')
 
     @if ($polling)
         <p class="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">Friends are voting on a time. Lock a time from the event page. You can still edit the other details.</p>

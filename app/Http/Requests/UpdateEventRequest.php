@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Event;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateEventRequest extends FormRequest
 {
@@ -16,6 +17,20 @@ class UpdateEventRequest extends FormRequest
         $event = $this->route('event');
 
         return $event !== null && $this->user()->can('update', $event);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('sport') && $this->filled('sport_type')) {
+            $this->merge(['sport' => $this->input('sport_type')]);
+        }
+
+        if ($this->input('sport') === 'other') {
+            $custom = trim((string) $this->input('custom_sport', ''));
+            $this->merge(['custom_sport' => $custom === '' ? null : $custom]);
+        } else {
+            $this->merge(['custom_sport' => null]);
+        }
     }
 
     /**
@@ -30,7 +45,14 @@ class UpdateEventRequest extends FormRequest
 
         return [
             'title' => ['required', 'string', 'max:255'],
-            'sport_type' => ['required', 'in:football,tennis,basketball,other'],
+            'sport' => ['required', 'in:'.implode(',', array_keys(Event::SPORTS))],
+            'custom_sport' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::requiredIf(fn () => $this->input('sport') === 'other'
+                    && ! ($event instanceof Event && $event->hasUnspecifiedSport())),
+            ],
             'event_date' => $polling
                 ? ['exclude']
                 : ['required', 'date'],

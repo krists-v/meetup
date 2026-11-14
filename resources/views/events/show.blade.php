@@ -1,10 +1,5 @@
 @php
-    $tone = match ($event->sport_type) {
-        'football' => 'bg-emerald-100 text-emerald-800',
-        'tennis' => 'bg-lime-100 text-lime-800',
-        'basketball' => 'bg-orange-100 text-orange-800',
-        default => 'bg-slate-100 text-slate-700',
-    };
+    $tone = $event->sportTone();
     $groups = [
         'going' => ['label' => 'Going', 'people' => $event->participants->where('pivot.status', 'going')],
         'maybe' => ['label' => 'Maybe', 'people' => $event->participants->where('pivot.status', 'maybe')],
