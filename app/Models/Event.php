@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Event extends Model
@@ -24,6 +25,7 @@ class Event extends Model
         'description',
         'visibility',
         'invite_token',
+        'schedule_type',
     ];
 
     protected $casts = [
@@ -88,6 +90,39 @@ class Event extends Model
         $participant = $this->participants()->where('users.id', $user->id)->first();
 
         return $participant?->pivot->status;
+    }
+
+    public function timeOptions(): HasMany
+    {
+        return $this->hasMany(EventTimeOption::class)->orderBy('position')->orderBy('starts_at');
+    }
+
+    public function isPoll(): bool
+    {
+        return $this->schedule_type === 'poll';
+    }
+
+    public function bestTimeOption(): ?EventTimeOption
+    {
+        $options = $this->relationLoaded('timeOptions')
+            ? $this->timeOptions
+            : $this->timeOptions()->with('votes')->get();
+
+        return $options->sort(function (EventTimeOption $a, EventTimeOption $b): int {
+            $yes = $b->voteCount('yes') <=> $a->voteCount('yes');
+
+            if ($yes !== 0) {
+                return $yes;
+            }
+
+            $maybe = $b->voteCount('maybe') <=> $a->voteCount('maybe');
+
+            if ($maybe !== 0) {
+                return $maybe;
+            }
+
+            return $a->starts_at <=> $b->starts_at;
+        })->first();
     }
 
     public function sportLabel(): string

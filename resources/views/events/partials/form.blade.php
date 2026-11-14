@@ -1,8 +1,13 @@
 @php
     $editing = isset($event);
+    $polling = $editing && $event->isPoll();
+    $oldOptions = array_values(old('options', ['', '']));
+    if (count($oldOptions) < 2) {
+        $oldOptions = array_pad($oldOptions, 2, '');
+    }
 @endphp
 
-<form method="POST" action="{{ $editing ? route('events.update', $event) : route('events.store') }}" class="space-y-5">
+<form method="POST" action="{{ $editing ? route('events.update', $event) : route('events.store') }}" class="space-y-5" @unless ($editing) x-data="{ schedule: @js(old('schedule_type', 'fixed')), times: @js($oldOptions) }" @endunless>
     @csrf
     @if ($editing)
         @method('PUT')
@@ -24,11 +29,45 @@
         <x-input-error class="mt-2" :messages="$errors->get('sport_type')" />
     </div>
 
-    <div>
-        <x-input-label for="event_date" value="Date and time" />
-        <x-text-input id="event_date" name="event_date" type="datetime-local" class="mt-1 block w-full" :value="old('event_date', $editing ? $event->event_date->format('Y-m-d\TH:i') : '')" required />
-        <x-input-error class="mt-2" :messages="$errors->get('event_date')" />
-    </div>
+    @if ($polling)
+        <p class="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">Friends are voting on a time. Lock a time from the event page. You can still edit the other details.</p>
+    @elseif ($editing)
+        <div>
+            <x-input-label for="event_date" value="Date and time" />
+            <x-text-input id="event_date" name="event_date" type="datetime-local" class="mt-1 block w-full" :value="old('event_date', $event->event_date->format('Y-m-d\TH:i'))" required />
+            <x-input-error class="mt-2" :messages="$errors->get('event_date')" />
+        </div>
+    @else
+        <fieldset>
+            <legend class="block font-medium text-sm text-gray-700">When</legend>
+            <div class="mt-2 space-y-2">
+                <label class="flex items-start gap-2 text-sm text-gray-700">
+                    <input type="radio" name="schedule_type" value="fixed" class="mt-1 border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" x-model="schedule" />
+                    <span>Set a date</span>
+                </label>
+                <label class="flex items-start gap-2 text-sm text-gray-700">
+                    <input type="radio" name="schedule_type" value="poll" class="mt-1 border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" x-model="schedule" />
+                    <span>Let friends vote on a time</span>
+                </label>
+            </div>
+        </fieldset>
+
+        <div x-show="schedule === 'fixed'" x-cloak>
+            <x-input-label for="event_date" value="Date and time" />
+            <x-text-input id="event_date" name="event_date" type="datetime-local" class="mt-1 block w-full" :value="old('event_date')" x-bind:required="schedule === 'fixed'" />
+            <x-input-error class="mt-2" :messages="$errors->get('event_date')" />
+        </div>
+
+        <div x-show="schedule === 'poll'" x-cloak class="space-y-3">
+            <x-input-label value="Time options" />
+            <template x-for="(time, index) in times" :key="index">
+                <input type="datetime-local" class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" x-model="times[index]" :name="'options[' + index + ']'" />
+            </template>
+            <button type="button" class="text-sm font-semibold text-gray-700 underline" @click="times.push('')">Add another time</button>
+            <p class="text-xs text-gray-500">Add at least two different times. Friends vote Yes, Maybe, or No on each one.</p>
+            <x-input-error class="mt-2" :messages="$errors->get('options')" />
+        </div>
+    @endif
 
     <div>
         <x-input-label for="location" value="Location" />
