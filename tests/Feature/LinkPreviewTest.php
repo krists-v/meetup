@@ -119,6 +119,40 @@ class LinkPreviewTest extends TestCase
             ->assertSee('Hidden pitch', false);
     }
 
+    public function test_a_token_on_the_event_page_joins_after_login(): void
+    {
+        $friend = User::factory()->create();
+        $event = Event::factory()->private()->create([
+            'title' => 'Secret match',
+        ]);
+        $url = route('events.show', ['event' => $event, 'token' => $event->invite_token]);
+
+        $this->get($url)
+            ->assertOk()
+            ->assertSee('Secret match');
+
+        $this->post('/login', [
+            'email' => $friend->email,
+            'password' => 'password',
+        ])->assertRedirect($url);
+
+        $this->get($url)
+            ->assertOk()
+            ->assertSee('Secret match');
+
+        $this->assertDatabaseHas('event_user', [
+            'event_id' => $event->id,
+            'user_id' => $friend->id,
+            'status' => 'invited',
+        ]);
+
+        $stranger = User::factory()->create();
+
+        $this->actingAs($stranger)
+            ->get(route('events.show', ['event' => $event, 'token' => 'not-the-token']))
+            ->assertForbidden();
+    }
+
     public function test_logging_in_from_an_invite_preview_joins_the_game(): void
     {
         $friend = User::factory()->create();

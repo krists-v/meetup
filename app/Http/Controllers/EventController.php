@@ -93,8 +93,14 @@ class EventController extends Controller
 
     public function show(Request $request, Event $event): View
     {
-        if ($request->user() === null) {
+        $user = $request->user();
+
+        if ($user === null) {
             return $this->preview($request, $event, $event->visibility === 'public' || $this->inviteTokenMatches($event, $request->query('token')));
+        }
+
+        if ($this->inviteTokenMatches($event, $request->query('token'))) {
+            $this->rememberInvite($event, $user);
         }
 
         $this->authorize('view', $event);
@@ -143,11 +149,7 @@ class EventController extends Controller
             return $this->preview($request, $event, true);
         }
 
-        $user = $request->user();
-
-        if (! $event->isCreator($user) && $event->getUserStatus($user) === null) {
-            $event->participants()->attach($user->id, ['status' => 'invited']);
-        }
+        $this->rememberInvite($event, $request->user());
 
         return redirect()->route('events.show', $event);
     }
@@ -253,6 +255,13 @@ class EventController extends Controller
         return redirect()
             ->route('events.show', $event)
             ->with('status', 'Time locked. Yes votes are marked Going while there is room.');
+    }
+
+    private function rememberInvite(Event $event, User $user): void
+    {
+        if (! $event->isCreator($user) && $event->getUserStatus($user) === null) {
+            $event->participants()->attach($user->id, ['status' => 'invited']);
+        }
     }
 
     private function preview(Request $request, Event $event, bool $revealed): View
