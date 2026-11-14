@@ -18,6 +18,20 @@ class UpdateEventRequest extends FormRequest
         return $event !== null && $this->user()->can('update', $event);
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('sport') && $this->filled('sport_type')) {
+            $this->merge(['sport' => $this->input('sport_type')]);
+        }
+
+        if ($this->input('sport') === 'other') {
+            $custom = trim((string) $this->input('custom_sport', ''));
+            $this->merge(['custom_sport' => $custom === '' ? null : $custom]);
+        } else {
+            $this->merge(['custom_sport' => null]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -30,7 +44,8 @@ class UpdateEventRequest extends FormRequest
 
         return [
             'title' => ['required', 'string', 'max:255'],
-            'sport_type' => ['required', 'in:football,tennis,basketball,other'],
+            'sport' => ['required', 'in:'.implode(',', array_keys(Event::SPORTS))],
+            'custom_sport' => ['nullable', 'required_if:sport,other', 'string', 'max:50'],
             'event_date' => $polling
                 ? ['exclude']
                 : ['required', 'date'],

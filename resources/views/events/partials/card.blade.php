@@ -1,10 +1,5 @@
 @php
-    $tone = match ($event->sport_type) {
-        'football' => 'bg-emerald-100 text-emerald-800',
-        'tennis' => 'bg-lime-100 text-lime-800',
-        'basketball' => 'bg-orange-100 text-orange-800',
-        default => 'bg-slate-100 text-slate-700',
-    };
+    $tone = $event->sportTone();
 @endphp
 
 <a href="{{ route('events.show', $event) }}" class="block bg-white rounded-lg shadow-sm px-4 py-4 hover:bg-gray-50">

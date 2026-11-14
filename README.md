@@ -1,6 +1,6 @@
 # Meetup
 
-Meetup is a small web app for organising sports with friends. A group can create a football, tennis, basketball, or other event, paste one invite link into WhatsApp, and collect Going / Maybe / Not going replies. It is meant to be used on a phone.
+Meetup is a small web app for organising sports with friends. A group can create a padel, basketball, football, tennis, hockey, volleyball, or other event, paste one invite link into WhatsApp, and collect Going / Maybe / Not going replies. It is meant to be used on a phone.
 
 Public events show up for every logged-in user. Private events are visible only to the creator and to people who open the invite link or join.
 
