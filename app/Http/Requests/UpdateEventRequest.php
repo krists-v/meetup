@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Event;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,10 +25,15 @@ class UpdateEventRequest extends FormRequest
      */
     public function rules(): array
     {
+        $event = $this->route('event');
+        $polling = $event instanceof Event && $event->isPoll();
+
         return [
             'title' => ['required', 'string', 'max:255'],
             'sport_type' => ['required', 'in:football,tennis,basketball,other'],
-            'event_date' => ['required', 'date'],
+            'event_date' => $polling
+                ? ['exclude']
+                : ['required', 'date'],
             'location' => ['required', 'string', 'max:255'],
             'max_participants' => ['nullable', 'integer', 'min:2'],
             'description' => ['nullable', 'string', 'max:1000'],

@@ -33,16 +33,31 @@
             @endif
 
             <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-2 text-sm">
-                <p><span class="text-gray-500">When</span><br><span class="text-base text-gray-900">{{ $event->event_date->format('l j F Y, H:i') }}</span></p>
+                <p>
+                    <span class="text-gray-500">When</span><br>
+                    @if ($event->isPoll())
+                        <span class="text-base text-gray-900">Friends are voting on a time</span>
+                    @else
+                        <span class="text-base text-gray-900">{{ $event->event_date->format('l j F Y, H:i') }}</span>
+                    @endif
+                </p>
                 <p><span class="text-gray-500">Where</span><br><span class="text-base text-gray-900">{{ $event->location }}</span></p>
                 <p>
                     <span class="text-gray-500">Places</span><br>
                     <span class="text-base text-gray-900">
-                        {{ $goingCount }} going
-                        @if ($event->max_participants)
-                            of {{ $event->max_participants }}
+                        @if ($event->isPoll())
+                            @if ($event->max_participants)
+                                Up to {{ $event->max_participants }} can go once a time is locked
+                            @else
+                                No limit once a time is locked
+                            @endif
                         @else
-                            · no limit
+                            {{ $goingCount }} going
+                            @if ($event->max_participants)
+                                of {{ $event->max_participants }}
+                            @else
+                                · no limit
+                            @endif
                         @endif
                     </span>
                 </p>
@@ -52,6 +67,9 @@
                 @endif
             </section>
 
+            @if ($event->isPoll())
+                @include('events.partials.time-poll')
+            @else
             <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6">
                 <h3 class="font-semibold text-gray-900">Your RSVP</h3>
                 @if ($full && $userStatus !== 'going')
@@ -71,6 +89,7 @@
                     @endforeach
                 </form>
             </section>
+            @endif
 
             @if ($event->isCreator(auth()->user()))
                 <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-3">
@@ -93,6 +112,7 @@
                 </section>
             @endif
 
+            @unless ($event->isPoll())
             <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
                 <h3 class="font-semibold text-gray-900">Participants</h3>
                 @foreach ($groups as $group)
@@ -110,6 +130,7 @@
                     </div>
                 @endforeach
             </section>
+            @endunless
         </div>
     </div>
 </x-app-layout>

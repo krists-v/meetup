@@ -20,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
     Route::post('/events/{event}/rsvp', [EventController::class, 'rsvp'])->name('events.rsvp');
+    Route::post('/events/{event}/options/{option}/vote', [EventController::class, 'vote'])->name('events.options.vote');
+    Route::post('/events/{event}/options/{option}/lock', [EventController::class, 'lock'])->name('events.options.lock');
 
     Route::get('/invite/{token}', [EventController::class, 'invite'])->name('events.invite');
 

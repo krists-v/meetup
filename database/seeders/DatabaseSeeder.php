@@ -66,6 +66,23 @@ class DatabaseSeeder extends Seeder
 
         $basketball->participants()->attach($alex->id, ['status' => 'going']);
 
+        $poll = Event::factory()->create([
+            'user_id' => $sam->id,
+            'title' => 'Friday game — pick a time',
+            'sport_type' => 'football',
+            'schedule_type' => 'poll',
+            'event_date' => now()->addDays(8)->setTime(20, 0),
+            'location' => 'Riverside pitches',
+            'max_participants' => 10,
+            'visibility' => 'public',
+            'description' => 'Vote on a kickoff. The best time can be locked in.',
+        ]);
+
+        $poll->timeOptions()->createMany([
+            ['starts_at' => now()->addDays(6)->setTime(18, 0), 'position' => 0],
+            ['starts_at' => now()->addDays(8)->setTime(20, 0), 'position' => 1],
+        ]);
+
         Event::factory()->create([
             'user_id' => $alex->id,
             'title' => 'Last week kickabout',

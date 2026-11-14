@@ -7,7 +7,8 @@ Public events show up for every logged-in user. Private events are visible only 
 ## What you can do
 
 - Register, log in, and log out.
-- Create an event with a title, sport, date and time, location, optional participant limit, optional description, and public or private visibility.
+- Create an event with a title, sport, a fixed date and time or a few times for friends to vote on, location, optional participant limit, optional description, and public or private visibility.
+- On a time poll, anyone who can see the event votes Yes, Maybe, or No. The best time (most Yes, then most Maybe) is highlighted. The creator can lock that time, which turns it into a normal event and marks Yes voters as Going while there is room.
 - Copy a unique invite link and send it in WhatsApp. Opening it after login shows the event, including private ones.
 - RSVP Going, Maybe, or Not going. Going is blocked once the event is full. Maybe and Not going stay available.
 - See who is going, maybe, or not going, with counts.
@@ -47,7 +48,9 @@ The database defaults to SQLite at `database/database.sqlite`. No other services
 php artisan test
 ```
 
-Feature tests cover creating an event, public versus private visibility, joining through an invite link, RSVP capacity, and creator-only edit and delete.
+Feature tests cover creating an event, public versus private visibility, joining through an invite link, RSVP capacity, creator-only edit and delete, time polls (voting, private visibility, and locking with the capacity limit).
+
+Laravel Boost is a dev dependency for Cursor. Its generated guidelines are in `AGENTS.md`, with skills and MCP config under `.cursor/`. Production installs skip dev dependencies, so Boost is not part of the Railway image.
 
 ## Deploy on Railway
 

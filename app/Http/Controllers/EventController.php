@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\EventTimeOption;
+use App\Models\EventTimeVote;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
 class EventController extends Controller
@@ -18,7 +22,7 @@ class EventController extends Controller
         $myEvents = Event::query()
             ->upcoming()
             ->with('creator')
-            ->withCount('goingParticipants')
+            ->withCount(['goingParticipants', 'timeOptions'])
             ->where(function ($query) use ($user) {
                 $query->where('user_id', $user->id)
                     ->orWhereHas('participants', function ($query) use ($user) {
@@ -33,7 +37,7 @@ class EventController extends Controller
             ->public()
             ->upcoming()
             ->with('creator')
-            ->withCount('goingParticipants')
+            ->withCount(['goingParticipants', 'timeOptions'])
             ->whereNotIn('id', $myEvents->pluck('id'))
             ->orderBy('event_date')
             ->get();
@@ -53,21 +57,44 @@ class EventController extends Controller
 
     public function store(StoreEventRequest $request): RedirectResponse
     {
-        $event = Event::create([
-            ...$request->validated(),
-            'user_id' => $request->user()->id,
-        ]);
+        $data = $request->safe()->except(['options']);
+        $scheduleType = $data['schedule_type'] ?? 'fixed';
+        $data['schedule_type'] = $scheduleType;
+        $data['user_id'] = $request->user()->id;
+
+        $options = collect($request->input('options', []))
+            ->filter(fn ($value) => filled($value))
+            ->map(fn ($value) => Carbon::parse($value))
+            ->unique(fn (Carbon $date) => $date->format('Y-m-d H:i'))
+            ->values();
+
+        if ($scheduleType === 'poll') {
+            $data['event_date'] = $options->max();
+        }
+
+        $event = Event::create($data);
+
+        if ($scheduleType === 'poll') {
+            foreach ($options as $position => $startsAt) {
+                $event->timeOptions()->create([
+                    'starts_at' => $startsAt,
+                    'position' => $position,
+                ]);
+            }
+        }
 
         return redirect()
             ->route('events.show', $event)
-            ->with('status', 'Event created. Share the invite link on WhatsApp.');
+            ->with('status', $scheduleType === 'poll'
+                ? 'Event created. Share the invite link so friends can vote on a time.'
+                : 'Event created. Share the invite link on WhatsApp.');
     }
 
     public function show(Request $request, Event $event): View
     {
         $this->authorize('view', $event);
 
-        $event->load(['creator', 'participants']);
+        $event->load(['creator', 'participants', 'timeOptions.votes.user']);
 
         return view('events.show', [
             'event' => $event,
@@ -118,6 +145,12 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
+        if ($event->isPoll()) {
+            return back()->withErrors([
+                'status' => 'Choose a time before marking Going, Maybe, or Not going.',
+            ]);
+        }
+
         $validated = $request->validate([
             'status' => ['required', 'in:going,maybe,not_going'],
         ]);
@@ -138,5 +171,76 @@ class EventController extends Controller
         ]);
 
         return back()->with('status', 'RSVP saved.');
+    }
+
+    public function vote(Request $request, Event $event, EventTimeOption $option): RedirectResponse
+    {
+        $this->authorize('view', $event);
+        abort_unless($option->event_id === $event->id, 404);
+        abort_unless($event->isPoll(), 403);
+
+        if ($option->hasPassed()) {
+            return back()->withErrors([
+                'vote' => 'That time has already passed.',
+            ]);
+        }
+
+        $validated = $request->validate([
+            'vote' => ['required', 'in:yes,maybe,no'],
+        ]);
+
+        EventTimeVote::query()->updateOrCreate(
+            [
+                'event_time_option_id' => $option->id,
+                'user_id' => $request->user()->id,
+            ],
+            ['vote' => $validated['vote']],
+        );
+
+        return back()->with('status', 'Vote saved.');
+    }
+
+    public function lock(Event $event, EventTimeOption $option): RedirectResponse
+    {
+        $this->authorize('update', $event);
+        abort_unless($option->event_id === $event->id, 404);
+        abort_unless($event->isPoll(), 403);
+
+        if ($option->hasPassed()) {
+            return back()->withErrors([
+                'option' => 'That time has already passed.',
+            ]);
+        }
+
+        $yesVoterIds = $option->votes()
+            ->where('vote', 'yes')
+            ->orderBy('created_at')
+            ->orderBy('id')
+            ->pluck('user_id');
+
+        $event->update([
+            'event_date' => $option->starts_at,
+            'schedule_type' => 'fixed',
+        ]);
+
+        foreach ($yesVoterIds as $userId) {
+            $voter = User::query()->find($userId);
+
+            if ($voter === null || $event->getUserStatus($voter) === 'going') {
+                continue;
+            }
+
+            if ($event->hasReachedCapacity()) {
+                break;
+            }
+
+            $event->participants()->syncWithoutDetaching([
+                $voter->id => ['status' => 'going'],
+            ]);
+        }
+
+        return redirect()
+            ->route('events.show', $event)
+            ->with('status', 'Time locked in. People who voted Yes are marked Going while there is room.');
     }
 }
