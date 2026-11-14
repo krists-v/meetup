@@ -2,6 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/inter-400.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/inter-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/inter-600.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/inter-700.woff2') format('woff2');
+}
+
+:root {
+    --color-pitch-50: #f3faf5;
+    --color-pitch-100: #e3f4e8;
+    --color-pitch-200: #c5e8d0;
+    --color-pitch-300: #97d4ad;
+    --color-pitch-400: #5fb882;
+    --color-pitch-500: #359a5e;
+    --color-pitch-600: #247c49;
+    --color-pitch-700: #1c633b;
+    --color-pitch-800: #184f31;
+    --color-pitch-900: #144129;
+    --color-pitch-950: #0a2416;
+    --color-ink: #122117;
+    --color-ink-muted: #5c6b62;
+    --color-ink-faint: #8b978f;
+    --color-canvas: #f4f6f4;
+    --color-line: #e3ebe6;
+    --color-sand: #e7d3bf;
+    --color-success: #1c633b;
+    --color-success-soft: #e3f4e8;
+    --color-warn: #9a6700;
+    --color-warn-soft: #fff8eb;
+    --color-danger: #b42318;
+    --color-danger-soft: #fef3f2;
+    --radius-control: 0.75rem;
+    --radius-card: 1rem;
+    --shadow-card: 0 1px 2px rgba(18, 33, 23, 0.04), 0 8px 24px rgba(18, 33, 23, 0.05);
+    --shadow-lift: 0 12px 32px rgba(18, 33, 23, 0.08);
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
 [x-cloak] {
     display: none !important;
+}
+
+.sport-picker .sport-custom {
+    display: none;
+}
+
+.sport-picker:has(#sport-other:checked) .sport-custom {
+    display: block;
+}
+
+.bg-pitch-wash {
+    background-image:
+        radial-gradient(120% 80% at 100% 0%, rgba(53, 154, 94, 0.16), transparent 55%),
+        linear-gradient(180deg, var(--color-pitch-100) 0%, var(--color-canvas) 72%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

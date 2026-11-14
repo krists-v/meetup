@@ -1,5 +1,4 @@
 @php
-    $tone = $event->sportTone();
     $groups = [
         'going' => ['label' => 'Going', 'people' => $event->participants->where('pivot.status', 'going')],
         'maybe' => ['label' => 'Maybe', 'people' => $event->participants->where('pivot.status', 'maybe')],
@@ -12,120 +11,139 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-start justify-between gap-3">
-            <div>
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $event->title }}</h2>
-                <p class="mt-1 text-sm text-gray-500">Organised by {{ $event->creator->name }}</p>
-            </div>
-            <span class="shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {{ $tone }}">{{ $event->sportLabel() }}</span>
-        </div>
+        <x-ui.page-header :title="$event->title" subtitle="Hosted by {{ $event->creator->name }}">
+            <x-slot name="actions">
+                <x-ui.sport-chip :event="$event" />
+            </x-slot>
+        </x-ui.page-header>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 space-y-4">
-            @if (session('status'))
-                <p class="rounded-md bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">{{ session('status') }}</p>
-            @endif
-
-            <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-2 text-sm">
-                <p>
-                    <span class="text-gray-500">When</span><br>
-                    @if ($event->isPoll())
-                        <span class="text-base text-gray-900">Friends are voting on a time</span>
-                    @else
-                        <span class="text-base text-gray-900">{{ $event->event_date->format('l j F Y, H:i') }}</span>
-                    @endif
-                </p>
-                <p><span class="text-gray-500">Where</span><br><span class="text-base text-gray-900">{{ $event->location }}</span></p>
-                <p>
-                    <span class="text-gray-500">Places</span><br>
-                    <span class="text-base text-gray-900">
+    <div class="space-y-4">
+        <x-ui.card class="overflow-hidden">
+            <x-illustrations.sport :sport="$event->sportSelection()" class="h-40 w-full" />
+            <div class="space-y-4 p-4 sm:p-6">
+                <div class="flex gap-3">
+                    <x-ui.icon name="calendar" class="mt-0.5 text-pitch-700" />
+                    <div>
+                        <p class="text-sm text-ink-muted">When</p>
                         @if ($event->isPoll())
-                            @if ($event->max_participants)
-                                Up to {{ $event->max_participants }} can go once a time is locked
-                            @else
-                                No limit once a time is locked
-                            @endif
+                            <p class="text-base text-ink">Friends are voting on a time</p>
                         @else
-                            {{ $goingCount }} going
-                            @if ($event->max_participants)
-                                of {{ $event->max_participants }}
-                            @else
-                                · no limit
-                            @endif
+                            <p class="text-base text-ink">{{ $event->event_date->format('l j F Y, H:i') }}</p>
                         @endif
-                    </span>
-                </p>
-                <p class="text-gray-500">{{ $event->visibility === 'public' ? 'Public event' : 'Private event' }}</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <x-ui.icon name="map-pin" class="mt-0.5 text-pitch-700" />
+                    <div>
+                        <p class="text-sm text-ink-muted">Where</p>
+                        <p class="text-base text-ink">{{ $event->location }}</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <x-ui.icon name="users" class="mt-0.5 text-pitch-700" />
+                    <div>
+                        <p class="text-sm text-ink-muted">Places</p>
+                        <p class="text-base text-ink">
+                            @if ($event->isPoll())
+                                @if ($event->max_participants)
+                                    Up to {{ $event->max_participants }} can go once a time is locked
+                                @else
+                                    No limit once a time is locked
+                                @endif
+                            @else
+                                {{ $goingCount }} going
+                                @if ($event->max_participants)
+                                    of {{ $event->max_participants }}
+                                @else
+                                    · no limit
+                                @endif
+                            @endif
+                        </p>
+                    </div>
+                </div>
+                <x-ui.badge :tone="$event->visibility === 'public' ? 'pitch' : 'neutral'">
+                    {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
+                </x-ui.badge>
                 @if ($event->description)
-                    <p class="pt-2 text-gray-800 whitespace-pre-line">{{ $event->description }}</p>
+                    <p class="whitespace-pre-line text-sm text-ink">{{ $event->description }}</p>
                 @endif
-            </section>
+            </div>
+        </x-ui.card>
 
-            @if ($event->isPoll())
-                @include('events.partials.time-poll')
-            @else
-            <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-                <h3 class="font-semibold text-gray-900">Your RSVP</h3>
+        @if ($event->isPoll())
+            @include('events.partials.time-poll')
+        @else
+            <x-ui.card class="space-y-3 p-4 sm:p-6">
+                <h2 class="font-semibold text-ink">Your RSVP</h2>
                 @if ($full && $userStatus !== 'going')
-                    <p class="mt-2 text-sm text-amber-800">This event is full. You can still say Maybe or Not going.</p>
+                    <p class="text-sm text-warn">This game is full. You can still say Maybe or Not going.</p>
                 @endif
-                <x-input-error class="mt-2" :messages="$errors->get('status')" />
-                <form method="POST" action="{{ route('events.rsvp', $event) }}" class="mt-3 grid grid-cols-3 gap-2">
+                <x-ui.error :messages="$errors->get('status')" />
+                <form method="POST" action="{{ route('events.rsvp', $event) }}" class="grid grid-cols-3 gap-2">
                     @csrf
                     @foreach (['going' => 'Going', 'maybe' => 'Maybe', 'not_going' => 'Not going'] as $value => $label)
-                        <button
+                        <x-ui.button
                             type="submit"
                             name="status"
                             value="{{ $value }}"
-                            @disabled($value === 'going' && $full && $userStatus !== 'going')
-                            class="px-2 py-3 rounded-md text-sm font-semibold border {{ $userStatus === $value ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-800 border-gray-300' }} disabled:opacity-40"
-                        >{{ $label }}</button>
+                            :variant="$userStatus === $value ? 'primary' : 'secondary'"
+                            class="w-full px-2"
+                            :disabled="$value === 'going' && $full && $userStatus !== 'going'"
+                        >{{ $label }}</x-ui.button>
                     @endforeach
                 </form>
-            </section>
-            @endif
+            </x-ui.card>
+        @endif
 
-            @if ($event->isCreator(auth()->user()))
-                <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-3">
-                    <h3 class="font-semibold text-gray-900">Invite link</h3>
-                    <p class="text-sm text-gray-600">Paste this into WhatsApp. Friends can open it after they log in, including when the event is private.</p>
-                    <p class="break-all rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800">{{ $inviteUrl }}</p>
-                    <button
-                        type="button"
-                        class="w-full sm:w-auto px-4 py-3 rounded-md bg-gray-900 text-white text-sm font-semibold"
-                        onclick="navigator.clipboard.writeText(@js($inviteUrl)); this.textContent = 'Copied';"
-                    >Copy invite link</button>
-                    <div class="flex flex-col sm:flex-row gap-2 pt-2">
-                        <a href="{{ route('events.edit', $event) }}" class="inline-flex justify-center px-4 py-3 rounded-md border border-gray-300 text-sm font-semibold">Edit event</a>
-                        <form method="POST" action="{{ route('events.destroy', $event) }}" onsubmit="return confirm('Cancel this event?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="w-full px-4 py-3 rounded-md border border-red-300 text-red-700 text-sm font-semibold">Cancel event</button>
-                        </form>
+        @if ($event->isCreator(auth()->user()))
+            <x-ui.card class="space-y-3 p-4 sm:p-6">
+                <div class="flex items-start gap-3">
+                    <x-illustrations.empty variant="invites" class="hidden h-16 w-24 sm:block" />
+                    <div class="space-y-1">
+                        <h2 class="font-semibold text-ink">Invite link</h2>
+                        <p class="text-sm text-ink-muted">Paste this into WhatsApp. Anyone with the link can open the game after they log in, including a private one.</p>
                     </div>
-                </section>
-            @endif
+                </div>
+                <p class="break-all rounded-control bg-canvas px-3 py-2 text-sm text-ink ring-1 ring-line">{{ $inviteUrl }}</p>
+                <x-ui.button
+                    type="button"
+                    class="w-full sm:w-auto"
+                    onclick="navigator.clipboard.writeText(@js($inviteUrl)); this.textContent = 'Copied';"
+                >Copy invite link</x-ui.button>
+                <div class="flex flex-col gap-2 sm:flex-row">
+                    <x-ui.button variant="secondary" :href="route('events.edit', $event)">Edit game</x-ui.button>
+                    <form method="POST" action="{{ route('events.destroy', $event) }}" onsubmit="return confirm('Cancel this game?');">
+                        @csrf
+                        @method('DELETE')
+                        <x-ui.button type="submit" variant="danger" class="w-full">Cancel game</x-ui.button>
+                    </form>
+                </div>
+            </x-ui.card>
+        @endif
 
-            @unless ($event->isPoll())
-            <section class="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
-                <h3 class="font-semibold text-gray-900">Participants</h3>
-                @foreach ($groups as $group)
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">{{ $group['label'] }} · {{ $group['people']->count() }}</p>
-                        @if ($group['people']->isEmpty())
-                            <p class="mt-1 text-sm text-gray-400">No one yet</p>
-                        @else
-                            <ul class="mt-1 text-sm text-gray-800">
-                                @foreach ($group['people'] as $person)
-                                    <li>{{ $person->name }}</li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                @endforeach
-            </section>
-            @endunless
-        </div>
+        @unless ($event->isPoll())
+            <x-ui.section title="Participants">
+                <x-ui.card class="space-y-4 p-4 sm:p-6">
+                    @foreach ($groups as $group)
+                        <div class="space-y-2">
+                            <p class="text-xs font-semibold uppercase tracking-wide text-ink-muted">{{ $group['label'] }} · {{ $group['people']->count() }}</p>
+                            @if ($group['people']->isEmpty())
+                                <p class="text-sm text-ink-faint">No one yet</p>
+                            @else
+                                <ul class="space-y-2">
+                                    @foreach ($group['people'] as $person)
+                                        <li class="flex items-center gap-2 text-sm text-ink">
+                                            <x-ui.avatar :name="$person->name" class="h-7 w-7 text-[11px]" />
+                                            {{ $person->name }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
+                    @endforeach
+                </x-ui.card>
+            </x-ui.section>
+        @endunless
     </div>
 </x-app-layout>

@@ -1,38 +1,44 @@
-@php
-    $tone = $event->sportTone();
-@endphp
-
-<a href="{{ route('events.show', $event) }}" class="block bg-white rounded-lg shadow-sm px-4 py-4 hover:bg-gray-50">
-    <div class="flex items-start justify-between gap-3">
-        <h4 class="font-semibold text-gray-900">{{ $event->title }}</h4>
-        <span class="shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {{ $tone }}">{{ $event->sportLabel() }}</span>
-    </div>
-    @if ($event->isPoll())
-        <p class="mt-2">
-            <span class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900">Vote on a time</span>
+<a href="{{ route('events.show', $event) }}" class="block overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line transition duration-150 hover:shadow-lift motion-safe:hover:-translate-y-0.5">
+    <x-illustrations.sport :sport="$event->sportSelection()" />
+    <div class="space-y-2 px-4 py-4">
+        <div class="flex items-start justify-between gap-3">
+            <h3 class="font-semibold text-ink">{{ $event->title }}</h3>
+            <x-ui.sport-chip :event="$event" />
+        </div>
+        @if ($event->isPoll())
+            <x-ui.badge tone="warn">Vote on a time</x-ui.badge>
+            <p class="flex items-center gap-1.5 text-sm text-ink-muted">
+                <x-ui.icon name="clock" class="h-4 w-4" />
+                {{ $event->time_options_count }} time options
+            </p>
+        @else
+            <p class="flex items-center gap-1.5 text-sm text-ink-muted">
+                <x-ui.icon name="calendar" class="h-4 w-4" />
+                {{ $event->event_date->format('D j M, H:i') }}
+            </p>
+        @endif
+        <p class="flex items-center gap-1.5 text-sm text-ink-muted">
+            <x-ui.icon name="map-pin" class="h-4 w-4" />
+            {{ $event->location }}
         </p>
-        <p class="mt-2 text-sm text-gray-700">{{ $event->time_options_count }} time options</p>
-    @else
-        <p class="mt-2 text-sm text-gray-700">{{ $event->event_date->format('D j M, H:i') }}</p>
-    @endif
-    <p class="text-sm text-gray-600">{{ $event->location }}</p>
-    @php
-        $meta = [];
-        if ($event->isPoll()) {
-            if ($event->max_participants) {
-                $meta[] = 'max '.$event->max_participants.' once a time is chosen';
+        @php
+            $meta = [];
+            if ($event->isPoll()) {
+                if ($event->max_participants) {
+                    $meta[] = 'max '.$event->max_participants.' once a time is chosen';
+                }
+            } else {
+                $meta[] = $event->going_participants_count.' going';
+                if ($event->max_participants) {
+                    $meta[] = 'max '.$event->max_participants;
+                }
             }
-        } else {
-            $meta[] = $event->going_participants_count.' going';
-            if ($event->max_participants) {
-                $meta[] = 'max '.$event->max_participants;
+            if ($event->visibility === 'private') {
+                $meta[] = 'private';
             }
-        }
-        if ($event->visibility === 'private') {
-            $meta[] = 'private';
-        }
-    @endphp
-    @if ($meta !== [])
-        <p class="mt-2 text-xs text-gray-500">{{ implode(' · ', $meta) }}</p>
-    @endif
+        @endphp
+        @if ($meta !== [])
+            <p class="text-xs text-ink-faint">{{ implode(' · ', $meta) }}</p>
+        @endif
+    </div>
 </a>

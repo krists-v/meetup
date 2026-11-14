@@ -13,88 +13,89 @@
         @method('PUT')
     @endif
 
-    <div>
-        <x-input-label for="title" value="Title" />
-        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $editing ? $event->title : '')" required autofocus />
-        <x-input-error class="mt-2" :messages="$errors->get('title')" />
+    <div class="space-y-2">
+        <x-ui.label for="title" value="Title" />
+        <x-ui.input id="title" name="title" type="text" :value="old('title', $editing ? $event->title : '')" required autofocus placeholder="Thursday five-a-side" />
+        <x-ui.error :messages="$errors->get('title')" />
     </div>
 
     @include('events.partials.sport-picker')
 
     @if ($polling)
-        <p class="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">Friends are voting on a time. Lock a time from the event page. You can still edit the other details.</p>
+        <p class="rounded-control bg-warn-soft px-3 py-2 text-sm text-warn">Friends are voting on a time. Lock a time from the game page. The other details can still change.</p>
     @elseif ($editing)
-        <div>
-            <x-input-label for="event_date" value="Date and time" />
-            <x-text-input id="event_date" name="event_date" type="datetime-local" class="mt-1 block w-full" :value="old('event_date', $event->event_date->format('Y-m-d\TH:i'))" required />
-            <x-input-error class="mt-2" :messages="$errors->get('event_date')" />
+        <div class="space-y-2">
+            <x-ui.label for="event_date" value="Date and time" />
+            <x-ui.input id="event_date" name="event_date" type="datetime-local" :value="old('event_date', $event->event_date->format('Y-m-d\TH:i'))" required />
+            <x-ui.error :messages="$errors->get('event_date')" />
         </div>
     @else
-        <fieldset>
-            <legend class="block font-medium text-sm text-gray-700">When</legend>
-            <div class="mt-2 space-y-2">
-                <label class="flex items-start gap-2 text-sm text-gray-700">
-                    <input type="radio" name="schedule_type" value="fixed" class="mt-1 border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" x-model="schedule" />
+        <fieldset class="space-y-2">
+            <legend class="text-sm font-medium text-ink">When</legend>
+            <div class="space-y-2">
+                <label class="flex min-h-11 items-center gap-3 text-sm text-ink">
+                    <input type="radio" name="schedule_type" value="fixed" class="border-line text-pitch-700 focus:ring-pitch-600" x-model="schedule" />
                     <span>Set a date</span>
                 </label>
-                <label class="flex items-start gap-2 text-sm text-gray-700">
-                    <input type="radio" name="schedule_type" value="poll" class="mt-1 border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" x-model="schedule" />
+                <label class="flex min-h-11 items-center gap-3 text-sm text-ink">
+                    <input type="radio" name="schedule_type" value="poll" class="border-line text-pitch-700 focus:ring-pitch-600" x-model="schedule" />
                     <span>Let friends vote on a time</span>
                 </label>
             </div>
         </fieldset>
 
-        <div x-show="schedule === 'fixed'" x-cloak>
-            <x-input-label for="event_date" value="Date and time" />
-            <x-text-input id="event_date" name="event_date" type="datetime-local" class="mt-1 block w-full" :value="old('event_date')" x-bind:required="schedule === 'fixed'" />
-            <x-input-error class="mt-2" :messages="$errors->get('event_date')" />
+        <div x-show="schedule === 'fixed'" x-cloak class="space-y-2">
+            <x-ui.label for="event_date" value="Date and time" />
+            <x-ui.input id="event_date" name="event_date" type="datetime-local" :value="old('event_date')" x-bind:required="schedule === 'fixed'" />
+            <x-ui.error :messages="$errors->get('event_date')" />
         </div>
 
         <div x-show="schedule === 'poll'" x-cloak class="space-y-3">
-            <x-input-label value="Time options" />
+            <x-illustrations.empty variant="votes" class="h-24 w-full" />
+            <x-ui.label value="Time options" />
             <template x-for="(time, index) in times" :key="index">
-                <input type="datetime-local" class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" x-model="times[index]" :name="'options[' + index + ']'" />
+                <input type="datetime-local" class="block w-full rounded-control border-line text-base text-ink focus:border-pitch-600 focus:ring-pitch-600" x-model="times[index]" :name="'options[' + index + ']'" />
             </template>
-            <button type="button" class="text-sm font-semibold text-gray-700 underline" @click="times.push('')">Add another time</button>
-            <p class="text-xs text-gray-500">Add at least two different times. Friends vote Yes, Maybe, or No on each one.</p>
-            <x-input-error class="mt-2" :messages="$errors->get('options')" />
+            <x-ui.button type="button" variant="ghost" x-on:click="times.push('')">Add another time</x-ui.button>
+            <p class="text-sm text-ink-muted">Add at least two different times. Friends vote Yes, Maybe, or No on each one.</p>
+            <x-ui.error :messages="$errors->get('options')" />
         </div>
     @endif
 
-    <div>
-        <x-input-label for="location" value="Location" />
-        <x-text-input id="location" name="location" type="text" class="mt-1 block w-full" :value="old('location', $editing ? $event->location : '')" required placeholder="Park, court, or address" />
-        <x-input-error class="mt-2" :messages="$errors->get('location')" />
+    <div class="space-y-2">
+        <x-ui.label for="location" value="Location" />
+        <x-ui.input id="location" name="location" type="text" :value="old('location', $editing ? $event->location : '')" required placeholder="Park, court, or address" />
+        <x-ui.error :messages="$errors->get('location')" />
     </div>
 
-    <div>
-        <x-input-label for="max_participants" value="Max participants (optional)" />
-        <x-text-input id="max_participants" name="max_participants" type="number" min="2" class="mt-1 block w-full" :value="old('max_participants', $editing ? $event->max_participants : '')" />
-        <p class="mt-1 text-xs text-gray-500">Limits how many people can mark Going. Maybe is always allowed.</p>
-        <x-input-error class="mt-2" :messages="$errors->get('max_participants')" />
+    <div class="space-y-2">
+        <x-ui.label for="max_participants" value="Max players (optional)" />
+        <x-ui.input id="max_participants" name="max_participants" type="number" min="2" :value="old('max_participants', $editing ? $event->max_participants : '')" />
+        <p class="text-sm text-ink-muted">Limits how many people can mark Going. Maybe is always allowed.</p>
+        <x-ui.error :messages="$errors->get('max_participants')" />
     </div>
 
-    <div>
-        <x-input-label for="description" value="Description (optional)" />
-        <textarea id="description" name="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">{{ old('description', $editing ? $event->description : '') }}</textarea>
-        <x-input-error class="mt-2" :messages="$errors->get('description')" />
+    <div class="space-y-2">
+        <x-ui.label for="description" value="Notes (optional)" />
+        <x-ui.textarea id="description" name="description" rows="3" placeholder="Bring a light shirt. Meet by the gate.">{{ old('description', $editing ? $event->description : '') }}</x-ui.textarea>
+        <x-ui.error :messages="$errors->get('description')" />
     </div>
 
-    <fieldset>
-        <legend class="block font-medium text-sm text-gray-700">Visibility</legend>
-        <div class="mt-2 space-y-2">
-            @foreach (['public' => 'Public — listed for every logged-in friend', 'private' => 'Private — only you and people with the invite link'] as $value => $label)
-                <label class="flex items-start gap-2 text-sm text-gray-700">
-                    <input type="radio" name="visibility" value="{{ $value }}" class="mt-1 border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('visibility', $editing ? $event->visibility : 'public') === $value) />
+    <fieldset class="space-y-2">
+        <legend class="text-sm font-medium text-ink">Who can see it</legend>
+        <div class="space-y-2">
+            @foreach (['public' => 'Public. Listed for every logged-in friend.', 'private' => 'Private. Only you and people with the invite link.'] as $value => $label)
+                <label class="flex min-h-11 items-start gap-3 text-sm text-ink">
+                    <input type="radio" name="visibility" value="{{ $value }}" class="mt-1 border-line text-pitch-700 focus:ring-pitch-600" @checked(old('visibility', $editing ? $event->visibility : 'public') === $value) />
                     <span>{{ $label }}</span>
                 </label>
             @endforeach
         </div>
-        <x-input-error class="mt-2" :messages="$errors->get('visibility')" />
+        <x-ui.error :messages="$errors->get('visibility')" />
     </fieldset>
 
-    <div class="flex items-center gap-3">
-        <x-primary-button>{{ $editing ? 'Save changes' : 'Create event' }}</x-primary-button>
-        <a href="{{ $editing ? route('events.show', $event) : route('dashboard') }}" class="text-sm text-gray-600 underline">Cancel</a>
+    <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+        <x-ui.button variant="ghost" :href="$editing ? route('events.show', $event) : route('dashboard')">Cancel</x-ui.button>
+        <x-ui.button type="submit">{{ $editing ? 'Save changes' : 'Create game' }}</x-ui.button>
     </div>
 </form>
