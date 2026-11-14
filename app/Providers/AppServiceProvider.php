@@ -11,6 +11,20 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
+     * Use Resend only when a key is present. Otherwise keep the log mailer so a missing key cannot take the app down.
+     */
+    public static function resolveMailer(?string $mailer, ?string $resendKey): string
+    {
+        $mailer = filled($mailer) ? $mailer : 'log';
+
+        if ($mailer === 'resend' && blank($resendKey)) {
+            return 'log';
+        }
+
+        return $mailer;
+    }
+
+    /**
      * Register any application services.
      */
     public function register(): void
@@ -37,10 +51,11 @@ class AppServiceProvider extends ServiceProvider
 
             return (new MailMessage)
                 ->subject('Reset your Varza password')
-                ->greeting('Reset your password')
-                ->line('We got a request to reset the password for your Varza account. This link is good for '.$minutes.' minutes.')
+                ->greeting('Choose a new password')
+                ->line('Someone asked to reset the password for your Varza account. This link is good for '.$minutes.' minutes.')
                 ->action('Choose a new password', $url)
-                ->line('If you did not ask for this, you can ignore the email. Your password stays as it is.');
+                ->line('If you did not ask for this, you can ignore the email. Your password stays as it is.')
+                ->salutation('See you on the pitch.');
         });
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
@@ -49,7 +64,8 @@ class AppServiceProvider extends ServiceProvider
                 ->greeting('Confirm your email')
                 ->line('Tap the button so we know this inbox belongs to your Varza account.')
                 ->action('Confirm email', $url)
-                ->line('If you did not create a Varza account, you can ignore this email.');
+                ->line('If you did not create a Varza account, you can ignore this email.')
+                ->salutation('See you on the pitch.');
         });
     }
 }

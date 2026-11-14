@@ -38,7 +38,12 @@ class BrandTest extends TestCase
         $user = User::factory()->create();
         $mail = (new ResetPassword('token'))->toMail($user);
 
+        $html = $mail->render();
+
         $this->assertSame('Reset your Varza password', $mail->subject);
         $this->assertStringContainsString('Varza', $mail->introLines[0]);
+        $this->assertStringContainsString('Varza', $html);
+        $this->assertStringContainsString('#1c633b', $html);
+        $this->assertStringContainsString('Choose a new password', $html);
     }
 }

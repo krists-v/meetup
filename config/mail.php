@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+
 return [
 
     /*
@@ -14,7 +16,10 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'log'),
+    'default' => AppServiceProvider::resolveMailer(
+        env('MAIL_MAILER', 'log'),
+        env('RESEND_API_KEY'),
+    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -63,6 +68,7 @@ return [
 
         'resend' => [
             'transport' => 'resend',
+            'key' => env('RESEND_API_KEY'),
         ],
 
         'sendmail' => [

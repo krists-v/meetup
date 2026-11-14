@@ -17,4 +17,8 @@
 
         <x-ui.button type="submit" class="w-full">{{ __('Send reset link') }}</x-ui.button>
     </form>
+
+    <p class="mt-4 text-sm">
+        <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('login') }}">Back to log in</a>
+    </p>
 </x-guest-layout>
