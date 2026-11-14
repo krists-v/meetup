@@ -9,7 +9,12 @@
     $inviteUrl = route('events.invite', $event->invite_token);
 @endphp
 
-<x-app-layout>
+<x-app-layout
+    :title="$preview->title"
+    :description="$preview->description"
+    :image="$preview->image"
+    :url="$preview->url"
+>
     <x-slot name="header">
         <x-ui.page-header :title="$event->title" subtitle="Hosted by {{ $event->creator->name }}">
             <x-slot name="actions">

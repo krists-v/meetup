@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\EventTimeOption;
 use App\Models\EventTimeVote;
 use App\Models\User;
+use App\Support\LinkPreview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -92,6 +93,10 @@ class EventController extends Controller
 
     public function show(Request $request, Event $event): View
     {
+        if ($request->user() === null) {
+            return $this->preview($request, $event, $event->visibility === 'public' || $this->inviteTokenMatches($event, $request->query('token')));
+        }
+
         $this->authorize('view', $event);
 
         $event->load(['creator', 'participants', 'timeOptions.votes.user']);
@@ -99,6 +104,7 @@ class EventController extends Controller
         return view('events.show', [
             'event' => $event,
             'userStatus' => $event->getUserStatus($request->user()),
+            'preview' => LinkPreview::forEvent($event, true),
         ]);
     }
 
@@ -129,9 +135,14 @@ class EventController extends Controller
             ->with('status', 'Game cancelled.');
     }
 
-    public function invite(Request $request, string $token): RedirectResponse
+    public function invite(Request $request, string $token): RedirectResponse|View
     {
         $event = Event::where('invite_token', $token)->firstOrFail();
+
+        if ($request->user() === null) {
+            return $this->preview($request, $event, true);
+        }
+
         $user = $request->user();
 
         if (! $event->isCreator($user) && $event->getUserStatus($user) === null) {
@@ -242,5 +253,24 @@ class EventController extends Controller
         return redirect()
             ->route('events.show', $event)
             ->with('status', 'Time locked. Yes votes are marked Going while there is room.');
+    }
+
+    private function preview(Request $request, Event $event, bool $revealed): View
+    {
+        redirect()->setIntendedUrl($request->fullUrl());
+
+        return view('events.preview', [
+            'preview' => LinkPreview::forEvent($event, $revealed),
+            'event' => $revealed ? $event : null,
+        ]);
+    }
+
+    private function inviteTokenMatches(Event $event, mixed $token): bool
+    {
+        if (! is_string($token) || $token === '' || strlen($token) !== strlen($event->invite_token)) {
+            return false;
+        }
+
+        return hash_equals($event->invite_token, $token);
     }
 }

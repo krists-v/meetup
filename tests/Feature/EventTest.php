@@ -100,7 +100,8 @@ class EventTest extends TestCase
         ]);
 
         $this->get(route('events.invite', $event->invite_token))
-            ->assertRedirect(route('login'));
+            ->assertOk()
+            ->assertSee('Invite-only tennis');
 
         $this->actingAs($friend)
             ->get(route('events.invite', $event->invite_token))
