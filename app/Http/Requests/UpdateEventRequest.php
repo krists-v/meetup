@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Event;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateEventRequest extends FormRequest
 {
@@ -45,7 +46,13 @@ class UpdateEventRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'sport' => ['required', 'in:'.implode(',', array_keys(Event::SPORTS))],
-            'custom_sport' => ['nullable', 'required_if:sport,other', 'string', 'max:50'],
+            'custom_sport' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::requiredIf(fn () => $this->input('sport') === 'other'
+                    && ! ($event instanceof Event && $event->hasUnspecifiedSport())),
+            ],
             'event_date' => $polling
                 ? ['exclude']
                 : ['required', 'date'],

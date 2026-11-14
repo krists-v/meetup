@@ -91,6 +91,11 @@ class Event extends Model
         return '';
     }
 
+    public function hasUnspecifiedSport(): bool
+    {
+        return $this->sportSelection() === 'other' && $this->customSportInput() === '';
+    }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

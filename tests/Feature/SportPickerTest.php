@@ -148,6 +148,52 @@ class SportPickerTest extends TestCase
             ->assertSee('Curling');
     }
 
+    public function test_legacy_other_event_can_be_edited_without_a_custom_name(): void
+    {
+        $user = User::factory()->create();
+        $event = Event::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Mystery game',
+            'sport_type' => 'other',
+            'sport' => 'other',
+            'custom_sport' => null,
+            'visibility' => 'public',
+        ]);
+
+        $this->actingAs($user)
+            ->put(route('events.update', $event), $this->payload('Mystery game renamed', [
+                'sport' => 'other',
+                'custom_sport' => '',
+                'event_date' => $event->event_date->format('Y-m-d\TH:i'),
+                'location' => $event->location,
+                'visibility' => 'public',
+            ]))
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('events.show', $event));
+
+        $event->refresh();
+        $this->assertSame('Mystery game renamed', $event->title);
+        $this->assertSame('other', $event->sport);
+        $this->assertNull($event->custom_sport);
+
+        $named = Event::factory()->create([
+            'user_id' => $user->id,
+            'sport_type' => 'football',
+            'sport' => 'football',
+            'visibility' => 'public',
+        ]);
+
+        $this->actingAs($user)
+            ->put(route('events.update', $named), $this->payload($named->title, [
+                'sport' => 'other',
+                'custom_sport' => '',
+                'event_date' => $named->event_date->format('Y-m-d\TH:i'),
+                'location' => $named->location,
+                'visibility' => 'public',
+            ]))
+            ->assertSessionHasErrors('custom_sport');
+    }
+
     /**
      * @param  array<string, mixed>  $overrides
      * @return array<string, mixed>
