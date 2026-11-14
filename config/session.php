@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\AppServiceProvider;
 use Illuminate\Support\Str;
 
 return [
@@ -169,7 +170,10 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => AppServiceProvider::secureSessionCookie(
+        (string) env('APP_ENV', 'production'),
+        env('SESSION_SECURE_COOKIE'),
+    ),
 
     /*
     |--------------------------------------------------------------------------

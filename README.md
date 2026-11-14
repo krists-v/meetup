@@ -72,8 +72,9 @@ Set these variables on the service:
 | `RESEND_API_KEY` | API key from Resend. Leave it empty and mail is written to the log instead of failing. |
 | `MAIL_FROM_ADDRESS` | a sender address on a domain you have verified in Resend |
 | `MAIL_FROM_NAME` | `Varza` |
+| `CONTACT_EMAIL` | address on the privacy and terms pages |
 
-`APP_URL` is what invite links and password-reset links use, so set it before sharing links.
+`APP_URL` is what invite links and password-reset links use, so set it before sharing links. In production the app forces HTTPS URLs and marks the session cookie secure. Railway's proxy headers are trusted, so that HTTPS check sees the original request.
 
 Password reset emails use the Varza mail theme. Private games are shared with a link, not an email address, so Varza does not send an invite email.
 

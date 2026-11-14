@@ -19,6 +19,7 @@
                 <x-ui.card class="px-5 py-6 sm:px-6">
                     {{ $slot }}
                 </x-ui.card>
+                <x-ui.footer class="mt-4" />
             </main>
         </div>
     </body>

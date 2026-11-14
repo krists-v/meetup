@@ -4,12 +4,33 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public static function shouldForceHttps(string $environment): bool
+    {
+        return $environment === 'production';
+    }
+
+    /**
+     * Secure cookies in production unless SESSION_SECURE_COOKIE is set explicitly.
+     */
+    public static function secureSessionCookie(string $environment, mixed $override): bool
+    {
+        if ($override !== null) {
+            return filter_var($override, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return $environment === 'production';
+    }
+
     /**
      * Use Resend only when a key is present. Otherwise keep the log mailer so a missing key cannot take the app down.
      */
@@ -37,9 +58,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->app->environment('production')) {
+        if (self::shouldForceHttps($this->app->environment())) {
             URL::forceScheme('https');
         }
+
+        $this->configureRateLimiting();
 
         ResetPassword::toMailUsing(function (object $notifiable, string $token) {
             $url = url(route('password.reset', [
@@ -66,6 +89,27 @@ class AppServiceProvider extends ServiceProvider
                 ->action('Confirm email', $url)
                 ->line('If you did not create a Varza account, you can ignore this email.')
                 ->salutation('See you on the pitch.');
+        });
+    }
+
+    private function configureRateLimiting(): void
+    {
+        RateLimiter::for('register', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
+        RateLimiter::for('password-email', function (Request $request) {
+            $email = Str::transliterate(Str::lower((string) $request->input('email')));
+
+            return Limit::perMinute(5)->by($email.'|'.$request->ip());
+        });
+
+        RateLimiter::for('writes', function (Request $request) {
+            return Limit::perMinute(30)->by((string) ($request->user()?->id ?: $request->ip()));
+        });
+
+        RateLimiter::for('events', function (Request $request) {
+            return Limit::perHour(10)->by((string) ($request->user()?->id ?: $request->ip()));
         });
     }
 }
