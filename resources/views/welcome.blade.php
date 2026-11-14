@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        @include('partials.meta', ['title' => 'Varza'])
+        @include('partials.meta', [
+            'title' => 'Varza',
+            'description' => 'Get the crew together. Pick a time, lock the pitch, play.',
+            'url' => url('/'),
+        ])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="bg-canvas font-sans text-ink antialiased">

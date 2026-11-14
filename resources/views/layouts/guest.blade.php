@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        @include('partials.meta', ['title' => $title ?? config('app.name', 'Varza')])
+        @include('partials.meta', [
+            'title' => $title ?? null,
+            'description' => $description ?? null,
+            'image' => $image ?? null,
+            'url' => $url ?? null,
+        ])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="bg-pitch-wash font-sans text-ink antialiased">
