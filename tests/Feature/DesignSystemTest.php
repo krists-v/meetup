@@ -209,10 +209,12 @@ class DesignSystemTest extends TestCase
         $this->actingAs($user)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('When')
-            ->assertSee('Thursday 10 December 2026, 18:00')
+            ->assertSee('Date')
+            ->assertSee('Thu 10 Dec')
+            ->assertSee('Time')
+            ->assertSee('18:00')
             ->assertSee('Where')
-            ->assertSee('Places')
+            ->assertSee('Spots')
             ->assertSee('https://www.google.com/maps/search/?api=1&amp;query=Park%20pitch', false)
             ->assertSee('bg-activity-padel-soft', false);
     }

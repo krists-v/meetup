@@ -77,6 +77,7 @@ class UpdateEventRequest extends FormRequest
         return [
             'setting.in' => 'Pick indoors or outdoors.',
             'level.in' => 'Pick all levels, beginner, intermediate, advanced, or pro.',
+            'max_participants.min' => 'A game needs at least two spots.',
         ];
     }
 }

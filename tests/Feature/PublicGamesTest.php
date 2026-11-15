@@ -48,7 +48,7 @@ class PublicGamesTest extends TestCase
 
         $this->get(route('games.index'))
             ->assertOk()
-            ->assertSee('Public games')
+            ->assertSee('What\'s on')
             ->assertSee('Thursday five-a-side')
             ->assertSee('Football')
             ->assertSee($public->event_date->format('D j M, H:i'))
@@ -66,7 +66,7 @@ class PublicGamesTest extends TestCase
         $this->actingAs($host)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('Public games')
+            ->assertSee('What\'s on', false)
             ->assertSee(route('games.index'), false);
     }
 
@@ -197,7 +197,7 @@ class PublicGamesTest extends TestCase
         $this->get(route('games.index', ['where' => 'riga%']))
             ->assertOk()
             ->assertDontSee('Saturday padel')
-            ->assertSee('No games match');
+            ->assertSee('Nothing for that.');
 
         $this->actingAs($viewer)
             ->get(route('dashboard', ['sport' => 'padel']))
@@ -205,7 +205,7 @@ class PublicGamesTest extends TestCase
             ->assertSee('My private padel')
             ->assertSee('Saturday padel')
             ->assertDontSee('Today football')
-            ->assertSee('My upcoming events');
+            ->assertSee('Your next game');
     }
 
     public function test_im_in_sends_a_guest_through_login_and_joins_the_game(): void

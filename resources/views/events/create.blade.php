@@ -1,9 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-ui.page-header title="Plan a game" subtitle="A title, a sport, and a place. Set the time, or let the crew vote." />
+        <x-ui.page-header title="Start a game" subtitle="A name, an activity, and a place. Set a time, or let people pick one." />
     </x-slot>
 
-    <x-ui.card class="p-4 sm:p-6">
-        @include('events.partials.form')
-    </x-ui.card>
+    @include('events.partials.form')
+
+    <div class="h-16 sm:hidden" aria-hidden="true"></div>
+    <div class="sticky-action fixed inset-x-0 z-40 border-t border-line bg-white p-3 sm:hidden" style="bottom: calc(3.5rem + env(safe-area-inset-bottom))">
+        <x-ui.button type="submit" form="game-form" class="w-full">Start the game</x-ui.button>
+    </div>
 </x-app-layout>

@@ -27,7 +27,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-ui.button type="submit">{{ __('Save') }}</x-ui.button>
+            <x-ui.button type="submit" variant="secondary">{{ __('Save password') }}</x-ui.button>
 
             @if (session('status') === 'password-updated')
                 <p

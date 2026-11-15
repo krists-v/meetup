@@ -50,7 +50,7 @@ class PendingJoin
         if ($event->isPoll()) {
             return redirect()
                 ->route('events.show', $event)
-                ->with('status', 'Vote on a time, then say if you are going.');
+                ->with('status', 'Pick a time first. Then say you\'re in.');
         }
 
         if ($event->getUserStatus($user) !== 'going') {
@@ -58,7 +58,7 @@ class PendingJoin
                 return redirect()
                     ->route('events.show', $event)
                     ->withErrors([
-                        'status' => 'This game is full. You can still say Maybe or Not going.',
+                        'status' => 'It\'s full. Join the waitlist, or say maybe.',
                     ]);
             }
 
@@ -69,7 +69,7 @@ class PendingJoin
 
         return redirect()
             ->route('events.show', $event)
-            ->with('status', 'You are in.');
+            ->with('status', 'You\'re in.');
     }
 
     private static function canJoin(Event $event, User $user, mixed $token): bool

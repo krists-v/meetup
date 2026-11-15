@@ -54,7 +54,7 @@ class GameFlowTest extends TestCase
         $this->actingAs($second)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSeeInOrder(['My upcoming events', 'Thursday five-a-side', 'Public upcoming events']);
+            ->assertSeeInOrder(['Joined', 'Thursday five-a-side', 'Open near you']);
 
         $this->actingAs($first)
             ->get(route('events.show', $event))

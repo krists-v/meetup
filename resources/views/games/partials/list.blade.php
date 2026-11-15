@@ -6,14 +6,16 @@
     @empty
         <x-ui.empty-state
             illustration="public"
-            :title="$filters->active() ? 'No games match' : 'Nothing public right now'"
-            :description="$filters->active() ? 'Try another sport, a different day, or a wider search.' : 'When someone plans a public game, it shows up here.'"
+            :title="$filters->active() ? 'Nothing for that.' : 'Quiet around here.'"
+            :description="$filters->active() ? 'Try another activity, or a wider day.' : 'Start something, or check back this weekend.'"
         >
-            @if ($filters->active())
-                <x-slot name="action">
+            <x-slot name="action">
+                @if ($filters->active())
                     <x-ui.button variant="secondary" :href="route('games.index')">Clear filters</x-ui.button>
-                </x-slot>
-            @endif
+                @else
+                    <x-ui.button :href="auth()->check() ? route('events.create') : route('register')">Start a game</x-ui.button>
+                @endif
+            </x-slot>
         </x-ui.empty-state>
     @endforelse
 </div>
