@@ -8,11 +8,13 @@ use App\Models\Event;
 use App\Models\EventTimeOption;
 use App\Models\EventTimeVote;
 use App\Models\User;
+use App\Support\GameCalendar;
 use App\Support\GameFilters;
 use App\Support\LinkPreview;
 use App\Support\PendingJoin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
@@ -30,7 +32,7 @@ class EventController extends Controller
                 $query->where('user_id', $user->id)
                     ->orWhereHas('participants', function ($query) use ($user) {
                         $query->where('users.id', $user->id)
-                            ->whereIn('event_user.status', ['going', 'maybe', 'not_going', 'invited']);
+                            ->whereIn('event_user.status', ['going', 'maybe', 'not_going', 'invited', 'waitlist']);
                     });
             })
             ->orderBy('event_date')
@@ -164,6 +166,11 @@ class EventController extends Controller
 
         $this->authorize('view', $event);
 
+        $request->user()->unreadNotifications
+            ->filter(fn ($notice) => (int) ($notice->data['event_id'] ?? 0) === $event->id)
+            ->each->markAsRead();
+        $request->user()->unsetRelation('unreadNotifications');
+
         $event->load(['creator', 'participants', 'timeOptions.votes.user']);
 
         return view('events.show', [
@@ -182,11 +189,57 @@ class EventController extends Controller
 
     public function update(UpdateEventRequest $request, Event $event): RedirectResponse
     {
+        $previousLimit = $event->max_participants;
+
         $event->update($request->validated());
+        $event->refresh();
+
+        $raised = $event->max_participants === null
+            ? $previousLimit !== null
+            : $previousLimit !== null && $event->max_participants > $previousLimit;
+
+        if ($raised) {
+            $event->promoteWaitlist();
+        }
 
         return redirect()
             ->route('events.show', $event)
             ->with('status', 'Game updated.');
+    }
+
+    public function repeat(Event $event): RedirectResponse
+    {
+        $this->authorize('update', $event);
+        abort_if($event->isPoll(), 403);
+
+        $copy = $event->replicate(['invite_token']);
+        $copy->event_date = $event->event_date->copy()->addDays(7);
+        $copy->invite_token = null;
+        $copy->save();
+        $copy->participants()->attach($event->user_id, ['status' => 'going']);
+
+        return redirect()
+            ->route('events.edit', $copy)
+            ->with('status', 'Same time next week is ready. Change anything, then save.');
+    }
+
+    public function calendar(Request $request, Event $event): Response
+    {
+        abort_if($event->isPoll(), 404);
+
+        $user = $request->user();
+        $allowed = $event->visibility === 'public'
+            || $event->matchesInviteToken($request->query('token'))
+            || ($user !== null && ($event->isCreator($user) || $event->participants()->where('users.id', $user->id)->exists()));
+
+        abort_unless($allowed, $user === null ? 404 : 403);
+
+        $calendar = GameCalendar::for($event);
+
+        return response($calendar->ics(), 200, [
+            'Content-Type' => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="varza-game.ics"',
+        ]);
     }
 
     public function destroy(Event $event): RedirectResponse
@@ -224,25 +277,46 @@ class EventController extends Controller
         }
 
         $validated = $request->validate([
-            'status' => ['required', 'in:going,maybe,not_going'],
+            'status' => ['required', 'in:going,maybe,not_going,waitlist'],
         ]);
 
         $status = $validated['status'];
         $current = $event->getUserStatus($request->user());
 
+        if ($status === 'waitlist' && $current === 'going') {
+            return back();
+        }
+
         if ($status === 'going' && $current !== 'going' && $event->hasReachedCapacity()) {
             return back()
                 ->withErrors([
-                    'status' => 'This game is full. You can still say Maybe or Not going.',
+                    'status' => 'This game is full. Join the waitlist, or say Maybe or Not going.',
                 ])
                 ->withInput();
+        }
+
+        if ($status === 'waitlist' && ! $event->hasReachedCapacity()) {
+            $status = 'going';
         }
 
         $event->participants()->syncWithoutDetaching([
             $request->user()->id => ['status' => $status],
         ]);
 
-        return back()->with('status', 'You are on the list.');
+        if ($status === 'waitlist' && $current !== 'waitlist') {
+            $event->participants()->updateExistingPivot($request->user()->id, [
+                'created_at' => now(),
+            ]);
+        }
+
+        if ($current === 'going' && $status !== 'going') {
+            $event->promoteWaitlist();
+        }
+
+        return back()->with(
+            'status',
+            $status === 'waitlist' ? 'You are on the waitlist.' : 'You are on the list.',
+        );
     }
 
     public function vote(Request $request, Event $event, EventTimeOption $option): RedirectResponse
