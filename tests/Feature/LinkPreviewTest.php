@@ -17,7 +17,7 @@ class LinkPreviewTest extends TestCase
             ->assertOk()
             ->assertSee('property="og:site_name" content="Varza"', false)
             ->assertSee('property="og:title" content="Varza"', false)
-            ->assertSee('property="og:description" content="Get the crew together. Pick a time, lock the pitch, play."', false)
+            ->assertSee('property="og:description" content="Bored at home? See what&#039;s on near you and go play."', false)
             ->assertSee('property="og:image" content="'.asset('images/og/default.png').'"', false)
             ->assertSee('property="og:url" content="'.url('/').'"', false)
             ->assertSee('name="twitter:card" content="summary_large_image"', false)

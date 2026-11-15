@@ -1,6 +1,6 @@
 @php
     $previewTitle = $title ?? 'Varza';
-    $previewDescription = $description ?? 'Get the crew together. Pick a time, lock the pitch, play.';
+    $previewDescription = $description ?? \App\Support\LinkPreview::page()->description;
     $previewImage = $image ?? \App\Support\LinkPreview::image('default');
     $previewUrl = $url ?? url()->current();
 @endphp

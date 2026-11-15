@@ -17,7 +17,7 @@ class LinkPreview
     {
         return new self(
             title: $title ?: 'Varza',
-            description: $description ?: 'Get the crew together. Pick a time, lock the pitch, play.',
+            description: $description ?: 'Bored at home? See what\'s on near you and go play.',
             image: self::image('default'),
             url: $url ?: url()->current(),
         );

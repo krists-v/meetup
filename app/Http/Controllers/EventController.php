@@ -20,6 +20,25 @@ use Illuminate\View\View;
 
 class EventController extends Controller
 {
+    public function home(): View|RedirectResponse
+    {
+        if (auth()->check()) {
+            return redirect()->route('dashboard');
+        }
+
+        $weekendGames = (new GameFilters(null, 'weekend', null, null, null, null))
+            ->apply(Event::query())
+            ->with('creator')
+            ->withCount(['goingParticipants', 'timeOptions'])
+            ->orderBy('event_date')
+            ->limit(6)
+            ->get();
+
+        return view('welcome', [
+            'weekendGames' => $weekendGames,
+        ]);
+    }
+
     public function dashboard(Request $request): View
     {
         $user = $request->user();

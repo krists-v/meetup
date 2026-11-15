@@ -60,7 +60,7 @@ class PublicGamesTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('See public games')
+            ->assertSee('See what\'s on', false)
             ->assertSee(route('games.index'), false);
 
         $this->actingAs($host)
