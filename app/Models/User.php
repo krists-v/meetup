@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_path',
+        'favorite_sports',
     ];
 
     /**
@@ -46,7 +49,24 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'favorite_sports' => 'array',
         ];
+    }
+
+    public function avatarUrl(): ?string
+    {
+        if (blank($this->avatar_path)) {
+            return null;
+        }
+
+        return route('avatars.show', $this).'?v='.$this->updated_at?->getTimestamp();
+    }
+
+    public function deleteAvatarFile(): void
+    {
+        if (filled($this->avatar_path)) {
+            Storage::disk('avatars')->delete($this->avatar_path);
+        }
     }
 
     public function createdEvents(): HasMany

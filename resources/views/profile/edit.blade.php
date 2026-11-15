@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-ui.page-header title="Profile" subtitle="The name friends see, and the password that keeps your account yours." />
+        <x-ui.page-header title="Profile" subtitle="Your name, photo, and the sports you play." />
     </x-slot>
 
     <div class="space-y-4">

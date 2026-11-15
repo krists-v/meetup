@@ -30,7 +30,7 @@
                 @forelse ($option->votes->sortBy('user.name') as $vote)
                     <li class="flex items-center justify-between gap-3 py-2">
                         <span class="flex items-center gap-2">
-                            <x-ui.avatar :name="$vote->user->name" class="h-7 w-7 text-[11px]" />
+                            <x-ui.avatar :name="$vote->user->name" :user="$vote->user" class="h-7 w-7 text-[11px]" />
                             {{ $vote->user->name }}
                         </span>
                         <span @class([

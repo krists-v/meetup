@@ -171,7 +171,7 @@ class EventController extends Controller
             ->each->markAsRead();
         $request->user()->unsetRelation('unreadNotifications');
 
-        $event->load(['creator', 'participants', 'timeOptions.votes.user']);
+        $event->load(['creator', 'participants', 'comments.user', 'timeOptions.votes.user']);
 
         return view('events.show', [
             'event' => $event,

@@ -132,6 +132,34 @@ class Event extends Model
         return $this->participants()->wherePivot('status', 'not_going');
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->orderBy('created_at')->orderBy('id');
+    }
+
+    public function shareUrl(): string
+    {
+        if ($this->visibility === 'private') {
+            return route('events.invite', $this->invite_token);
+        }
+
+        return route('events.show', $this);
+    }
+
+    public function shareText(): string
+    {
+        $when = $this->isPoll()
+            ? 'Time still to be chosen'
+            : $this->event_date->timezone(config('app.timezone'))->format('D j M, H:i');
+
+        return $this->title.'. '.$this->sportLabel().', '.$when.', '.$this->location.'. '.$this->shareUrl();
+    }
+
+    public function whatsAppUrl(): string
+    {
+        return 'https://wa.me/?text='.rawurlencode($this->shareText());
+    }
+
     public function isCreator(User $user): bool
     {
         return $this->user_id === $user->id;

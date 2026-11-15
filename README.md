@@ -50,7 +50,7 @@ The database defaults to SQLite at `database/database.sqlite`. No other services
 php artisan test
 ```
 
-Feature tests cover creating an event, public versus private visibility, joining through an invite link, RSVP capacity, the waitlist and its promotion email, calendar files, repeating a game, creator-only edit and delete, and time polls (voting, private visibility, and locking with the capacity limit).
+Feature tests cover creating an event, public versus private visibility, joining through an invite link, RSVP capacity, the waitlist and its promotion email, calendar files, repeating a game, WhatsApp sharing, profile photos and favorite sports, game comments, creator-only edit and delete, and time polls (voting, private visibility, and locking with the capacity limit).
 
 Laravel Boost is a dev dependency for Cursor. Its generated guidelines are in `AGENTS.md`, with skills and MCP config under `.cursor/`. Production installs skip dev dependencies, so Boost is not part of the Railway image.
 
@@ -85,11 +85,11 @@ Password reset emails use the Varza mail theme. Private games are shared with a 
 
 ### SQLite on a volume
 
-Leave `DATABASE_URL` unset. The container stores the database at `/data/database.sqlite`. In the Railway service, add a volume mounted at `/data` so the file survives deploys and restarts. Use one instance. SQLite does not suit multiple replicas writing at once.
+Leave `DATABASE_URL` unset. The container stores the database at `/data/database.sqlite` and profile photos at `/data/avatars`. In the Railway service, add a volume mounted at `/data` so both survive deploys and restarts. Photos are limited to 2 MB. When PHP GD is available, Varza resizes them to 256 pixels. Use one instance. SQLite does not suit multiple replicas writing at once.
 
 ### Postgres
 
-Add the Railway Postgres plugin. It sets `DATABASE_URL`. Do not set `DB_CONNECTION=sqlite`. On boot the app sees `DATABASE_URL`, uses the Postgres connection, and migrates. The Railway URL's `sslmode` is honoured. You do not need the `/data` volume in this mode.
+Add the Railway Postgres plugin. It sets `DATABASE_URL`. Do not set `DB_CONNECTION=sqlite`. On boot the app sees `DATABASE_URL`, uses the Postgres connection, and migrates. The Railway URL's `sslmode` is honoured. Profile photos still use `/data/avatars`, so keep a volume mounted at `/data`, or set `AVATAR_ROOT` to another path that survives deploys.
 
 Sessions and cache use the database, so they persist with either option. The health check path is `/up`.
 

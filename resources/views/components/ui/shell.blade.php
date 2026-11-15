@@ -17,7 +17,7 @@
 
             <div class="relative" x-data="{ open: false }" @keydown.escape.window="open = false">
                 <button type="button" class="inline-flex items-center gap-2 rounded-full py-1 pe-2 ps-1 hover:bg-pitch-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pitch-600" @click="open = ! open" :aria-expanded="open.toString()" aria-haspopup="menu">
-                    <x-ui.avatar :name="$user->name" />
+                    <x-ui.avatar :name="$user->name" :user="$user" />
                     <span class="hidden max-w-32 truncate text-sm font-medium sm:inline">{{ $user->name }}</span>
                 </button>
                 <div x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open = false" class="absolute end-0 mt-2 w-48 rounded-card bg-white py-1 shadow-lift ring-1 ring-line" role="menu">

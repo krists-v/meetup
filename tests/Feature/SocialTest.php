@@ -1,0 +1,259 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Event;
+use App\Models\User;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+class SocialTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_whatsapp_share_includes_the_private_invite_and_a_copy_link(): void
+    {
+        $creator = User::factory()->create();
+        $event = Event::factory()->private()->create([
+            'user_id' => $creator->id,
+            'title' => 'Thursday five-a-side',
+            'sport' => 'football',
+            'sport_type' => 'football',
+            'location' => 'Park pitch',
+            'event_date' => '2026-12-10 18:00:00',
+        ]);
+
+        $this->get(route('events.invite', $event->invite_token))
+            ->assertOk()
+            ->assertSee('Share on WhatsApp', false)
+            ->assertSee('Copy link', false)
+            ->assertSee($event->invite_token, false)
+            ->assertDontSee('Post comment');
+
+        $this->actingAs($creator)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee('Share on WhatsApp', false)
+            ->assertSee('Copy link', false)
+            ->assertSee('https://wa.me/?text=', false)
+            ->assertSee($event->invite_token, false)
+            ->assertSee($event->shareUrl(), false);
+
+        $this->assertStringContainsString($event->invite_token, $event->whatsAppUrl());
+    }
+
+    public function test_a_public_game_shares_its_public_link(): void
+    {
+        $event = Event::factory()->create([
+            'visibility' => 'public',
+            'title' => 'Open run',
+            'location' => 'City court',
+        ]);
+
+        $this->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee('https://wa.me/?text=', false)
+            ->assertSee($event->shareUrl(), false)
+            ->assertDontSee($event->invite_token);
+
+        $this->assertStringNotContainsString($event->invite_token, $event->whatsAppUrl());
+        $this->assertSame(route('events.show', $event), $event->shareUrl());
+    }
+
+    public function test_profile_saves_name_photo_and_favorite_sports(): void
+    {
+        Storage::fake('avatars');
+
+        $user = User::factory()->create(['name' => 'Old Name']);
+        $event = Event::factory()->create([
+            'visibility' => 'public',
+            'max_participants' => 10,
+        ]);
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => 'Alex Rivera',
+                'email' => $user->email,
+                'avatar' => UploadedFile::fake()->createWithContent('face.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==')),
+                'favorite_sports' => ['football', 'padel'],
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('profile.edit'));
+
+        $user->refresh();
+        $this->assertSame('Alex Rivera', $user->name);
+        $this->assertSame(['football', 'padel'], $user->favorite_sports);
+        $this->assertNotNull($user->avatar_path);
+        Storage::disk('avatars')->assertExists($user->avatar_path);
+
+        $photo = $this->get(route('avatars.show', $user));
+        $photo->assertOk();
+        $this->assertStringStartsWith('image/', (string) $photo->headers->get('content-type'));
+
+        $this->actingAs($user)
+            ->get(route('profile.edit'))
+            ->assertOk()
+            ->assertSee('id="favorite-football"', false)
+            ->assertSee('Sports you play')
+            ->assertSee(route('avatars.show', $user), false);
+
+        $this->actingAs($user)->post(route('events.rsvp', $event), ['status' => 'going']);
+
+        $this->actingAs($user)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee(route('avatars.show', $user), false)
+            ->assertSee('Alex Rivera');
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => 'Alex Rivera',
+                'email' => $user->email,
+                'remove_avatar' => '1',
+                'favorite_sports' => ['football'],
+            ])
+            ->assertSessionHasNoErrors();
+
+        $user->refresh();
+        $this->assertNull($user->avatar_path);
+        $this->assertSame(['football'], $user->favorite_sports);
+        $this->get(route('avatars.show', $user))->assertNotFound();
+    }
+
+    public function test_profile_rejects_a_file_that_is_not_a_photo(): void
+    {
+        Storage::fake('avatars');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => UploadedFile::fake()->create('notes.txt', 20, 'text/plain'),
+            ])
+            ->assertSessionHasErrors('avatar');
+
+        $this->assertNull($user->fresh()->avatar_path);
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => $user->name,
+                'email' => $user->email,
+                'favorite_sports' => ['curling'],
+            ])
+            ->assertSessionHasErrors('favorite_sports.0');
+    }
+
+    public function test_comments_are_ordered_escaped_and_limited_to_people_who_can_see_the_game(): void
+    {
+        $creator = User::factory()->create();
+        $player = User::factory()->create(['name' => 'Sam Okonkwo']);
+        $stranger = User::factory()->create();
+        $event = Event::factory()->private()->create([
+            'user_id' => $creator->id,
+            'visibility' => 'private',
+        ]);
+        $event->participants()->attach($player->id, ['status' => 'going']);
+
+        $this->post(route('events.comments.store', $event), ['body' => 'Hello'])
+            ->assertRedirect(route('login'));
+
+        $this->actingAs($stranger)
+            ->post(route('events.comments.store', $event), ['body' => 'Hello'])
+            ->assertForbidden();
+
+        $this->actingAs($player)
+            ->post(route('events.comments.store', $event), ['body' => '   '])
+            ->assertSessionHasErrors('body');
+
+        $this->actingAs($player)
+            ->post(route('events.comments.store', $event), [
+                'body' => 'Arriving early <script>alert(1)</script>',
+            ])
+            ->assertRedirect();
+
+        $this->actingAs($creator)
+            ->post(route('events.comments.store', $event), ['body' => 'Bringing a ball'])
+            ->assertRedirect();
+
+        $this->actingAs($player)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSeeInOrder(['Arriving early', 'Bringing a ball'])
+            ->assertSee(e('Arriving early <script>alert(1)</script>'), false)
+            ->assertDontSee('<script>alert(1)</script>', false);
+
+        $comment = $event->comments()->first();
+        $creatorComment = $event->comments()->skip(1)->first();
+
+        $this->actingAs($stranger)
+            ->delete(route('events.comments.destroy', [$event, $comment]))
+            ->assertForbidden();
+
+        $this->actingAs($creator)
+            ->delete(route('events.comments.destroy', [$event, $comment]))
+            ->assertRedirect();
+
+        $this->assertModelMissing($comment);
+
+        $other = Event::factory()->create(['user_id' => $creator->id]);
+        $this->actingAs($creator)
+            ->delete(route('events.comments.destroy', [$other, $creatorComment]))
+            ->assertNotFound();
+
+        $this->actingAs($player)
+            ->delete(route('events.comments.destroy', [$event, $creatorComment]))
+            ->assertForbidden();
+
+        $this->actingAs($creator)
+            ->delete(route('events.comments.destroy', [$event, $creatorComment]))
+            ->assertRedirect();
+
+        $this->assertModelMissing($creatorComment);
+    }
+
+    public function test_anyone_logged_in_can_comment_on_a_public_game(): void
+    {
+        $event = Event::factory()->create(['visibility' => 'public']);
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post(route('events.comments.store', $event), ['body' => 'I can make it'])
+            ->assertRedirect();
+
+        $this->actingAs($user)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee('I can make it')
+            ->assertSee('Post comment');
+
+        $comment = $event->comments()->first();
+        $this->actingAs($user)
+            ->delete(route('events.comments.destroy', [$event, $comment]))
+            ->assertRedirect();
+
+        $this->assertModelMissing($comment);
+    }
+
+    public function test_comment_posting_is_rate_limited(): void
+    {
+        RateLimiter::for('comments', fn () => Limit::perMinute(2)->by('social-test'));
+
+        $user = User::factory()->create();
+        $event = Event::factory()->create([
+            'user_id' => $user->id,
+            'visibility' => 'public',
+        ]);
+
+        $this->actingAs($user)->post(route('events.comments.store', $event), ['body' => 'One'])->assertRedirect();
+        $this->actingAs($user)->post(route('events.comments.store', $event), ['body' => 'Two'])->assertRedirect();
+        $this->actingAs($user)
+            ->post(route('events.comments.store', $event), ['body' => 'Three'])
+            ->assertStatus(429)
+            ->assertSee('Too many tries');
+    }
+}

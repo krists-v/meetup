@@ -22,6 +22,8 @@ else
 fi
 
 export LOG_CHANNEL="${LOG_CHANNEL:-stderr}"
+export AVATAR_ROOT="${AVATAR_ROOT:-/data/avatars}"
+mkdir -p "$AVATAR_ROOT"
 
 php artisan migrate --force --no-interaction
 

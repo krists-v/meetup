@@ -46,7 +46,8 @@ ENV DB_CONNECTION=sqlite \
     SESSION_DRIVER=database \
     CACHE_STORE=database \
     QUEUE_CONNECTION=sync \
-    LOG_CHANNEL=stderr
+    LOG_CHANNEL=stderr \
+    AVATAR_ROOT=/data/avatars
 
 EXPOSE 8000
 
