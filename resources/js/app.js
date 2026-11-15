@@ -36,17 +36,20 @@ document.addEventListener('alpine:init', () => {
 
                 const next = bar ? `translateX(${x})` : `translate(${x}, ${y})`;
 
-                if (previous) {
+                const stored = previous && previous !== `${x},${y}`;
+
+                if (stored) {
                     const [px, py] = previous.split(',');
+                    indicator.hidden = false;
+                    indicator.style.transition = 'none';
                     indicator.style.transform = bar ? `translateX(${px})` : `translate(${px}, ${py})`;
-                    requestAnimationFrame(() => {
-                        indicator.style.transform = next;
-                    });
+                    void indicator.offsetWidth;
+                    indicator.style.removeProperty('transition');
+                    indicator.style.transform = next;
                 } else {
                     indicator.style.transform = next;
+                    indicator.hidden = false;
                 }
-
-                indicator.hidden = false;
 
                 try {
                     sessionStorage.setItem(key, `${x},${y}`);
@@ -64,7 +67,7 @@ document.addEventListener('alpine:init', () => {
 document.addEventListener('submit', (event) => {
     const form = event.target;
 
-    if (! (form instanceof HTMLFormElement) || form.method.toLowerCase() !== 'post') {
+    if (! (form instanceof HTMLFormElement) || form.method.toLowerCase() !== 'post' || event.defaultPrevented) {
         return;
     }
 
@@ -75,9 +78,10 @@ document.addEventListener('submit', (event) => {
     }
 
     const submitter = event.submitter;
+    let hidden = null;
 
     if (submitter instanceof HTMLButtonElement && submitter.name) {
-        const hidden = document.createElement('input');
+        hidden = document.createElement('input');
         hidden.type = 'hidden';
         hidden.name = submitter.name;
         hidden.value = submitter.value;
@@ -87,6 +91,13 @@ document.addEventListener('submit', (event) => {
     form.dataset.pending = '1';
 
     window.setTimeout(() => {
+        if (event.defaultPrevented) {
+            delete form.dataset.pending;
+            hidden?.remove();
+
+            return;
+        }
+
         form.querySelectorAll('button[type="submit"], button:not([type])').forEach((button) => {
             button.disabled = true;
         });
