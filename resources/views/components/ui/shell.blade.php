@@ -11,6 +11,7 @@
 
             <nav class="hidden items-center gap-1 sm:flex" aria-label="Primary">
                 <a href="{{ route('dashboard') }}" class="rounded-control px-3 py-2 text-sm font-medium {{ request()->routeIs('dashboard') ? 'bg-pitch-50 text-pitch-800' : 'text-ink-muted hover:bg-pitch-50 hover:text-ink' }}">Games</a>
+                <a href="{{ route('games.index') }}" class="rounded-control px-3 py-2 text-sm font-medium {{ request()->routeIs('games.index') ? 'bg-pitch-50 text-pitch-800' : 'text-ink-muted hover:bg-pitch-50 hover:text-ink' }}">Public games</a>
                 <a href="{{ route('events.create') }}" class="rounded-control px-3 py-2 text-sm font-medium {{ request()->routeIs('events.create') ? 'bg-pitch-50 text-pitch-800' : 'text-ink-muted hover:bg-pitch-50 hover:text-ink' }}">Plan a game</a>
             </nav>
 
@@ -37,10 +38,14 @@
     <x-ui.footer class="mx-auto w-full max-w-5xl px-4 pb-24 pt-2 sm:pb-8" />
 
     <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 backdrop-blur sm:hidden" style="padding-bottom: env(safe-area-inset-bottom)" aria-label="Mobile">
-        <div class="grid grid-cols-3">
+        <div class="grid grid-cols-4">
             <a href="{{ route('dashboard') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('dashboard') ? 'text-pitch-700' : 'text-ink-muted' }}">
                 <x-ui.icon name="home" />
                 Games
+            </a>
+            <a href="{{ route('games.index') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('games.index') ? 'text-pitch-700' : 'text-ink-muted' }}">
+                <x-ui.icon name="calendar" />
+                Public
             </a>
             <a href="{{ route('events.create') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('events.create') ? 'text-pitch-700' : 'text-ink-muted' }}">
                 <x-ui.icon name="plus" />

@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\EventTimeOption;
 use App\Models\EventTimeVote;
 use App\Models\User;
+use App\Support\GameFilters;
 use App\Support\LinkPreview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,9 +35,9 @@ class EventController extends Controller
             ->orderBy('event_date')
             ->get();
 
-        $publicEvents = Event::query()
-            ->public()
-            ->upcoming()
+        $filters = GameFilters::fromRequest($request);
+
+        $publicEvents = $filters->apply(Event::query())
             ->with('creator')
             ->withCount(['goingParticipants', 'timeOptions'])
             ->whereNotIn('id', $myEvents->pluck('id'))
@@ -46,7 +47,63 @@ class EventController extends Controller
         return view('dashboard', [
             'myEvents' => $myEvents,
             'publicEvents' => $publicEvents,
+            'filters' => $filters,
         ]);
+    }
+
+    public function index(Request $request): View
+    {
+        $filters = GameFilters::fromRequest($request);
+
+        $events = $filters->apply(Event::query())
+            ->with('creator')
+            ->withCount(['goingParticipants', 'timeOptions'])
+            ->orderBy('event_date')
+            ->get();
+
+        return view('games.index', [
+            'events' => $events,
+            'filters' => $filters,
+        ]);
+    }
+
+    public function join(Request $request, Event $event): RedirectResponse
+    {
+        if ($request->user() === null) {
+            redirect()->setIntendedUrl(route('events.join', $event));
+
+            return redirect()->route($request->query('account') === 'new' ? 'register' : 'login');
+        }
+
+        $canJoin = $event->visibility === 'public'
+            || $event->isCreator($request->user())
+            || $event->participants()->where('users.id', $request->user()->id)->exists();
+
+        abort_unless($canJoin, 403);
+
+        if ($event->isPoll()) {
+            return redirect()
+                ->route('events.show', $event)
+                ->with('status', 'Vote on a time, then say if you are going.');
+        }
+
+        if ($event->getUserStatus($request->user()) !== 'going') {
+            if ($event->hasReachedCapacity()) {
+                return redirect()
+                    ->route('events.show', $event)
+                    ->withErrors([
+                        'status' => 'This game is full. You can still say Maybe or Not going.',
+                    ]);
+            }
+
+            $event->participants()->syncWithoutDetaching([
+                $request->user()->id => ['status' => 'going'],
+            ]);
+        }
+
+        return redirect()
+            ->route('events.show', $event)
+            ->with('status', 'You are in.');
     }
 
     public function create(): View

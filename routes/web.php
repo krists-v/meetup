@@ -13,6 +13,12 @@ Route::get('/', function () {
 Route::view('/privacy', 'legal.privacy')->name('privacy');
 Route::view('/terms', 'legal.terms')->name('terms');
 
+Route::get('/games', [EventController::class, 'index'])->name('games.index');
+
+Route::get('/events/{event}/join', [EventController::class, 'join'])
+    ->middleware('throttle:writes')
+    ->name('events.join');
+
 Route::get('/invite/{token}', [EventController::class, 'invite'])
     ->middleware('throttle:writes')
     ->name('events.invite');

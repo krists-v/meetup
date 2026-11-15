@@ -45,7 +45,7 @@ class LinkPreviewTest extends TestCase
             ->assertOk()
             ->assertSee('property="og:title" content="Sunday football"', false)
             ->assertSee('property="og:site_name" content="Varza"', false)
-            ->assertSee('Football, '.$when.', Park pitch. 10 spots left.', false)
+            ->assertSee('Football, '.$when.', Park pitch. 0 of 10 going · 10 spots left.', false)
             ->assertSee('property="og:image" content="'.asset('images/og/football.png').'"', false)
             ->assertSee('name="twitter:card" content="summary_large_image"', false);
     }
@@ -67,7 +67,7 @@ class LinkPreviewTest extends TestCase
         $this->actingAs($user)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('Padel, Vote on a time, Court 2. 4 spots left.', false)
+            ->assertSee('Padel, Vote on a time, Court 2. max 4 once a time is chosen.', false)
             ->assertDontSee($event->event_date->format('l j F Y, H:i'));
     }
 
@@ -109,7 +109,7 @@ class LinkPreviewTest extends TestCase
         $this->get(route('events.invite', $event->invite_token))
             ->assertOk()
             ->assertSee('property="og:title" content="Secret match"', false)
-            ->assertSee('Tennis, '.$when.', Hidden pitch. 6 spots left.', false)
+            ->assertSee('Tennis, '.$when.', Hidden pitch. 0 of 6 going · 6 spots left.', false)
             ->assertSee('property="og:image" content="'.asset('images/og/tennis.png').'"', false)
             ->assertSee('property="og:url" content="'.route('events.invite', $event->invite_token).'"', false);
 
