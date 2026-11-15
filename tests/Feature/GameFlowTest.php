@@ -180,6 +180,49 @@ class GameFlowTest extends TestCase
         $this->assertSame('going', $event->fresh()->getUserStatus($waiting));
     }
 
+    public function test_joining_the_waitlist_again_keeps_the_original_place(): void
+    {
+        $event = Event::factory()->create([
+            'visibility' => 'public',
+            'max_participants' => 1,
+            'event_date' => '2026-12-10 18:00:00',
+        ]);
+        $going = User::factory()->create();
+        $first = User::factory()->create();
+        $second = User::factory()->create();
+
+        $this->actingAs($going)->post(route('events.rsvp', $event), ['status' => 'going']);
+
+        Carbon::setTestNow('2026-11-15 10:00:00');
+        $this->actingAs($first)->post(route('events.rsvp', $event), ['status' => 'waitlist']);
+        Carbon::setTestNow('2026-11-15 11:00:00');
+        $this->actingAs($second)->post(route('events.rsvp', $event), ['status' => 'waitlist']);
+
+        $joinedAt = $event->participants()->where('users.id', $first->id)->first()->pivot->created_at;
+
+        Carbon::setTestNow('2026-11-15 12:00:00');
+        $this->actingAs($first)
+            ->post(route('events.rsvp', $event), ['status' => 'waitlist'])
+            ->assertSessionHasNoErrors();
+        Carbon::setTestNow();
+
+        $event->refresh();
+        $this->assertTrue($joinedAt->equalTo(
+            $event->participants()->where('users.id', $first->id)->first()->pivot->created_at
+        ));
+        $this->assertSame(1, $event->waitlistPosition($first));
+        $this->assertSame(2, $event->waitlistPosition($second));
+
+        $this->actingAs($first)->post(route('events.rsvp', $event), ['status' => 'maybe']);
+        Carbon::setTestNow('2026-11-15 13:00:00');
+        $this->actingAs($first)->post(route('events.rsvp', $event), ['status' => 'waitlist']);
+        Carbon::setTestNow();
+
+        $event->refresh();
+        $this->assertSame(1, $event->waitlistPosition($second));
+        $this->assertSame(2, $event->waitlistPosition($first));
+    }
+
     public function test_a_free_spot_treats_a_waitlist_request_as_going(): void
     {
         $event = Event::factory()->create([

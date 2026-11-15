@@ -303,7 +303,7 @@ class EventController extends Controller
             $request->user()->id => ['status' => $status],
         ]);
 
-        if ($status === 'waitlist') {
+        if ($status === 'waitlist' && $current !== 'waitlist') {
             $event->participants()->updateExistingPivot($request->user()->id, [
                 'created_at' => now(),
             ]);
