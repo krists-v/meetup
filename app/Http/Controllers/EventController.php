@@ -66,7 +66,7 @@ class EventController extends Controller
                 return true;
             }
 
-            return in_array($event->participants->first()?->pivot->status, ['going', 'maybe', 'waitlist'], true);
+            return in_array($event->participants->first()?->pivot->status, ['going', 'maybe', 'waitlist', 'invited'], true);
         })->values();
 
         $nextGame = $visible->first(function (Event $event) use ($user) {

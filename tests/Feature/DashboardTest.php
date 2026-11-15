@@ -68,6 +68,13 @@ class DashboardTest extends TestCase
             'event_date' => now()->subDay(),
         ]);
 
+        $invited = Event::factory()->private()->create([
+            'user_id' => $host->id,
+            'title' => 'Invite-only tennis',
+            'event_date' => now()->addDays(5),
+        ]);
+        $invited->participants()->attach($user->id, ['status' => 'invited']);
+
         $this->actingAs($user)
             ->get(route('dashboard'))
             ->assertOk()
@@ -79,6 +86,7 @@ class DashboardTest extends TestCase
                 'Joined',
                 'Waitlisted bowls',
                 'Joined padel',
+                'Invite-only tennis',
                 'Open near you',
                 'Open climb',
             ])
