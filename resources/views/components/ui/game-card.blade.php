@@ -1,6 +1,6 @@
 @props(['event'])
 
-<article {{ $attributes->merge(['class' => 'overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line transition duration-150 hover:shadow-lift motion-safe:hover:-translate-y-0.5']) }}>
+<article style="--vt-name: game-{{ $event->id }}" {{ $attributes->merge(['class' => 'motion-view overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line transition duration-150 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.99]']) }}>
     <a href="{{ route('events.show', $event) }}" class="block">
         <x-illustrations.sport :sport="$event->sportSelection()" />
         <div class="space-y-3 px-4 pt-4">

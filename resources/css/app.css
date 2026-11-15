@@ -224,6 +224,28 @@
     50% { opacity: 0.45; }
 }
 
+@keyframes motion-tick {
+    from { transform: translateY(6px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+}
+
+@keyframes motion-avatar {
+    from { transform: translateX(-8px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+}
+
+@keyframes motion-burst {
+    to { transform: translate(var(--x), var(--y)) scale(0.4); opacity: 0; }
+}
+
+@keyframes motion-spin {
+    to { transform: rotate(360deg); }
+}
+
+@view-transition {
+    navigation: auto;
+}
+
 @media (prefers-reduced-motion: no-preference) {
     .motion-press:active {
         transform: scale(0.98);
@@ -242,7 +264,53 @@
     }
 
     .motion-view {
-        view-transition-name: varza;
+        view-transition-name: var(--vt-name);
+    }
+
+    .motion-tick {
+        display: inline-block;
+        animation: motion-tick 200ms ease-out;
+    }
+
+    .motion-avatar {
+        animation: motion-avatar 200ms ease-out;
+    }
+
+    .motion-burst {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+    }
+
+    .motion-burst span {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        margin: -3px;
+        border-radius: 999px;
+        background: currentColor;
+        animation: motion-burst 400ms ease-out forwards;
+    }
+
+    .motion-burst span:nth-child(1) { --x: 0px; --y: -28px; }
+    .motion-burst span:nth-child(2) { --x: 20px; --y: -20px; }
+    .motion-burst span:nth-child(3) { --x: 28px; --y: 0px; }
+    .motion-burst span:nth-child(4) { --x: 20px; --y: 20px; }
+    .motion-burst span:nth-child(5) { --x: 0px; --y: 28px; }
+    .motion-burst span:nth-child(6) { --x: -20px; --y: 20px; }
+    .motion-burst span:nth-child(7) { --x: -28px; --y: 0px; }
+    .motion-burst span:nth-child(8) { --x: -20px; --y: -20px; }
+
+    .motion-spin {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 999px;
+        animation: motion-spin 400ms linear infinite;
     }
 
     .motion-hero > *,
@@ -282,5 +350,17 @@
 
     .motion-view {
         view-transition-name: none !important;
+    }
+
+    .motion-tick,
+    .motion-avatar,
+    .motion-burst span,
+    .motion-spin {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    @view-transition {
+        navigation: none;
     }
 }

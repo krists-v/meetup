@@ -397,6 +397,15 @@ class Event extends Model
         return self::LEVELS[$this->level] ?? 'All levels';
     }
 
+    public static function accentInk(?string $sport): string
+    {
+        if (preg_match('/text-activity-[\w-]+/', self::accentClasses($sport), $match) === 1) {
+            return $match[0];
+        }
+
+        return 'text-pitch-700';
+    }
+
     public static function accentClasses(?string $sport): string
     {
         $sport = array_key_exists((string) $sport, self::SPORTS) ? (string) $sport : 'other';

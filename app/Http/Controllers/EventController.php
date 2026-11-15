@@ -340,6 +340,10 @@ class EventController extends Controller
             $status = 'going';
         }
 
+        if ($current === $status) {
+            return back();
+        }
+
         $event->participants()->syncWithoutDetaching([
             $request->user()->id => ['status' => $status],
         ]);
@@ -354,10 +358,17 @@ class EventController extends Controller
             $event->promoteWaitlist();
         }
 
-        return back()->with(
-            'status',
-            $status === 'waitlist' ? 'You are on the waitlist.' : 'You are on the list.',
-        );
+        $message = 'Saved.';
+        $joined = false;
+
+        if ($status === 'going' && $current !== 'going') {
+            $message = "You're in.";
+            $joined = true;
+        } elseif ($status === 'waitlist') {
+            $message = "You're on the waitlist.";
+        }
+
+        return back()->with('status', $message)->with('joined', $joined);
     }
 
     public function vote(Request $request, Event $event, EventTimeOption $option): RedirectResponse
@@ -376,6 +387,15 @@ class EventController extends Controller
             'vote' => ['required', 'in:yes,maybe,no'],
         ]);
 
+        $existing = EventTimeVote::query()
+            ->where('event_time_option_id', $option->id)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if ($existing && $existing->vote === $validated['vote']) {
+            return back();
+        }
+
         EventTimeVote::query()->updateOrCreate(
             [
                 'event_time_option_id' => $option->id,
@@ -384,7 +404,7 @@ class EventController extends Controller
             ['vote' => $validated['vote']],
         );
 
-        return back()->with('status', 'Vote saved.');
+        return back()->with('status', 'Vote saved.')->with('voted', $option->id);
     }
 
     public function lock(Event $event, EventTimeOption $option): RedirectResponse
