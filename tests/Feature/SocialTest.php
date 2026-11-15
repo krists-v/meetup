@@ -124,6 +124,48 @@ class SocialTest extends TestCase
         $this->get(route('avatars.show', $user))->assertNotFound();
     }
 
+    public function test_a_sideways_photo_is_turned_upright_before_it_is_saved(): void
+    {
+        if (! function_exists('imagejpeg') || ! function_exists('exif_read_data') || ! function_exists('imagecreatefromstring')) {
+            $this->markTestSkipped('GD and EXIF are required to check photo orientation.');
+        }
+
+        Storage::fake('avatars');
+
+        $wide = imagecreatetruecolor(40, 10);
+        $red = imagecolorallocate($wide, 220, 20, 20);
+        $blue = imagecolorallocate($wide, 20, 20, 220);
+        imagefilledrectangle($wide, 0, 0, 19, 9, $red);
+        imagefilledrectangle($wide, 20, 0, 39, 9, $blue);
+        ob_start();
+        imagejpeg($wide, null, 95);
+        $jpeg = ob_get_clean();
+        imagedestroy($wide);
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => UploadedFile::fake()->createWithContent('face.jpg', $this->jpegWithOrientation($jpeg, 6)),
+            ])
+            ->assertSessionHasNoErrors();
+
+        $stored = Storage::disk('avatars')->get($user->fresh()->avatar_path);
+        $image = imagecreatefromstring($stored);
+        $this->assertNotFalse($image);
+        $this->assertSame(10, imagesx($image));
+        $this->assertSame(40, imagesy($image));
+
+        $top = imagecolorsforindex($image, imagecolorat($image, 5, 2));
+        $bottom = imagecolorsforindex($image, imagecolorat($image, 5, 37));
+        imagedestroy($image);
+
+        $this->assertGreaterThan($top['blue'], $top['red']);
+        $this->assertGreaterThan($bottom['red'], $bottom['blue']);
+    }
+
     public function test_profile_rejects_a_file_that_is_not_a_photo(): void
     {
         Storage::fake('avatars');
@@ -255,5 +297,20 @@ class SocialTest extends TestCase
             ->post(route('events.comments.store', $event), ['body' => 'Three'])
             ->assertStatus(429)
             ->assertSee('Too many tries');
+    }
+
+    private function jpegWithOrientation(string $jpeg, int $orientation): string
+    {
+        $exif = "Exif\x00\x00"
+            .'MM'."\x00\x2A"
+            ."\x00\x00\x00\x08"
+            ."\x00\x01"
+            ."\x01\x12"
+            ."\x00\x03"
+            ."\x00\x00\x00\x01"
+            .pack('n', $orientation)."\x00\x00"
+            ."\x00\x00\x00\x00";
+
+        return "\xFF\xD8"."\xFF\xE1".pack('n', strlen($exif) + 2).$exif.substr($jpeg, 2);
     }
 }

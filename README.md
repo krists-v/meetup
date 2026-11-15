@@ -85,7 +85,7 @@ Password reset emails use the Varza mail theme. Private games are shared with a 
 
 ### SQLite on a volume
 
-Leave `DATABASE_URL` unset. The container stores the database at `/data/database.sqlite` and profile photos at `/data/avatars`. In the Railway service, add a volume mounted at `/data` so both survive deploys and restarts. Photos are limited to 2 MB. When PHP GD is available, Varza resizes them to 256 pixels. Use one instance. SQLite does not suit multiple replicas writing at once.
+Leave `DATABASE_URL` unset. The container stores the database at `/data/database.sqlite` and profile photos at `/data/avatars`. In the Railway service, add a volume mounted at `/data` so both survive deploys and restarts. Photos are limited to 2 MB. When PHP GD is available, Varza resizes them to 256 pixels and turns phone photos upright. Use one instance. SQLite does not suit multiple replicas writing at once.
 
 ### Postgres
 

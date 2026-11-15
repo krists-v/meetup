@@ -49,6 +49,8 @@ class AvatarStore
             return null;
         }
 
+        $source = $this->applyOrientation($source, $this->orientation($file));
+
         $width = imagesx($source);
         $height = imagesy($source);
         $scale = min(256 / max($width, 1), 256 / max($height, 1), 1);
@@ -64,5 +66,50 @@ class AvatarStore
         imagedestroy($target);
 
         return is_string($binary) && $binary !== '' ? $binary : null;
+    }
+
+    private function orientation(UploadedFile $file): int
+    {
+        if (! function_exists('exif_read_data')) {
+            return 1;
+        }
+
+        $exif = @exif_read_data($file->getRealPath());
+        $value = (int) ($exif['Orientation'] ?? 1);
+
+        return ($value >= 1 && $value <= 8) ? $value : 1;
+    }
+
+    private function applyOrientation(\GdImage $image, int $orientation): \GdImage
+    {
+        return match ($orientation) {
+            2 => $this->flip($image, IMG_FLIP_HORIZONTAL),
+            3 => $this->rotate($image, 180),
+            4 => $this->flip($image, IMG_FLIP_VERTICAL),
+            5 => $this->rotate($this->flip($image, IMG_FLIP_HORIZONTAL), -90),
+            6 => $this->rotate($image, -90),
+            7 => $this->rotate($this->flip($image, IMG_FLIP_HORIZONTAL), 90),
+            8 => $this->rotate($image, 90),
+            default => $image,
+        };
+    }
+
+    private function flip(\GdImage $image, int $mode): \GdImage
+    {
+        imageflip($image, $mode);
+
+        return $image;
+    }
+
+    private function rotate(\GdImage $image, float $angle): \GdImage
+    {
+        $rotated = imagerotate($image, $angle, 0);
+        if ($rotated === false) {
+            return $image;
+        }
+
+        imagedestroy($image);
+
+        return $rotated;
     }
 }
