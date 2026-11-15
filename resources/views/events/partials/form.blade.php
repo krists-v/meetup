@@ -21,6 +21,8 @@
 
     @include('events.partials.sport-picker')
 
+    @include('events.partials.activity-options')
+
     @if ($polling)
         <p class="rounded-control bg-warn-soft px-3 py-2 text-sm text-warn">Friends are voting on a time. Lock a time from the game page. The other details can still change.</p>
     @elseif ($editing)

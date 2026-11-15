@@ -31,6 +31,10 @@ class UpdateEventRequest extends FormRequest
         } else {
             $this->merge(['custom_sport' => null]);
         }
+
+        if ($this->exists('level') && in_array($this->input('level'), ['', 'all'], true)) {
+            $this->merge(['level' => null]);
+        }
     }
 
     /**
@@ -60,6 +64,19 @@ class UpdateEventRequest extends FormRequest
             'max_participants' => ['nullable', 'integer', 'min:2'],
             'description' => ['nullable', 'string', 'max:1000'],
             'visibility' => ['required', 'in:public,private'],
+            'setting' => ['nullable', 'in:indoor,outdoor'],
+            'level' => ['nullable', 'in:'.implode(',', array_keys(Event::LEVELS))],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'setting.in' => 'Pick indoors or outdoors.',
+            'level.in' => 'Pick all levels, beginner, intermediate, advanced, or pro.',
         ];
     }
 }

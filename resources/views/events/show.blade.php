@@ -56,6 +56,7 @@
                         @endif
                     @endif
                 </x-ui.info-row>
+                <x-ui.activity-facts :event="$event" />
                 <x-ui.badge :tone="$event->visibility === 'public' ? 'pitch' : 'neutral'">
                     {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
                 </x-ui.badge>

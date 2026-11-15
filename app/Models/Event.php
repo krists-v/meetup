@@ -29,6 +29,8 @@ class Event extends Model
         'visibility',
         'invite_token',
         'schedule_type',
+        'setting',
+        'level',
     ];
 
     protected $casts = [
@@ -47,26 +49,71 @@ class Event extends Model
         });
 
         static::saving(function (Event $event) {
-            if (blank($event->sport)) {
-                return;
+            if (filled($event->sport)) {
+                $legacy = ['football', 'tennis', 'basketball', 'other'];
+                $event->sport_type = in_array($event->sport, $legacy, true) ? $event->sport : 'other';
+
+                if ($event->sport !== 'other') {
+                    $event->custom_sport = null;
+                }
             }
 
-            $legacy = ['football', 'tennis', 'basketball', 'other'];
-            $event->sport_type = in_array($event->sport, $legacy, true) ? $event->sport : 'other';
-
-            if ($event->sport !== 'other') {
-                $event->custom_sport = null;
+            if (! in_array($event->setting, ['indoor', 'outdoor'], true)) {
+                $event->setting = self::defaultSetting($event->sportSelection());
             }
         });
     }
 
+    public const CATEGORIES = [
+        'racket' => 'Racket',
+        'team' => 'Team',
+        'indoor' => 'Indoor',
+        'outdoor' => 'Outdoor',
+        'social' => 'Social',
+    ];
+
+    public const LEVELS = [
+        'beginner' => 'Beginner',
+        'intermediate' => 'Intermediate',
+        'advanced' => 'Advanced',
+        'pro' => 'Pro',
+    ];
+
+    /**
+     * Label, category, indoor or outdoor default, and Lucide icon.
+     * Null category or setting means a custom activity.
+     *
+     * @var array<string, array{label: string, category: ?string, setting: ?string, icon: string}>
+     */
+    public const ACTIVITIES = [
+        'padel' => ['label' => 'Padel', 'category' => 'racket', 'setting' => 'indoor', 'icon' => 'grid-2x2'],
+        'tennis' => ['label' => 'Tennis', 'category' => 'racket', 'setting' => 'outdoor', 'icon' => 'circle'],
+        'table-tennis' => ['label' => 'Table tennis', 'category' => 'racket', 'setting' => 'indoor', 'icon' => 'disc'],
+        'basketball' => ['label' => 'Basketball', 'category' => 'team', 'setting' => 'indoor', 'icon' => 'circle-dot'],
+        'football' => ['label' => 'Football', 'category' => 'team', 'setting' => 'outdoor', 'icon' => 'goal'],
+        'hockey' => ['label' => 'Hockey', 'category' => 'team', 'setting' => 'indoor', 'icon' => 'snowflake'],
+        'volleyball' => ['label' => 'Volleyball', 'category' => 'team', 'setting' => 'indoor', 'icon' => 'volleyball'],
+        'bowling' => ['label' => 'Bowling', 'category' => 'social', 'setting' => 'indoor', 'icon' => 'disc-3'],
+        'climbing' => ['label' => 'Climbing', 'category' => 'indoor', 'setting' => 'indoor', 'icon' => 'brick-wall'],
+        'running' => ['label' => 'Running', 'category' => 'outdoor', 'setting' => 'outdoor', 'icon' => 'footprints'],
+        'cycling' => ['label' => 'Cycling', 'category' => 'outdoor', 'setting' => 'outdoor', 'icon' => 'bike'],
+        'hiking' => ['label' => 'Hiking', 'category' => 'outdoor', 'setting' => 'outdoor', 'icon' => 'trees'],
+        'other' => ['label' => 'Other', 'category' => null, 'setting' => null, 'icon' => 'sparkles'],
+    ];
+
     public const SPORTS = [
         'padel' => 'Padel',
+        'tennis' => 'Tennis',
+        'table-tennis' => 'Table tennis',
         'basketball' => 'Basketball',
         'football' => 'Football',
-        'tennis' => 'Tennis',
         'hockey' => 'Hockey',
         'volleyball' => 'Volleyball',
+        'bowling' => 'Bowling',
+        'climbing' => 'Climbing',
+        'running' => 'Running',
+        'cycling' => 'Cycling',
+        'hiking' => 'Hiking',
         'other' => 'Other',
     ];
 
@@ -310,17 +357,63 @@ class Event extends Model
         return self::SPORTS[$sport] ?? (string) $sport;
     }
 
+    public static function defaultSetting(?string $sport): string
+    {
+        $sport = array_key_exists((string) $sport, self::SPORTS) ? (string) $sport : 'other';
+
+        return self::ACTIVITIES[$sport]['setting'] === 'indoor' ? 'indoor' : 'outdoor';
+    }
+
+    public static function activityIcon(?string $sport): string
+    {
+        $sport = array_key_exists((string) $sport, self::SPORTS) ? (string) $sport : 'other';
+
+        return self::ACTIVITIES[$sport]['icon'];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function slugsInCategory(string $category): array
+    {
+        return array_keys(array_filter(
+            self::ACTIVITIES,
+            fn (array $activity): bool => $activity['category'] === $category,
+        ));
+    }
+
+    public function isIndoor(): bool
+    {
+        return $this->setting === 'indoor';
+    }
+
+    public function welcomesBeginners(): bool
+    {
+        return $this->level === null || $this->level === 'beginner';
+    }
+
+    public function levelLabel(): string
+    {
+        return self::LEVELS[$this->level] ?? 'All levels';
+    }
+
     public static function accentClasses(?string $sport): string
     {
         $sport = array_key_exists((string) $sport, self::SPORTS) ? (string) $sport : 'other';
 
         return match ($sport) {
             'padel' => 'bg-activity-padel-soft text-activity-padel',
+            'tennis' => 'bg-activity-tennis-soft text-activity-tennis',
+            'table-tennis' => 'bg-activity-table-tennis-soft text-activity-table-tennis',
             'basketball' => 'bg-activity-basketball-soft text-activity-basketball',
             'football' => 'bg-activity-football-soft text-activity-football',
-            'tennis' => 'bg-activity-tennis-soft text-activity-tennis',
             'hockey' => 'bg-activity-hockey-soft text-activity-hockey',
             'volleyball' => 'bg-activity-volleyball-soft text-activity-volleyball',
+            'bowling' => 'bg-activity-bowling-soft text-activity-bowling',
+            'climbing' => 'bg-activity-climbing-soft text-activity-climbing',
+            'running' => 'bg-activity-running-soft text-activity-running',
+            'cycling' => 'bg-activity-cycling-soft text-activity-cycling',
+            'hiking' => 'bg-activity-hiking-soft text-activity-hiking',
             default => 'bg-activity-other-soft text-activity-other',
         };
     }
