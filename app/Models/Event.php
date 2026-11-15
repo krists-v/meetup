@@ -310,9 +310,24 @@ class Event extends Model
         return self::SPORTS[$sport] ?? (string) $sport;
     }
 
+    public static function accentClasses(?string $sport): string
+    {
+        $sport = array_key_exists((string) $sport, self::SPORTS) ? (string) $sport : 'other';
+
+        return match ($sport) {
+            'padel' => 'bg-activity-padel-soft text-activity-padel',
+            'basketball' => 'bg-activity-basketball-soft text-activity-basketball',
+            'football' => 'bg-activity-football-soft text-activity-football',
+            'tennis' => 'bg-activity-tennis-soft text-activity-tennis',
+            'hockey' => 'bg-activity-hockey-soft text-activity-hockey',
+            'volleyball' => 'bg-activity-volleyball-soft text-activity-volleyball',
+            default => 'bg-activity-other-soft text-activity-other',
+        };
+    }
+
     public function sportTone(): string
     {
-        return 'bg-pitch-100 text-pitch-800';
+        return self::accentClasses($this->sportSelection());
     }
 
     public function scopePublic($query)

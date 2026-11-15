@@ -36,44 +36,26 @@
         <x-ui.card class="overflow-hidden">
             <x-illustrations.sport :sport="$event->sportSelection()" class="h-40 w-full" />
             <div class="space-y-4 p-4 sm:p-6">
-                <div class="flex gap-3">
-                    <x-ui.icon name="calendar" class="mt-0.5 text-pitch-700" />
-                    <div>
-                        <p class="text-sm text-ink-muted">When</p>
-                        @if ($event->isPoll())
-                            <p class="text-base text-ink">Friends are voting on a time</p>
+                @if ($event->isPoll())
+                    <x-ui.info-row variant="time" label="When">Friends are voting on a time</x-ui.info-row>
+                @else
+                    <x-ui.info-row variant="date" label="When">{{ $event->event_date->format('l j F Y, H:i') }}</x-ui.info-row>
+                @endif
+                <x-ui.info-row variant="place" label="Where" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
+                <x-ui.info-row variant="spots" label="Places">
+                    @if ($event->isPoll())
+                        @if ($event->max_participants)
+                            Up to {{ $event->max_participants }} can go once a time is locked
                         @else
-                            <p class="text-base text-ink">{{ $event->event_date->format('l j F Y, H:i') }}</p>
+                            No limit once a time is locked
                         @endif
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <x-ui.icon name="map-pin" class="mt-0.5 text-pitch-700" />
-                    <div>
-                        <p class="text-sm text-ink-muted">Where</p>
-                        <a href="{{ $event->mapUrl() }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center text-base font-medium text-pitch-700 hover:text-pitch-800">{{ $event->location }}</a>
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <x-ui.icon name="users" class="mt-0.5 text-pitch-700" />
-                    <div>
-                        <p class="text-sm text-ink-muted">Places</p>
-                        <p class="flex flex-wrap items-center gap-2 text-base text-ink">
-                            @if ($event->isPoll())
-                                @if ($event->max_participants)
-                                    Up to {{ $event->max_participants }} can go once a time is locked
-                                @else
-                                    No limit once a time is locked
-                                @endif
-                            @else
-                                <span>{{ $event->attendanceLabel() }}</span>
-                                @if ($event->isFull())
-                                    <x-ui.badge tone="warn">Full</x-ui.badge>
-                                @endif
-                            @endif
-                        </p>
-                    </div>
-                </div>
+                    @else
+                        <span>{{ $event->attendanceLabel() }}</span>
+                        @if ($event->isFull())
+                            <x-ui.badge preset="full" />
+                        @endif
+                    @endif
+                </x-ui.info-row>
                 <x-ui.badge :tone="$event->visibility === 'public' ? 'pitch' : 'neutral'">
                     {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
                 </x-ui.badge>

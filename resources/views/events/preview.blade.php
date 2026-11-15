@@ -16,9 +16,9 @@
             </div>
             <p class="text-sm text-ink-muted">{{ $event->sportLabel() }}</p>
             @unless ($event->isPoll())
-                <p class="text-base text-ink">{{ $event->event_date->format('D j M, H:i') }}</p>
+                <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
             @endunless
-            <a href="{{ $event->mapUrl() }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center text-base font-medium text-pitch-700 hover:text-pitch-800">{{ $event->location }}</a>
+            <x-ui.info-row variant="place" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
             <div class="flex flex-col gap-2">
                 <x-ui.button variant="secondary" :href="$event->whatsAppUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Share on WhatsApp</x-ui.button>
                 <x-ui.button
@@ -35,12 +35,12 @@
                 </div>
             @endunless
             @if ($event->attendanceLabel() !== '')
-                <p class="flex flex-wrap items-center gap-2 text-sm text-ink-muted">
+                <x-ui.info-row variant="spots">
                     <span>{{ $event->attendanceLabel() }}</span>
                     @if ($event->isFull())
-                        <x-ui.badge tone="warn">Full</x-ui.badge>
+                        <x-ui.badge preset="full" />
                     @endif
-                </p>
+                </x-ui.info-row>
             @endif
         </div>
         <form method="POST" action="{{ route('events.join', $event) }}" class="mt-6 space-y-3">

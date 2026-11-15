@@ -2,7 +2,7 @@
     @include('games.partials.filters', ['route' => 'games.index'])
 
     @forelse ($events as $event)
-        @include('events.partials.card', ['event' => $event])
+        <x-ui.game-card :event="$event" />
     @empty
         <x-ui.empty-state
             illustration="public"

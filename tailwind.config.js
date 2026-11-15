@@ -7,6 +7,7 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './app/Models/Event.php',
     ],
 
     theme: {
@@ -45,6 +46,22 @@ export default {
                     DEFAULT: 'rgb(var(--danger) / <alpha-value>)',
                     soft: 'rgb(var(--danger-soft) / <alpha-value>)',
                 },
+                activity: {
+                    padel: 'rgb(var(--activity-padel) / <alpha-value>)',
+                    'padel-soft': 'rgb(var(--activity-padel-soft) / <alpha-value>)',
+                    basketball: 'rgb(var(--activity-basketball) / <alpha-value>)',
+                    'basketball-soft': 'rgb(var(--activity-basketball-soft) / <alpha-value>)',
+                    football: 'rgb(var(--activity-football) / <alpha-value>)',
+                    'football-soft': 'rgb(var(--activity-football-soft) / <alpha-value>)',
+                    tennis: 'rgb(var(--activity-tennis) / <alpha-value>)',
+                    'tennis-soft': 'rgb(var(--activity-tennis-soft) / <alpha-value>)',
+                    hockey: 'rgb(var(--activity-hockey) / <alpha-value>)',
+                    'hockey-soft': 'rgb(var(--activity-hockey-soft) / <alpha-value>)',
+                    volleyball: 'rgb(var(--activity-volleyball) / <alpha-value>)',
+                    'volleyball-soft': 'rgb(var(--activity-volleyball-soft) / <alpha-value>)',
+                    other: 'rgb(var(--activity-other) / <alpha-value>)',
+                    'other-soft': 'rgb(var(--activity-other-soft) / <alpha-value>)',
+                },
             },
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
@@ -58,6 +75,8 @@ export default {
                 '2xl': ['1.5rem', { lineHeight: '2rem' }],
                 '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
                 '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+                '5xl': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+                '6xl': ['3.75rem', { lineHeight: '1.05', letterSpacing: '-0.02em' }],
             },
             spacing: {
                 4.5: '1.125rem',
