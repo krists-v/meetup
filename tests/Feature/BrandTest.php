@@ -28,9 +28,8 @@ class BrandTest extends TestCase
             ->get(route('dashboard'))
             ->assertOk()
             ->assertSee('Varza')
-            ->assertSee('My upcoming events')
-            ->assertSee('Public upcoming events')
-            ->assertSee('No games yet');
+            ->assertSee('Nothing on yet.')
+            ->assertSee('Open near you');
     }
 
     public function test_password_reset_email_uses_the_varza_name(): void

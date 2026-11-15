@@ -11,10 +11,12 @@
 
     @if ($event)
         <div class="mt-6 space-y-4">
-            <div class="overflow-hidden rounded-card ring-1 ring-line">
+            <div class="overflow-hidden rounded-card bg-white ring-1 ring-line">
+                <div class="px-4 py-3 {{ \App\Models\Event::accentClasses($event->sportSelection()) }}">
+                    <x-ui.chip :sport="$event->sportSelection()" :label="$event->sportLabel()" />
+                </div>
                 <x-illustrations.sport :sport="$event->sportSelection()" class="h-32 w-full" />
             </div>
-            <p class="text-sm text-ink-muted">{{ $event->sportLabel() }}</p>
             @unless ($event->isPoll())
                 <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
             @endunless
@@ -44,14 +46,20 @@
                 </x-ui.info-row>
             @endif
         </div>
-        <form method="POST" action="{{ route('events.join', $event) }}" class="mt-6 space-y-3">
+        <form id="join-form" method="POST" action="{{ route('events.join', $event) }}" class="mt-6 space-y-3">
             @csrf
             @if ($joinToken)
                 <input type="hidden" name="token" value="{{ $joinToken }}">
             @endif
-            <x-ui.button type="submit" class="w-full">I'm in</x-ui.button>
+            <div class="hidden sm:block">
+                <x-ui.button type="submit" class="w-full">I'm in</x-ui.button>
+            </div>
             <x-ui.button type="submit" name="account" value="new" variant="secondary" class="w-full">Create an account</x-ui.button>
         </form>
+        <div class="h-16 sm:hidden" aria-hidden="true"></div>
+        <div class="sticky-action fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white p-3 sm:hidden">
+            <x-ui.button type="submit" form="join-form" class="w-full">I'm in</x-ui.button>
+        </div>
     @else
         <div class="mt-6">
             <x-ui.button :href="route('login')" class="w-full">Log in</x-ui.button>

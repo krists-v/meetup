@@ -2,7 +2,7 @@
     <div class="space-y-1">
         <h2 class="font-semibold text-ink">Share</h2>
         <p class="text-sm text-ink-muted">
-            Send it on WhatsApp, or copy the link.
+            Send this to someone who'd be up for it.
             @if ($event->visibility === 'private')
                 A private game opens only with this link.
             @endif
@@ -20,5 +20,9 @@
             class="w-full"
             onclick="navigator.clipboard.writeText(@js($event->shareUrl())); this.textContent = 'Copied';"
         >Copy link</x-ui.button>
+        @unless ($event->isPoll())
+            <x-ui.button variant="secondary" :href="route('events.calendar', $event)" class="w-full">Download .ics</x-ui.button>
+            <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Google Calendar</x-ui.button>
+        @endunless
     </div>
 </x-ui.card>

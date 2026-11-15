@@ -238,8 +238,8 @@ class EventTest extends TestCase
             ->assertOk()
             ->assertSee('Future game')
             ->assertDontSee('Old game')
-            ->assertSee('My upcoming events')
-            ->assertSee('Public upcoming events');
+            ->assertSee('Your next game')
+            ->assertSee('Open near you');
     }
 
     public function test_strangers_cannot_rsvp_to_a_private_event(): void

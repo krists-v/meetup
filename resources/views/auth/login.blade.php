@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="space-y-1">
         <h1 class="text-2xl font-semibold tracking-tight">Welcome back</h1>
-        <p class="text-sm text-ink-muted">The next game is one login away.</p>
+        <p class="text-sm text-ink-muted">Log in, then see what's on.</p>
     </div>
 
     <x-auth-session-status class="mt-4" :status="session('status')" />

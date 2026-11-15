@@ -65,7 +65,7 @@ Emails and notices: one result, one link. Subject is the news. Body is two lines
 
 Share messages and link previews: the activity, when, where, and the link. Sound like a person texting a friend, not a press release. Private games include the invite link. Public games use the public page. No WhatsApp in the preview title.
 
-Locked strings, until the copy pass updates the tests in the same change: "My upcoming events", "Public upcoming events", "Vote on a time", "Availability", "Best time", "Your RSVP", "Lock in this time", "This time has passed".
+Locked strings, until the copy pass updates the tests in the same change: "Your next game", "Open near you", "Vote on a time", "Availability", "Best time", "Your RSVP", "Lock in this time", "This time has passed".
 
 ## Before and after
 

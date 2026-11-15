@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="space-y-1">
-        <h1 class="text-2xl font-semibold tracking-tight">Join the crew</h1>
-        <p class="text-sm text-ink-muted">An account takes a minute. Then you can plan a game or open an invite.</p>
+        <h1 class="text-2xl font-semibold tracking-tight">Come play</h1>
+        <p class="text-sm text-ink-muted">An account takes a minute. Then say you're in, or start a game.</p>
     </div>
 
     <form method="POST" action="{{ route('register') }}" class="mt-6 space-y-4">
@@ -38,7 +38,7 @@
             <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('privacy') }}">privacy policy</a>.
         </p>
 
-        <x-ui.button type="submit" class="w-full">{{ __('Create account') }}</x-ui.button>
+        <x-ui.button type="submit" class="w-full">Create an account</x-ui.button>
     </form>
 
     <p class="mt-4 text-sm text-ink-muted">

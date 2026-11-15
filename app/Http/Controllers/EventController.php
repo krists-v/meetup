@@ -43,33 +43,55 @@ class EventController extends Controller
     {
         $user = $request->user();
 
-        $myEvents = Event::query()
+        $involved = Event::query()
             ->upcoming()
-            ->with('creator')
+            ->with([
+                'creator',
+                'participants' => function ($query) use ($user) {
+                    $query->where('users.id', $user->id);
+                },
+            ])
             ->withCount(['goingParticipants', 'timeOptions'])
             ->where(function ($query) use ($user) {
                 $query->where('user_id', $user->id)
                     ->orWhereHas('participants', function ($query) use ($user) {
-                        $query->where('users.id', $user->id)
-                            ->whereIn('event_user.status', ['going', 'maybe', 'not_going', 'invited', 'waitlist']);
+                        $query->where('users.id', $user->id);
                     });
             })
             ->orderBy('event_date')
             ->get();
 
+        $visible = $involved->filter(function (Event $event) use ($user) {
+            if ($event->user_id === $user->id) {
+                return true;
+            }
+
+            return in_array($event->participants->first()?->pivot->status, ['going', 'maybe', 'waitlist'], true);
+        })->values();
+
+        $nextGame = $visible->first(function (Event $event) use ($user) {
+            return $event->user_id === $user->id
+                || $event->participants->first()?->pivot->status === 'going';
+        });
+
+        $rest = $visible->reject(fn (Event $event) => $nextGame && $event->is($nextGame))->values();
+
         $filters = GameFilters::fromRequest($request);
 
-        $publicEvents = $filters->apply(Event::query())
+        $openGames = $filters->apply(Event::query())
             ->with('creator')
             ->withCount(['goingParticipants', 'timeOptions'])
-            ->whereNotIn('id', $myEvents->pluck('id'))
+            ->whereNotIn('id', $involved->pluck('id'))
             ->orderBy('event_date')
             ->get();
 
         return view('dashboard', [
-            'myEvents' => $myEvents,
-            'publicEvents' => $publicEvents,
+            'nextGame' => $nextGame,
+            'hosting' => $rest->filter(fn (Event $event) => $event->user_id === $user->id)->values(),
+            'joined' => $rest->reject(fn (Event $event) => $event->user_id === $user->id)->values(),
+            'openGames' => $openGames,
             'filters' => $filters,
+            'hasGames' => $visible->isNotEmpty(),
         ]);
     }
 
@@ -160,8 +182,8 @@ class EventController extends Controller
         return redirect()
             ->route('events.show', $event)
             ->with('status', $scheduleType === 'poll'
-                ? 'Game planned. Send the link so friends can vote on a time.'
-                : 'Game planned. Send the invite link in the group chat.');
+                ? 'Game\'s on. Send the link so people can pick a time.'
+                : 'Game\'s on. Send the link to someone who\'d be up for it.');
     }
 
     public function show(Request $request, Event $event): View
@@ -291,7 +313,7 @@ class EventController extends Controller
 
         if ($event->isPoll()) {
             return back()->withErrors([
-                'status' => 'Pick a time before you mark Going, Maybe, or Not going.',
+                'status' => 'Pick a time first. Then say you\'re in.',
             ]);
         }
 
@@ -309,7 +331,7 @@ class EventController extends Controller
         if ($status === 'going' && $current !== 'going' && $event->hasReachedCapacity()) {
             return back()
                 ->withErrors([
-                    'status' => 'This game is full. Join the waitlist, or say Maybe or Not going.',
+                    'status' => 'It\'s full. Join the waitlist, or say maybe.',
                 ])
                 ->withInput();
         }

@@ -32,7 +32,7 @@ class SocialTest extends TestCase
             ->assertSee('Share on WhatsApp', false)
             ->assertSee('Copy link', false)
             ->assertSee($event->invite_token, false)
-            ->assertDontSee('Post comment');
+            ->assertDontSee('Add a note');
 
         $this->actingAs($creator)
             ->get(route('events.show', $event))
@@ -298,7 +298,7 @@ class SocialTest extends TestCase
             ->get(route('events.show', $event))
             ->assertOk()
             ->assertSee('I can make it')
-            ->assertSee('Post comment');
+            ->assertSee('Add a note');
 
         $comment = $event->comments()->first();
         $this->actingAs($user)

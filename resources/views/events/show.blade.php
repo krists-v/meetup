@@ -16,6 +16,17 @@
     ];
     $goingCount = $groups['going']['people']->count();
     $full = $event->max_participants !== null && $goingCount >= $event->max_participants;
+    $offerWaitlist = ! $event->isPoll() && $full && $userStatus !== 'going';
+    $rsvpValue = 'going';
+    $rsvpLabel = "I'm in";
+    $rsvpSettled = false;
+    if ($userStatus === 'going') {
+        $rsvpLabel = "You're in";
+        $rsvpSettled = true;
+    } elseif ($offerWaitlist) {
+        $rsvpValue = 'waitlist';
+        $rsvpLabel = 'Join waitlist';
+    }
 @endphp
 
 <x-app-layout
@@ -24,25 +35,23 @@
     :image="$preview->image"
     :url="$preview->url"
 >
-    <x-slot name="header">
-        <x-ui.page-header :title="$event->title" subtitle="Hosted by {{ $event->creator->name }}">
-            <x-slot name="actions">
-                <x-ui.sport-chip :event="$event" />
-            </x-slot>
-        </x-ui.page-header>
-    </x-slot>
-
     <div class="space-y-4">
-        <x-ui.card class="overflow-hidden">
-            <x-illustrations.sport :sport="$event->sportSelection()" class="h-40 w-full" />
+        <article class="overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line">
+            <div class="flex items-center justify-between gap-3 px-4 py-3 {{ \App\Models\Event::accentClasses($event->sportSelection()) }}">
+                <x-ui.chip :sport="$event->sportSelection()" :label="$event->sportLabel()" />
+                <span class="text-sm font-semibold">{{ $event->isIndoor() ? 'Indoors' : 'Outdoors' }}</span>
+            </div>
+            <x-illustrations.sport :sport="$event->sportSelection()" class="h-44 w-full" />
             <div class="space-y-4 p-4 sm:p-6">
+                <h1 class="text-2xl font-semibold tracking-tight text-ink">{{ $event->title }}</h1>
                 @if ($event->isPoll())
-                    <x-ui.info-row variant="time" label="When">Friends are voting on a time</x-ui.info-row>
+                    <x-ui.info-row variant="time" label="When">People are still picking a time</x-ui.info-row>
                 @else
-                    <x-ui.info-row variant="date" label="When">{{ $event->event_date->format('l j F Y, H:i') }}</x-ui.info-row>
+                    <x-ui.info-row variant="date" label="Date">{{ $event->event_date->timezone(config('app.timezone'))->format('D j M') }}</x-ui.info-row>
+                    <x-ui.info-row variant="time" label="Time">{{ $event->event_date->timezone(config('app.timezone'))->format('H:i') }}</x-ui.info-row>
                 @endif
                 <x-ui.info-row variant="place" label="Where" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
-                <x-ui.info-row variant="spots" label="Places">
+                <x-ui.info-row variant="spots" label="Spots">
                     @if ($event->isPoll())
                         @if ($event->max_participants)
                             Up to {{ $event->max_participants }} can go once a time is locked
@@ -64,65 +73,105 @@
                     <p class="whitespace-pre-line text-sm text-ink">{{ $event->description }}</p>
                 @endif
             </div>
-        </x-ui.card>
-
-        @unless ($event->isPoll())
-            <x-ui.card class="space-y-2 p-4 sm:p-6">
-                <h2 class="font-semibold text-ink">Add to calendar</h2>
-                <x-ui.button variant="secondary" :href="route('events.calendar', $event)" class="w-full">Download .ics</x-ui.button>
-                <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Google Calendar</x-ui.button>
-            </x-ui.card>
-        @endunless
+        </article>
 
         @if ($event->isPoll())
             @include('events.partials.time-poll')
         @else
             <x-ui.card class="space-y-3 p-4 sm:p-6">
                 <h2 class="font-semibold text-ink">Your RSVP</h2>
-                @php($offerWaitlist = $full && $userStatus !== 'going')
                 @if ($offerWaitlist)
-                    <p class="text-sm text-warn">This game is full. Join the waitlist, or say Maybe or Not going.</p>
+                    <p class="text-sm text-warn">It's full. Join the waitlist, or say maybe.</p>
                     @if ($userStatus === 'waitlist')
                         <p class="text-sm text-ink">You are {{ $event->waitlistPosition(auth()->user()) }} on the waitlist.</p>
                     @endif
                 @endif
                 <x-ui.error :messages="$errors->get('status')" />
-                <form method="POST" action="{{ route('events.rsvp', $event) }}" class="space-y-2">
+                @if ($userStatus === 'maybe')
+                    <p class="text-sm text-ink-muted">You're a maybe.</p>
+                @elseif ($userStatus === 'not_going')
+                    <p class="text-sm text-ink-muted">You said not going.</p>
+                @endif
+                <form id="rsvp-form" method="POST" action="{{ route('events.rsvp', $event) }}" class="space-y-2">
                     @csrf
-                    @if ($offerWaitlist)
-                        <x-ui.button
-                            type="submit"
-                            name="status"
-                            value="waitlist"
-                            :variant="$userStatus === 'waitlist' ? 'primary' : 'secondary'"
-                            class="w-full"
-                        >Join waitlist</x-ui.button>
+                    @if ($rsvpSettled)
+                        <div class="hidden min-h-11 items-center justify-center rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white sm:flex" role="status">{{ $rsvpLabel }}</div>
+                    @else
+                        <div class="hidden sm:block">
+                            <x-ui.button type="submit" name="status" value="{{ $rsvpValue }}" class="w-full">{{ $rsvpLabel }}</x-ui.button>
+                        </div>
                     @endif
-                    <div @class([
-                        'grid gap-2',
-                        'grid-cols-2' => $offerWaitlist,
-                        'grid-cols-3' => ! $offerWaitlist,
-                    ])>
-                        @foreach (['going' => 'Going', 'maybe' => 'Maybe', 'not_going' => 'Not going'] as $value => $label)
-                            @continue($offerWaitlist && $value === 'going')
+                    <div class="grid grid-cols-2 gap-2">
+                        @foreach (['maybe' => 'Maybe', 'not_going' => 'Not going'] as $value => $label)
                             <x-ui.button
                                 type="submit"
                                 name="status"
                                 value="{{ $value }}"
-                                :variant="$userStatus === $value ? 'primary' : 'secondary'"
+                                variant="secondary"
                                 class="w-full px-2"
                             >{{ $label }}</x-ui.button>
                         @endforeach
                     </div>
                 </form>
             </x-ui.card>
+
+            <div class="sticky-action fixed inset-x-0 z-40 border-t border-line bg-white p-3 sm:hidden" style="bottom: calc(3.5rem + env(safe-area-inset-bottom))">
+                @if ($rsvpSettled)
+                    <div class="flex min-h-11 w-full items-center justify-center rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white" role="status">{{ $rsvpLabel }}</div>
+                @else
+                    <x-ui.button type="submit" form="rsvp-form" name="status" value="{{ $rsvpValue }}" class="w-full">{{ $rsvpLabel }}</x-ui.button>
+                @endif
+            </div>
+            <div class="h-16 sm:hidden" aria-hidden="true"></div>
         @endif
 
-        @include('events.partials.share')
+        @unless ($event->isPoll())
+            <x-ui.section title="Who's going">
+                <x-ui.card class="space-y-4 p-4 sm:p-6">
+                    @if ($groups['going']['people']->isEmpty())
+                        <p class="text-sm text-ink-muted">No one yet. Be the first in.</p>
+                    @else
+                        <ul class="flex flex-wrap gap-4">
+                            @foreach ($groups['going']['people'] as $person)
+                                <li class="flex w-16 flex-col items-center gap-1 text-center">
+                                    <x-ui.avatar :name="$person->name" :user="$person" class="h-11 w-11" />
+                                    <span class="w-full truncate text-xs text-ink">{{ $person->name }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
 
-        @if ($event->isCreator(auth()->user()))
-            <x-ui.card class="space-y-3 p-4 sm:p-6">
-                <h2 class="font-semibold text-ink">Your game</h2>
+                    @foreach (['waitlist', 'maybe', 'not_going'] as $key)
+                        @continue($groups[$key]['people']->isEmpty())
+                        <div class="space-y-2">
+                            <p class="text-xs font-semibold uppercase tracking-wide text-ink-muted">{{ $groups[$key]['label'] }} · {{ $groups[$key]['people']->count() }}</p>
+                            <ul class="space-y-2">
+                                @foreach ($groups[$key]['people'] as $person)
+                                    <li class="flex min-h-11 items-center gap-2 text-sm text-ink">
+                                        <x-ui.avatar :name="$person->name" :user="$person" class="h-7 w-7 text-[11px]" />
+                                        @if ($key === 'waitlist')
+                                            {{ $loop->iteration }}.
+                                        @endif
+                                        {{ $person->name }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endforeach
+                </x-ui.card>
+            </x-ui.section>
+        @endunless
+
+        <x-ui.card class="space-y-3 p-4 sm:p-6">
+            <h2 class="font-semibold text-ink">Host</h2>
+            <div class="flex items-center gap-3">
+                <x-ui.avatar :name="$event->creator->name" :user="$event->creator" class="h-11 w-11" />
+                <div>
+                    <p class="font-semibold text-ink">{{ $event->creator->name }}</p>
+                    <p class="text-sm text-ink-muted">Hosting this game</p>
+                </div>
+            </div>
+            @if ($event->isCreator(auth()->user()))
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <x-ui.button variant="secondary" :href="route('events.edit', $event)">Edit game</x-ui.button>
                     @unless ($event->isPoll())
@@ -137,35 +186,10 @@
                         <x-ui.button type="submit" variant="danger" class="w-full">Cancel game</x-ui.button>
                     </form>
                 </div>
-            </x-ui.card>
-        @endif
+            @endif
+        </x-ui.card>
 
-        @unless ($event->isPoll())
-            <x-ui.section title="Participants">
-                <x-ui.card class="space-y-4 p-4 sm:p-6">
-                    @foreach ($groups as $group)
-                        <div class="space-y-2">
-                            <p class="text-xs font-semibold uppercase tracking-wide text-ink-muted">{{ $group['label'] }} · {{ $group['people']->count() }}</p>
-                            @if ($group['people']->isEmpty())
-                                <p class="text-sm text-ink-faint">No one yet</p>
-                            @else
-                                <ul class="space-y-2">
-                                    @foreach ($group['people'] as $person)
-                                        <li class="flex items-center gap-2 text-sm text-ink">
-                                            <x-ui.avatar :name="$person->name" :user="$person" class="h-7 w-7 text-[11px]" />
-                                            @if ($group['label'] === 'Waitlist')
-                                                {{ $loop->iteration }}.
-                                            @endif
-                                            {{ $person->name }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </div>
-                    @endforeach
-                </x-ui.card>
-            </x-ui.section>
-        @endunless
+        @include('events.partials.share')
 
         @include('events.partials.comments')
     </div>

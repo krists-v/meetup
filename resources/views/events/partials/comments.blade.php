@@ -1,7 +1,7 @@
-<x-ui.section title="Comments">
+<x-ui.section title="Notes">
     <x-ui.card class="space-y-4 p-4 sm:p-6">
         @if ($event->comments->isEmpty())
-            <p class="text-sm text-ink-muted">No comments yet. Leave a note for the crew.</p>
+            <p class="text-sm text-ink-muted">No notes yet. Say if you're bringing a ball.</p>
         @else
             <ul class="space-y-4">
                 @foreach ($event->comments as $comment)
@@ -28,10 +28,10 @@
 
         <form method="POST" action="{{ route('events.comments.store', $event) }}" class="space-y-2">
             @csrf
-            <x-ui.label for="comment-body" value="Comment" />
+            <x-ui.label for="comment-body" value="Note" />
             <x-ui.textarea id="comment-body" name="body" rows="3" maxlength="1000" required placeholder="Who is bringing a ball?">{{ old('body') }}</x-ui.textarea>
             <x-ui.error :messages="$errors->get('body')" />
-            <x-ui.button type="submit" class="w-full sm:w-auto">Post comment</x-ui.button>
+            <x-ui.button type="submit" variant="secondary" class="w-full sm:w-auto">Add a note</x-ui.button>
         </form>
     </x-ui.card>
 </x-ui.section>

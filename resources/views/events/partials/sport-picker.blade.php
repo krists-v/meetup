@@ -1,5 +1,5 @@
 @php
-    $selectedSport = old('sport', $editing ? $event->sportSelection() : 'football');
+    $selectedSport = old('sport', $editing ? $event->sportSelection() : ($fallbackSport ?? 'football'));
     $customSport = old('custom_sport', $editing ? $event->customSportInput() : '');
 @endphp
 
