@@ -166,6 +166,33 @@ class SocialTest extends TestCase
         $this->assertGreaterThan($bottom['red'], $bottom['blue']);
     }
 
+    public function test_mirrored_sideways_photos_land_right_way_up(): void
+    {
+        if (! function_exists('imagejpeg') || ! function_exists('exif_read_data') || ! function_exists('imagecreatefromstring')) {
+            $this->markTestSkipped('GD and EXIF are required to check photo orientation.');
+        }
+
+        $wide = imagecreatetruecolor(40, 10);
+        $red = imagecolorallocate($wide, 220, 20, 20);
+        $blue = imagecolorallocate($wide, 20, 20, 220);
+        imagefilledrectangle($wide, 0, 0, 39, 9, $blue);
+        imagefilledrectangle($wide, 0, 0, 9, 4, $red);
+        ob_start();
+        imagejpeg($wide, null, 95);
+        $jpeg = ob_get_clean();
+        imagedestroy($wide);
+
+        $upright = $this->storedAvatar($jpeg, 5);
+        $this->assertSame('R', $this->swatch($upright, 2, 2));
+        $this->assertSame('B', $this->swatch($upright, 2, 30));
+        imagedestroy($upright);
+
+        $other = $this->storedAvatar($jpeg, 7);
+        $this->assertSame('R', $this->swatch($other, 7, 35));
+        $this->assertSame('B', $this->swatch($other, 2, 2));
+        imagedestroy($other);
+    }
+
     public function test_profile_rejects_a_file_that_is_not_a_photo(): void
     {
         Storage::fake('avatars');
@@ -297,6 +324,37 @@ class SocialTest extends TestCase
             ->post(route('events.comments.store', $event), ['body' => 'Three'])
             ->assertStatus(429)
             ->assertSee('Too many tries');
+    }
+
+    private function storedAvatar(string $jpeg, int $orientation): \GdImage
+    {
+        Storage::fake('avatars');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => UploadedFile::fake()->createWithContent('face.jpg', $this->jpegWithOrientation($jpeg, $orientation)),
+            ])
+            ->assertSessionHasNoErrors();
+
+        $image = imagecreatefromstring(Storage::disk('avatars')->get($user->fresh()->avatar_path));
+        $this->assertNotFalse($image);
+        $this->assertSame(10, imagesx($image));
+        $this->assertSame(40, imagesy($image));
+
+        return $image;
+    }
+
+    /**
+     * @return 'R'|'B'
+     */
+    private function swatch(\GdImage $image, int $x, int $y): string
+    {
+        $color = imagecolorsforindex($image, imagecolorat($image, $x, $y));
+
+        return $color['red'] > $color['blue'] ? 'R' : 'B';
     }
 
     private function jpegWithOrientation(string $jpeg, int $orientation): string

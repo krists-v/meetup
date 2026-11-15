@@ -86,9 +86,9 @@ class AvatarStore
             2 => $this->flip($image, IMG_FLIP_HORIZONTAL),
             3 => $this->rotate($image, 180),
             4 => $this->flip($image, IMG_FLIP_VERTICAL),
-            5 => $this->rotate($this->flip($image, IMG_FLIP_HORIZONTAL), -90),
+            5 => $this->rotate($this->flip($image, IMG_FLIP_HORIZONTAL), 90),
             6 => $this->rotate($image, -90),
-            7 => $this->rotate($this->flip($image, IMG_FLIP_HORIZONTAL), 90),
+            7 => $this->rotate($this->flip($image, IMG_FLIP_HORIZONTAL), -90),
             8 => $this->rotate($image, 90),
             default => $image,
         };
