@@ -7,18 +7,18 @@ description: "Checklist for adding an activity to Varza. Use when adding a sport
 
 One activity touches the list, the picture, the share card, and the tests. Do all of them in the same change. Copy follows `varza-voice`. Color and icon follow `.cursor/rules/varza-design.mdc`.
 
-Current storage is `Event::SPORTS` in `app/Models/Event.php`. Slugs already there: padel, basketball, football, tennis, hockey, volleyball, other. Categories, indoor or outdoor, and "Beginners welcome" are not columns yet. When you add an activity, record those choices and add the field if it is missing.
+The catalog is `Event::ACTIVITIES` and `Event::SPORTS` in `app/Models/Event.php`. A game stores `setting` (`indoor` or `outdoor`) and a nullable `level` (`beginner`, `intermediate`, `advanced`, `pro`; null means all levels). Keep those two lists on the same slugs.
 
 ## Checklist
 
 1. Slug. Lowercase, stable, a key in `Event::SPORTS`. Do not rename a shipped slug.
 2. Label. The word people say: "Table tennis", not "TT".
-3. Category. One of Racket, Team, Indoor, Outdoor, Social. Store it when the category field exists. Until then, note it next to the slug in the change.
+3. Category. One of Racket, Team, Indoor, Outdoor, Social, stored on `Event::ACTIVITIES`. Custom `other` stays uncategorised.
 4. Icon. A Lucide name on `x-ui.icon`. No new icon set, no emoji.
 5. Accent. One `--activity-*` token. Chips, tints, and the illustration only. Pitch green stays the button color. No Tailwind default palette (`indigo`, `orange`, `sky`, `rose`).
 6. Illustration. A `@case` in `resources/views/components/illustrations/sport.blade.php`. Flat, pitch green, white, ink, sand, plus that one accent. Unknown slugs fall through to `other`.
 7. OG image. `public/images/og/{slug}.png`. `LinkPreview::image()` already maps the slug to that path. Also check the default image still covers a missing file.
-8. Indoor or outdoor default. Outdoors or indoors, one default. Show it later as the sun or home info row. Store it when the field exists.
+8. Indoor or outdoor default on `Event::ACTIVITIES`. Games copy it into `setting` and can change it. Show it as the sun or home info row.
 9. Copy. One line a stranger understands ("Climbing, indoors, beginners welcome."). Run the `varza-voice` checklist. "Beginners welcome" is the badge label when the activity is for new people.
 10. Tests. `SportPickerTest` loops `Event::SPORTS`, so a new slug is created and shown. Also cover the filter chip, the favorite-sport validation (`ProfileUpdateRequest`), and the OG image URL for that slug.
 

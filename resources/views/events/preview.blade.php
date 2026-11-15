@@ -19,6 +19,7 @@
                 <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
             @endunless
             <x-ui.info-row variant="place" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
+            <x-ui.activity-facts :event="$event" />
             <div class="flex flex-col gap-2">
                 <x-ui.button variant="secondary" :href="$event->whatsAppUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Share on WhatsApp</x-ui.button>
                 <x-ui.button

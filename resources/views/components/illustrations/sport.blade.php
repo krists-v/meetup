@@ -62,6 +62,45 @@
             <x-illustrations.person transform="translate(64 58)" shirt="#ffffff" />
             <x-illustrations.person transform="translate(250 58)" shirt="#144129" />
             @break
+        @case('table-tennis')
+            <rect x="48" y="46" width="224" height="48" rx="6" fill="#e0f2f2" stroke="#125a60" stroke-width="2" />
+            <path d="M160 46v48" stroke="#125a60" stroke-width="3" />
+            <circle cx="118" cy="70" r="6" fill="#f7faf8" stroke="#125a60" stroke-width="2" />
+            <x-illustrations.person transform="translate(28 50)" shirt="#ffffff" />
+            <x-illustrations.person transform="translate(268 50)" shirt="#125a60" />
+            @break
+        @case('bowling')
+            <path d="M70 96c40-28 140-28 180 0" stroke="#e7d3bf" stroke-width="10" stroke-linecap="round" />
+            <circle cx="196" cy="58" r="7" fill="#f7faf8" stroke="#80481c" stroke-width="2" />
+            <circle cx="214" cy="50" r="7" fill="#f7faf8" stroke="#80481c" stroke-width="2" />
+            <circle cx="232" cy="58" r="7" fill="#f7faf8" stroke="#80481c" stroke-width="2" />
+            <circle cx="96" cy="78" r="12" fill="#80481c" />
+            <x-illustrations.person transform="translate(48 46)" shirt="#ffffff" />
+            @break
+        @case('climbing')
+            <rect x="96" y="16" width="128" height="100" rx="8" fill="#e8eae4" stroke="#484e46" stroke-width="2" />
+            <circle cx="132" cy="40" r="6" fill="#484e46" />
+            <circle cx="176" cy="58" r="6" fill="#f7faf8" stroke="#484e46" stroke-width="2" />
+            <circle cx="148" cy="82" r="6" fill="#484e46" />
+            <x-illustrations.person transform="translate(150 48)" shirt="#ffffff" />
+            @break
+        @case('running')
+            <path d="M24 96h272" stroke="#e7d3bf" stroke-width="8" stroke-linecap="round" />
+            <path d="M40 96c20-16 36-16 52 0" stroke="#8c4030" stroke-width="3" stroke-linecap="round" />
+            <x-illustrations.person transform="translate(150 46)" shirt="#ffffff" />
+            <circle cx="210" cy="70" r="8" fill="#fae8e2" stroke="#8c4030" stroke-width="2" />
+            @break
+        @case('cycling')
+            <circle cx="108" cy="84" r="18" stroke="#305a48" stroke-width="3" />
+            <circle cx="212" cy="84" r="18" stroke="#305a48" stroke-width="3" />
+            <path d="M108 84l28-28h36l40 28" stroke="#305a48" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            <x-illustrations.person transform="translate(146 36)" shirt="#ffffff" />
+            @break
+        @case('hiking')
+            <path d="M40 100l70-52 40 28 50-40 70 64H40z" fill="#e8f0dc" stroke="#40582a" stroke-width="2" stroke-linejoin="round" />
+            <x-illustrations.person transform="translate(150 48)" shirt="#ffffff" />
+            <circle cx="230" cy="36" r="10" fill="#e7d3bf" />
+            @break
         @default
             <circle cx="160" cy="64" r="36" fill="#d7efe0" />
             <x-illustrations.person transform="translate(132 48)" shirt="#ffffff" />

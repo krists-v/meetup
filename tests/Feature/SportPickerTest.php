@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class SportPickerTest extends TestCase
@@ -22,6 +23,8 @@ class SportPickerTest extends TestCase
 
             $title = $label.' pickup';
 
+            RateLimiter::clear(md5('events'.$user->id));
+
             $this->actingAs($user)
                 ->post(route('events.store'), $this->payload($title, ['sport' => $value]))
                 ->assertSessionHasNoErrors();
@@ -36,10 +39,30 @@ class SportPickerTest extends TestCase
                 $event->sport_type,
             );
 
-            $this->actingAs($user)
+            $this->assertSame(Event::defaultSetting($value), $event->setting);
+            $this->assertNull($event->level);
+            $this->assertFileExists(public_path('images/og/'.$value.'.png'));
+
+            $show = $this->actingAs($user)
                 ->get(route('events.show', $event))
                 ->assertOk()
-                ->assertSee($label);
+                ->assertSee($label)
+                ->assertSee($event->isIndoor() ? 'Indoors' : 'Outdoors')
+                ->assertSee('Beginners welcome')
+                ->assertSee('images/og/'.$value.'.png', false);
+
+            $marks = [
+                'table-tennis' => '#e0f2f2',
+                'bowling' => '#80481c',
+                'climbing' => '#e8eae4',
+                'running' => '#8c4030',
+                'cycling' => '#305a48',
+                'hiking' => '#40582a',
+            ];
+
+            if (isset($marks[$value])) {
+                $show->assertSee($marks[$value], false);
+            }
 
             $this->actingAs($user)
                 ->get(route('dashboard'))

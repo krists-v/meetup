@@ -14,6 +14,7 @@
             @else
                 <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
             @endif
+            <x-ui.activity-facts :event="$event" />
             @if ($event->attendanceLabel() !== '')
                 <x-ui.info-row variant="spots">
                     <span>{{ $event->attendanceLabel() }}</span>
