@@ -30,14 +30,22 @@
         </x-ui.section>
 
         <x-ui.section title="Public upcoming events">
+            @include('games.partials.filters', ['route' => 'dashboard'])
+
             @forelse ($publicEvents as $event)
                 @include('events.partials.card', ['event' => $event])
             @empty
                 <x-ui.empty-state
                     illustration="public"
-                    title="Nothing public right now"
-                    description="When a friend plans a public game, it shows up here."
-                />
+                    :title="$filters->active() ? 'No games match' : 'Nothing public right now'"
+                    :description="$filters->active() ? 'Try another sport, a different day, or a wider search.' : 'When a friend plans a public game, it shows up here.'"
+                >
+                    @if ($filters->active())
+                        <x-slot name="action">
+                            <x-ui.button variant="secondary" :href="route('dashboard')">Clear filters</x-ui.button>
+                        </x-slot>
+                    @endif
+                </x-ui.empty-state>
             @endforelse
         </x-ui.section>
     </div>

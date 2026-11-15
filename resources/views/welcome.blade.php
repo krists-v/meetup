@@ -13,6 +13,7 @@
             <header class="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4">
                 <x-ui.wordmark href="/" />
                 <div class="flex items-center gap-2">
+                    <x-ui.button variant="ghost" :href="route('games.index')">Games</x-ui.button>
                     <x-ui.button variant="ghost" :href="route('login')">Log in</x-ui.button>
                     <div class="hidden sm:block">
                         <x-ui.button :href="route('register')">Create an account</x-ui.button>
@@ -31,6 +32,7 @@
                             <x-ui.button :href="route('register')">Create an account</x-ui.button>
                             <x-ui.button variant="secondary" :href="route('login')">I already play</x-ui.button>
                         </div>
+                        <a href="{{ route('games.index') }}" class="inline-flex min-h-11 items-center text-sm font-semibold text-pitch-700 hover:text-pitch-800">See public games</a>
                     </div>
                 </section>
 

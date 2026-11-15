@@ -55,21 +55,8 @@ class LinkPreview
             ? 'Vote on a time'
             : $event->event_date->format('l j F Y, H:i');
 
-        return $event->sportLabel().', '.$when.', '.$event->location.'. '.self::spots($event).'.';
-    }
+        $places = $event->attendanceLabel();
 
-    private static function spots(Event $event): string
-    {
-        if ($event->max_participants === null) {
-            return 'No limit on spots';
-        }
-
-        if ($event->going_participants_count === null) {
-            $event->loadCount('goingParticipants');
-        }
-
-        $left = max(0, $event->max_participants - (int) $event->going_participants_count);
-
-        return $left === 1 ? '1 spot left' : $left.' spots left';
+        return $event->sportLabel().', '.$when.', '.$event->location.($places === '' ? '.' : '. '.$places.'.');
     }
 }

@@ -42,14 +42,14 @@
                     <x-ui.icon name="map-pin" class="mt-0.5 text-pitch-700" />
                     <div>
                         <p class="text-sm text-ink-muted">Where</p>
-                        <p class="text-base text-ink">{{ $event->location }}</p>
+                        <a href="{{ $event->mapUrl() }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center text-base font-medium text-pitch-700 hover:text-pitch-800">{{ $event->location }}</a>
                     </div>
                 </div>
                 <div class="flex gap-3">
                     <x-ui.icon name="users" class="mt-0.5 text-pitch-700" />
                     <div>
                         <p class="text-sm text-ink-muted">Places</p>
-                        <p class="text-base text-ink">
+                        <p class="flex flex-wrap items-center gap-2 text-base text-ink">
                             @if ($event->isPoll())
                                 @if ($event->max_participants)
                                     Up to {{ $event->max_participants }} can go once a time is locked
@@ -57,11 +57,9 @@
                                     No limit once a time is locked
                                 @endif
                             @else
-                                {{ $goingCount }} going
-                                @if ($event->max_participants)
-                                    of {{ $event->max_participants }}
-                                @else
-                                    · no limit
+                                <span>{{ $event->attendanceLabel() }}</span>
+                                @if ($event->isFull())
+                                    <x-ui.badge tone="warn">Full</x-ui.badge>
                                 @endif
                             @endif
                         </p>

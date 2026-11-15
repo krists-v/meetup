@@ -130,11 +130,61 @@ class Event extends Model
 
     public function hasReachedCapacity(): bool
     {
+        return $this->isFull();
+    }
+
+    public function goingCount(): int
+    {
+        if (isset($this->going_participants_count)) {
+            return (int) $this->going_participants_count;
+        }
+
+        if ($this->relationLoaded('participants')) {
+            return $this->participants->where('pivot.status', 'going')->count();
+        }
+
+        return $this->goingParticipants()->count();
+    }
+
+    public function isFull(): bool
+    {
+        return ! $this->isPoll()
+            && $this->max_participants !== null
+            && $this->goingCount() >= $this->max_participants;
+    }
+
+    public function attendanceLabel(): string
+    {
+        if ($this->isPoll()) {
+            return $this->max_participants
+                ? 'max '.$this->max_participants.' once a time is chosen'
+                : '';
+        }
+
+        $going = $this->goingCount();
+
         if ($this->max_participants === null) {
+            return $going.' going';
+        }
+
+        $left = max(0, $this->max_participants - $going);
+        $spots = $left === 1 ? '1 spot left' : $left.' spots left';
+
+        return $going.' of '.$this->max_participants.' going · '.$spots;
+    }
+
+    public function mapUrl(): string
+    {
+        return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode($this->location);
+    }
+
+    public function matchesInviteToken(mixed $token): bool
+    {
+        if (! is_string($token) || $token === '' || strlen($token) !== strlen((string) $this->invite_token)) {
             return false;
         }
 
-        return $this->goingParticipants()->count() >= $this->max_participants;
+        return hash_equals((string) $this->invite_token, $token);
     }
 
     public function getUserStatus(User $user): ?string
