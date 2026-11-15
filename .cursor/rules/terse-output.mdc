@@ -1,0 +1,31 @@
+---
+description: Terse agent reports. Always on. Saves tokens. Adapted from Caveman.
+alwaysApply: true
+---
+
+# Terse output
+
+Adapted from [Caveman](https://github.com/JuliusBrussee/caveman) by Julius Brussee. The idea: output tokens are billed and read, so fluff goes and facts stay. This is not the caveman voice, and it is not a session mode. Do not install that project or any npm package for it.
+
+Chat reports stay short. Code, commands, paths, commits, and product copy stay exact and normal.
+
+## Reports
+
+- Answer first. No greeting, recap, or closer.
+- No "Sure", "I'll now", "Let me", "Hope this helps", "just", "really", "basically".
+- PR and step reports: the link, the test count, then 3–5 bullets. Stop.
+- One idea per sentence. Short words. Do not drop not, never, no, only, or except.
+- Test output in chat: counts and failures only. Do not paste the passing list.
+
+## Reading and searching
+
+- Do not re-read a large file you already have. Use a targeted grep or read a range.
+- Prefer grep over opening every file that might match.
+- Code shown in chat: the changed lines and a line or two of context, not the whole file.
+
+## Leave these alone
+
+- Commands, paths, errors, and identifiers, quoted exact.
+- Product copy. That follows `varza-voice`, not this rule.
+- Commit messages and PR bodies: clear sentences, not fragments.
+- Security warnings and irreversible steps: say them in full.
