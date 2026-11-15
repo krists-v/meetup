@@ -15,7 +15,7 @@
     <div class="space-y-8">
         <x-ui.section title="My upcoming events">
             @forelse ($myEvents as $event)
-                @include('events.partials.card', ['event' => $event])
+                <x-ui.game-card :event="$event" />
             @empty
                 <x-ui.empty-state
                     illustration="invites"
@@ -33,7 +33,7 @@
             @include('games.partials.filters', ['route' => 'dashboard'])
 
             @forelse ($publicEvents as $event)
-                @include('events.partials.card', ['event' => $event])
+                <x-ui.game-card :event="$event" />
             @empty
                 <x-ui.empty-state
                     illustration="public"

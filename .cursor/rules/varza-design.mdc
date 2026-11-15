@@ -35,11 +35,11 @@ Logged-in screens use canvas and white cards. No mesh, grain, or glass there.
 
 Public and marketing pages only (the homepage, not the logged-in app):
 
-- A pitch-green gradient or mesh background.
-- A subtle grain overlay.
-- One dark `pitch-950` band.
-- Glassy cards (white at low opacity, a light ring, backdrop blur).
-- Larger headlines than the app, up to `text-5xl` or `text-6xl`, still Inter, still `font-semibold tracking-tight`.
+- A pitch-green gradient or mesh background: `.bg-pitch-mesh` (`.bg-pitch-wash` remains).
+- A subtle grain overlay: `.bg-grain`.
+- One dark `pitch-950` band: `.bg-pitch-band`.
+- Glassy cards: `.glass-card`.
+- Larger headlines than the app: `text-5xl` or `text-6xl`, still Inter, still `font-semibold tracking-tight`.
 
 One dark band, not a dark theme. The rest of the page stays light.
 
@@ -47,7 +47,7 @@ One dark band, not a dark theme. The rest of the page stays light.
 
 Inter, self-hosted in `public/fonts`, with the system sans fallback. Weights in use: 400, 500, 600, 700.
 
-Type scale, already mapped onto Tailwind's text sizes: xs 12, sm 14, base 16, lg 18, xl 20, 2xl 24, 3xl 30, 4xl 36. App page titles are `text-2xl` or `text-3xl font-semibold tracking-tight`. Body copy is `text-base` or `text-sm` with `text-ink-muted`. Do not set a font below 16px on inputs (iOS zoom).
+Type scale, already mapped onto Tailwind's text sizes: xs 12, sm 14, base 16, lg 18, xl 20, 2xl 24, 3xl 30, 4xl 36, 5xl 48, 6xl 60. App page titles are `text-2xl` or `text-3xl font-semibold tracking-tight`. Marketing headlines may use `text-5xl` or `text-6xl`. Body copy is `text-base` or `text-sm` with `text-ink-muted`. Do not set a font below 16px on inputs (iOS zoom).
 
 ## Spacing
 
@@ -64,7 +64,7 @@ Use the 4px scale: 1, 2, 3, 4, 6, 8, 12, 16 (`--space-*`). Stack related items w
 
 One set: [Lucide](https://lucide.dev) (ISC). Outline, 24px viewBox, stroke 2, `currentColor`, round caps and joins.
 
-Render icons only as `<x-ui.icon name="..." />`, using Lucide path data inside that component. Do not add `blade-heroicons`, `blade-lucide-icons`, emoji, or one-off SVG icons in a page. The paths in `x-ui.icon` today are still Heroicons; when you add a symbol, add the Lucide path, and do not introduce a second icon component.
+Render icons only as `<x-ui.icon name="..." />`. Paths in that component are Lucide. Do not add `blade-heroicons`, `blade-lucide-icons`, emoji, or one-off SVG icons in a page. Add a new Lucide path to `x-ui.icon` when a screen needs a new symbol.
 
 Info-row names the UX skill expects: `calendar`, `clock`, `map-pin`, `users`, `signal`, `sun`, `home`.
 
@@ -72,12 +72,12 @@ Info-row names the UX skill expects: `calendar`, `clock`, `map-pin`, `users`, `s
 
 A small kit, CSS and Alpine only. No GSAP, Motion One, anime.js, AOS, or other animation libraries. Durations 150–400ms.
 
-- Press: `motion-safe:active:scale-[0.98]`, 150ms.
-- Success pop: a one-shot scale from 0.96 to 1 on the result, about 200ms.
-- Sliding active indicator: the nav or filter pill slides, about 200ms.
+- Press: `.motion-press` scales to 0.98 on active, 150ms. Buttons already use it.
+- Success pop: `.motion-pop`, a one-shot scale from 0.96 to 1, 200ms.
+- Sliding active indicator: `.motion-slide`, transform, 200ms.
 - Count tick: a number changes with a short vertical slide, about 200ms.
-- Skeleton pulse: opacity only, about 1.2s, and only while loading.
-- View transitions: a short cross-fade between screens, about 200ms.
+- Skeleton pulse: `.motion-skeleton`, opacity only, about 1.2s, and only while loading.
+- View transitions: `.motion-view` opts one element in. Do not set it on two elements.
 - Hero entrance: marketing pages only, a short staggered fade-up, 400ms total.
 
 `prefers-reduced-motion: reduce` is handled globally in `app.css`. Do not override it. Under reduced motion: no transform, no pulse, no entrance, instant state. The logged-in app does not use the hero entrance.
@@ -93,14 +93,17 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.page-header` | The title of a screen, with optional subtitle and `actions` slot. |
 | `x-ui.section` | A labeled group on a page. |
 | `x-ui.card` | A white surface for a form, a detail block, or a poll option. |
-| `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Primary is the one next step. |
+| `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Primary is the one next step. Includes `.motion-press`. |
+| `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
+| `x-ui.game-card` | One game: illustration, chip, title, info rows, map link outside the title link. |
+| `x-ui.chip` | Activity name with that activity's soft accent. |
 | `x-ui.label` | Every control's label. |
 | `x-ui.input` | Text, email, password, number, date. |
 | `x-ui.select` | A native select when there are many short options and chips would wrap into a mess. |
 | `x-ui.textarea` | Notes and descriptions. |
 | `x-ui.error` | Validation messages for one field. |
-| `x-ui.badge` | Status such as "Vote on a time" or "Best time". Tones: `pitch`, `warn`, `neutral`. |
-| `x-ui.sport-chip` | The activity name. Accent tint allowed here. |
+| `x-ui.badge` | Status such as "Vote on a time" or "Best time". Tones: `pitch`, `warn`, `neutral`. Presets: `full`, `beginners`, `indoor`, `outdoor`. |
+| `x-ui.sport-chip` | The activity name. Delegates to `x-ui.chip`. |
 | `x-ui.avatar` | Photo, or initials from a person's name. |
 | `x-ui.empty-state` | A titled empty list with an illustration and an optional action. |
 | `x-ui.icon` | The Lucide set. |
