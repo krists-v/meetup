@@ -21,7 +21,7 @@
             </header>
 
             <div class="relative z-10 mx-auto grid w-full max-w-5xl items-center gap-10 px-4 pb-16 pt-6 lg:grid-cols-2 lg:pt-10">
-                <div class="motion-hero">
+                <div class="motion-hero space-y-5">
                     <h1 class="text-5xl sm:text-6xl">Bored at home? Go play.</h1>
                     <p class="text-xl font-medium text-ink">Less scrolling, more playing.</p>
                     <p class="max-w-md text-base text-ink-muted">See what's on near you. Padel, tennis, bowling, climbing. Then go.</p>

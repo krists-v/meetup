@@ -44,7 +44,7 @@ class HomeTest extends TestCase
             ->assertSee('bg-pitch-mesh', false)
             ->assertSee('bg-grain', false)
             ->assertSee('bg-pitch-band', false)
-            ->assertSee('motion-hero', false)
+            ->assertSee('motion-hero space-y-5', false)
             ->assertDontSee('WhatsApp')
             ->assertDontSee('ten friends')
             ->assertDontSee('small crew')
