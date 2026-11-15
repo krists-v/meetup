@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\PromotedFromWaitlist;
 use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -104,13 +105,21 @@ class Event extends Model
     public function participants(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'event_user')
-            ->withPivot('status')
+            ->withPivot('id', 'status')
             ->withTimestamps();
     }
 
     public function goingParticipants(): BelongsToMany
     {
         return $this->participants()->wherePivot('status', 'going');
+    }
+
+    public function waitlistParticipants(): BelongsToMany
+    {
+        return $this->participants()
+            ->wherePivot('status', 'waitlist')
+            ->orderByPivot('created_at')
+            ->orderByPivot('id');
     }
 
     public function maybeParticipants(): BelongsToMany
@@ -192,6 +201,39 @@ class Event extends Model
         $participant = $this->participants()->where('users.id', $user->id)->first();
 
         return $participant?->pivot->status;
+    }
+
+    public function waitlistPosition(User $user): ?int
+    {
+        $index = $this->waitlistParticipants()->pluck('users.id')->search($user->id);
+
+        return $index === false ? null : $index + 1;
+    }
+
+    public function promoteWaitlist(): void
+    {
+        $this->unsetRelation('participants');
+        $this->unsetRelation('goingParticipants');
+
+        $open = $this->max_participants === null
+            ? PHP_INT_MAX
+            : max(0, $this->max_participants - $this->goingParticipants()->count());
+
+        if ($open < 1) {
+            return;
+        }
+
+        foreach ($this->waitlistParticipants()->get() as $waiting) {
+            if ($open < 1) {
+                break;
+            }
+
+            $this->participants()->updateExistingPivot($waiting->id, [
+                'status' => 'going',
+            ]);
+            $waiting->notify(new PromotedFromWaitlist($this));
+            $open--;
+        }
     }
 
     public function timeOptions(): HasMany

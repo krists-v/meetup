@@ -50,7 +50,7 @@ The database defaults to SQLite at `database/database.sqlite`. No other services
 php artisan test
 ```
 
-Feature tests cover creating an event, public versus private visibility, joining through an invite link, RSVP capacity, creator-only edit and delete, time polls (voting, private visibility, and locking with the capacity limit).
+Feature tests cover creating an event, public versus private visibility, joining through an invite link, RSVP capacity, the waitlist and its promotion email, calendar files, repeating a game, creator-only edit and delete, and time polls (voting, private visibility, and locking with the capacity limit).
 
 Laravel Boost is a dev dependency for Cursor. Its generated guidelines are in `AGENTS.md`, with skills and MCP config under `.cursor/`. Production installs skip dev dependencies, so Boost is not part of the Railway image.
 
@@ -67,6 +67,7 @@ Set these variables on the service:
 | `APP_DEBUG` | `false` |
 | `APP_URL` | the public https URL Railway gives the service |
 | `APP_NAME` | `Varza` |
+| `APP_TIMEZONE` | `Europe/Riga`. Calendar files and Google Calendar links use this zone. |
 | `QUEUE_CONNECTION` | `sync`. The image already sets this. Do not add a queue worker. |
 | `MAIL_MAILER` | `resend` |
 | `RESEND_API_KEY` | API key from Resend. Leave it empty and mail is written to the log instead of failing. |

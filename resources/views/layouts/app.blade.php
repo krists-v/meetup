@@ -27,6 +27,18 @@
                 @if (is_string($status) && $status !== '' && ! in_array($status, $quietStatuses, true))
                     <p class="mb-4 rounded-card bg-success-soft px-4 py-3 text-sm text-pitch-800" role="status">{{ $status }}</p>
                 @endif
+                @auth
+                    @foreach (auth()->user()->unreadNotifications as $notice)
+                        @if (is_string($notice->data['message'] ?? null))
+                            <p class="mb-4 rounded-card bg-success-soft px-4 py-3 text-sm text-pitch-800" role="status">
+                                {{ $notice->data['message'] }}
+                                @if (! empty($notice->data['event_id']))
+                                    <a href="{{ route('events.show', $notice->data['event_id']) }}" class="font-medium underline">See the game</a>
+                                @endif
+                            </p>
+                        @endif
+                    @endforeach
+                @endauth
                 {{ $slot }}
             </main>
         </x-ui.shell>

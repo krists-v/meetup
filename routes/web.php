@@ -19,6 +19,9 @@ Route::post('/events/{event}/join', [EventController::class, 'join'])
     ->middleware('throttle:writes')
     ->name('events.join');
 
+Route::get('/events/{event}/calendar.ics', [EventController::class, 'calendar'])
+    ->name('events.calendar');
+
 Route::get('/invite/{token}', [EventController::class, 'invite'])
     ->middleware('throttle:writes')
     ->name('events.invite');
@@ -40,6 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/events/{event}/rsvp', [EventController::class, 'rsvp'])
         ->middleware('throttle:writes')
         ->name('events.rsvp');
+    Route::post('/events/{event}/repeat', [EventController::class, 'repeat'])
+        ->middleware('throttle:writes')
+        ->name('events.repeat');
     Route::post('/events/{event}/options/{option}/vote', [EventController::class, 'vote'])
         ->middleware('throttle:writes')
         ->name('events.options.vote');
