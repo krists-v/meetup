@@ -13,11 +13,11 @@
             $mine = $option->votes->firstWhere('user_id', $userId);
             $isBest = $best && $best->is($option);
         @endphp
-        <x-ui.card class="{{ $isBest ? 'space-y-3 p-4 outline outline-2 outline-pitch-600' : 'space-y-3 p-4' }}">
+        <x-ui.card @class(['space-y-3 p-4', 'outline outline-2 outline-pitch-600' => $isBest, 'motion-pop' => (int) session('voted') === $option->id])>
             <div class="flex items-start justify-between gap-3">
                 <div>
                     <h3 class="font-semibold text-ink">{{ $option->starts_at->format('D j M, H:i') }}</h3>
-                    <p class="mt-1 text-xs text-ink-muted">
+                    <p @class(['mt-1 text-xs text-ink-muted', 'motion-tick' => (int) session('voted') === $option->id])>
                         {{ $option->voteCount('yes') }} yes · {{ $option->voteCount('maybe') }} maybe · {{ $option->voteCount('no') }} no
                     </p>
                 </div>

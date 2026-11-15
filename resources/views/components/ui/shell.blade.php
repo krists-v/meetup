@@ -38,20 +38,21 @@
     <x-ui.footer class="mx-auto w-full max-w-5xl px-4 pb-24 pt-2 sm:pb-8" />
 
     <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 backdrop-blur sm:hidden" style="padding-bottom: env(safe-area-inset-bottom)" aria-label="Mobile">
-        <div class="grid grid-cols-4">
-            <a href="{{ route('dashboard') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('dashboard') ? 'text-pitch-700' : 'text-ink-muted' }}">
+        <div class="relative grid grid-cols-4" x-data="motionIndicator" data-indicator="mobile-nav" data-indicator-mode="bar">
+            <span class="motion-slide pointer-events-none absolute top-0 h-0.5 rounded-full bg-pitch-700" x-ref="indicator" hidden aria-hidden="true"></span>
+            <a href="{{ route('dashboard') }}" data-active="{{ request()->routeIs('dashboard') ? '1' : '0' }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('dashboard') ? 'text-pitch-700' : 'text-ink-muted' }}">
                 <x-ui.icon name="home" />
                 Games
             </a>
-            <a href="{{ route('games.index') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('games.index') ? 'text-pitch-700' : 'text-ink-muted' }}">
+            <a href="{{ route('games.index') }}" data-active="{{ request()->routeIs('games.index') ? '1' : '0' }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('games.index') ? 'text-pitch-700' : 'text-ink-muted' }}">
                 <x-ui.icon name="calendar" />
                 What's on
             </a>
-            <a href="{{ route('events.create') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('events.create') ? 'text-pitch-700' : 'text-ink-muted' }}">
+            <a href="{{ route('events.create') }}" data-active="{{ request()->routeIs('events.create') ? '1' : '0' }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('events.create') ? 'text-pitch-700' : 'text-ink-muted' }}">
                 <x-ui.icon name="plus" />
                 Start
             </a>
-            <a href="{{ route('profile.edit') }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('profile.edit') ? 'text-pitch-700' : 'text-ink-muted' }}">
+            <a href="{{ route('profile.edit') }}" data-active="{{ request()->routeIs('profile.edit') ? '1' : '0' }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('profile.edit') ? 'text-pitch-700' : 'text-ink-muted' }}">
                 <x-ui.icon name="users" />
                 Profile
             </a>

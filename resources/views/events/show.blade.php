@@ -20,6 +20,7 @@
     $rsvpValue = 'going';
     $rsvpLabel = "I'm in";
     $rsvpSettled = false;
+    $justJoined = session('joined') === true;
     if ($userStatus === 'going') {
         $rsvpLabel = "You're in";
         $rsvpSettled = true;
@@ -36,7 +37,7 @@
     :url="$preview->url"
 >
     <div class="space-y-4">
-        <article class="overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line">
+        <article class="motion-view overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line" style="--vt-name: game-{{ $event->id }}">
             <div class="flex items-center justify-between gap-3 px-4 py-3 {{ \App\Models\Event::accentClasses($event->sportSelection()) }}">
                 <x-ui.chip :sport="$event->sportSelection()" :label="$event->sportLabel()" />
                 <span class="text-sm font-semibold">{{ $event->isIndoor() ? 'Indoors' : 'Outdoors' }}</span>
@@ -59,7 +60,7 @@
                             No limit once a time is locked
                         @endif
                     @else
-                        <span>{{ $event->attendanceLabel() }}</span>
+                        <span @class(['motion-tick' => $justJoined])>{{ $event->attendanceLabel() }}</span>
                         @if ($event->isFull())
                             <x-ui.badge preset="full" />
                         @endif
@@ -95,7 +96,15 @@
                 <form id="rsvp-form" method="POST" action="{{ route('events.rsvp', $event) }}" class="space-y-2">
                     @csrf
                     @if ($rsvpSettled)
-                        <div class="hidden min-h-11 items-center justify-center rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white sm:flex" role="status">{{ $rsvpLabel }}</div>
+                        <div @class(['relative hidden min-h-11 items-center justify-center gap-2 rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white sm:flex', 'motion-pop motion-joined' => $justJoined]) role="status">
+                            @if ($rsvpLabel === "You're in")
+                                @if ($justJoined)
+                                    <span class="motion-burst {{ \App\Models\Event::accentInk($event->sportSelection()) }}" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                                @endif
+                                <x-ui.icon name="check" class="h-4 w-4" />
+                            @endif
+                            {{ $rsvpLabel }}
+                        </div>
                     @else
                         <div class="hidden sm:block">
                             <x-ui.button type="submit" name="status" value="{{ $rsvpValue }}" class="w-full">{{ $rsvpLabel }}</x-ui.button>
@@ -117,7 +126,15 @@
 
             <div class="sticky-action fixed inset-x-0 z-40 border-t border-line bg-white p-3 sm:hidden" style="bottom: calc(3.5rem + env(safe-area-inset-bottom))">
                 @if ($rsvpSettled)
-                    <div class="flex min-h-11 w-full items-center justify-center rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white" role="status">{{ $rsvpLabel }}</div>
+                    <div @class(['relative flex min-h-11 w-full items-center justify-center gap-2 rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white', 'motion-pop motion-joined' => $justJoined]) role="status">
+                        @if ($rsvpLabel === "You're in")
+                            @if ($justJoined)
+                                <span class="motion-burst {{ \App\Models\Event::accentInk($event->sportSelection()) }}" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                            @endif
+                            <x-ui.icon name="check" class="h-4 w-4" />
+                        @endif
+                        {{ $rsvpLabel }}
+                    </div>
                 @else
                     <x-ui.button type="submit" form="rsvp-form" name="status" value="{{ $rsvpValue }}" class="w-full">{{ $rsvpLabel }}</x-ui.button>
                 @endif
@@ -133,7 +150,7 @@
                     @else
                         <ul class="flex flex-wrap gap-4">
                             @foreach ($groups['going']['people'] as $person)
-                                <li class="flex w-16 flex-col items-center gap-1 text-center">
+                                <li @class(['flex w-16 flex-col items-center gap-1 text-center', 'motion-avatar' => $justJoined && $person->is(auth()->user())])>
                                     <x-ui.avatar :name="$person->name" :user="$person" class="h-11 w-11" />
                                     <span class="w-full truncate text-xs text-ink">{{ $person->name }}</span>
                                 </li>
