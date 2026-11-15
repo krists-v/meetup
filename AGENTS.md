@@ -5,7 +5,14 @@
 
 ## Design
 
-The product is **Varza**. Before any user-facing change, follow `.cursor/rules/varza-design.mdc` (alwaysApply). Tokens live in `tailwind.config.js` and `resources/css/app.css`. Shared UI is in `resources/views/components/ui`.
+Varza gets people off the couch to play and meet someone new. It is not a friend-group scheduler. Before any user-facing change:
+
+- `.cursor/rules/varza-design.mdc` (always on): color, Lucide icons, motion, what marketing pages may do, and the calmer logged-in app.
+- `.cursor/skills/varza-voice/SKILL.md`: tone and copy. Run its checklist before writing any user-facing text.
+- `.cursor/skills/varza-ux/SKILL.md`: one primary action, info rows, cards, forms, empty states, accessibility. Run its checklist on any screen change.
+- `.cursor/skills/varza-new-activity/SKILL.md`: when adding an activity, icon, accent, illustration, or OG image.
+
+`.cursor/rules/terse-output.mdc` is always on for agent reports. Tokens live in `tailwind.config.js` and `resources/css/app.css`. Shared UI is in `resources/views/components/ui`.
 
 ## Foundational Context
 
