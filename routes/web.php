@@ -15,7 +15,7 @@ Route::view('/terms', 'legal.terms')->name('terms');
 
 Route::get('/games', [EventController::class, 'index'])->name('games.index');
 
-Route::get('/events/{event}/join', [EventController::class, 'join'])
+Route::post('/events/{event}/join', [EventController::class, 'join'])
     ->middleware('throttle:writes')
     ->name('events.join');
 

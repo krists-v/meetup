@@ -178,6 +178,15 @@ class Event extends Model
         return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode($this->location);
     }
 
+    public function matchesInviteToken(mixed $token): bool
+    {
+        if (! is_string($token) || $token === '' || strlen($token) !== strlen((string) $this->invite_token)) {
+            return false;
+        }
+
+        return hash_equals((string) $this->invite_token, $token);
+    }
+
     public function getUserStatus(User $user): ?string
     {
         $participant = $this->participants()->where('users.id', $user->id)->first();

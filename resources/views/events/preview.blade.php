@@ -28,10 +28,14 @@
                 </p>
             @endif
         </div>
-        <div class="mt-6 space-y-3">
-            <x-ui.button :href="route('events.join', $event)" class="w-full">I'm in</x-ui.button>
-            <x-ui.button variant="secondary" :href="route('events.join', ['event' => $event, 'account' => 'new'])" class="w-full">Create an account</x-ui.button>
-        </div>
+        <form method="POST" action="{{ route('events.join', $event) }}" class="mt-6 space-y-3">
+            @csrf
+            @if ($joinToken)
+                <input type="hidden" name="token" value="{{ $joinToken }}">
+            @endif
+            <x-ui.button type="submit" class="w-full">I'm in</x-ui.button>
+            <x-ui.button type="submit" name="account" value="new" variant="secondary" class="w-full">Create an account</x-ui.button>
+        </form>
     @else
         <div class="mt-6">
             <x-ui.button :href="route('login')" class="w-full">Log in</x-ui.button>

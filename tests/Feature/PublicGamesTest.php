@@ -225,16 +225,13 @@ class PublicGamesTest extends TestCase
             ->assertSee("I'm in", false)
             ->assertSee('Create an account');
 
-        $this->get(route('events.join', $event))
+        $this->post(route('events.join', $event))
             ->assertRedirect(route('login'));
 
         $this->post('/login', [
             'email' => $player->email,
             'password' => 'password',
-        ])->assertRedirect(route('events.join', $event));
-
-        $this->get(route('events.join', $event))
-            ->assertRedirect(route('events.show', $event));
+        ])->assertRedirect(route('events.show', $event));
 
         $this->assertSame('going', $event->fresh()->getUserStatus($player));
         $this->assertAuthenticatedAs($player);
@@ -249,7 +246,7 @@ class PublicGamesTest extends TestCase
             'event_date' => now()->addDay(),
         ]);
 
-        $this->get(route('events.join', ['event' => $event, 'account' => 'new']))
+        $this->post(route('events.join', $event), ['account' => 'new'])
             ->assertRedirect(route('register'));
 
         $this->post('/register', [
@@ -257,14 +254,10 @@ class PublicGamesTest extends TestCase
             'email' => 'bruno-qa@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
-        ])->assertRedirect(route('events.join', $event));
+        ])->assertRedirect(route('events.show', $event));
 
         $user = User::where('email', 'bruno-qa@example.com')->first();
         $this->assertNotNull($user);
-
-        $this->get(route('events.join', $event))
-            ->assertRedirect(route('events.show', $event));
-
         $this->assertSame('going', $event->fresh()->getUserStatus($user));
     }
 
@@ -284,14 +277,56 @@ class PublicGamesTest extends TestCase
         ]);
 
         $this->actingAs($player)
-            ->get(route('events.join', $full))
+            ->post(route('events.join', $full))
             ->assertRedirect(route('events.show', $full))
             ->assertSessionHasErrors('status');
 
         $this->assertNull($full->fresh()->getUserStatus($player));
 
         $this->actingAs($player)
-            ->get(route('events.join', $private))
+            ->get(route('events.join', $event = Event::factory()->create([
+                'visibility' => 'public',
+                'event_date' => now()->addDays(3),
+            ])))
+            ->assertStatus(405);
+
+        $this->assertNull($event->fresh()->getUserStatus($player));
+
+        $this->actingAs($player)
+            ->post(route('events.join', $private))
             ->assertForbidden();
+
+        $this->assertNull($private->fresh()->getUserStatus($player));
+    }
+
+    public function test_a_private_invite_still_joins_after_login(): void
+    {
+        $player = User::factory()->create();
+        $event = Event::factory()->private()->create([
+            'title' => 'Secret floorball',
+            'sport' => 'other',
+            'custom_sport' => 'Floorball',
+            'location' => 'Olympic center',
+            'event_date' => now()->addDays(2),
+        ]);
+
+        $this->post(route('events.join', $event), ['token' => 'not-the-token'])
+            ->assertNotFound();
+
+        $this->get(route('events.invite', $event->invite_token))
+            ->assertOk()
+            ->assertSee("I'm in", false)
+            ->assertSee($event->invite_token, false);
+
+        $this->post(route('events.join', $event), [
+            'token' => $event->invite_token,
+        ])->assertRedirect(route('login'));
+
+        $this->post('/login', [
+            'email' => $player->email,
+            'password' => 'password',
+        ])->assertRedirect(route('events.show', $event));
+
+        $this->assertSame('going', $event->fresh()->getUserStatus($player));
     }
 }

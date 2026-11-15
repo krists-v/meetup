@@ -10,6 +10,7 @@ use App\Models\EventTimeVote;
 use App\Models\User;
 use App\Support\GameFilters;
 use App\Support\LinkPreview;
+use App\Support\PendingJoin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -69,41 +70,35 @@ class EventController extends Controller
 
     public function join(Request $request, Event $event): RedirectResponse
     {
-        if ($request->user() === null) {
-            redirect()->setIntendedUrl(route('events.join', $event));
+        $token = $request->input('token');
+        $user = $request->user();
 
-            return redirect()->route($request->query('account') === 'new' ? 'register' : 'login');
+        if ($user === null) {
+            abort_unless($event->visibility === 'public' || $event->matchesInviteToken($token), 404);
+
+            PendingJoin::store($request, $event, is_string($token) ? $token : null);
+            redirect()->setIntendedUrl(
+                $event->matchesInviteToken($token)
+                    ? route('events.invite', $event->invite_token)
+                    : route('events.show', $event)
+            );
+
+            return redirect()->route($request->input('account') === 'new' ? 'register' : 'login');
         }
 
-        $canJoin = $event->visibility === 'public'
-            || $event->isCreator($request->user())
-            || $event->participants()->where('users.id', $request->user()->id)->exists();
+        abort_unless(
+            $event->visibility === 'public'
+                || $event->isCreator($user)
+                || $event->matchesInviteToken($token)
+                || $event->participants()->where('users.id', $user->id)->exists(),
+            403,
+        );
 
-        abort_unless($canJoin, 403);
-
-        if ($event->isPoll()) {
-            return redirect()
-                ->route('events.show', $event)
-                ->with('status', 'Vote on a time, then say if you are going.');
+        if ($event->matchesInviteToken($token)) {
+            $this->rememberInvite($event, $user);
         }
 
-        if ($event->getUserStatus($request->user()) !== 'going') {
-            if ($event->hasReachedCapacity()) {
-                return redirect()
-                    ->route('events.show', $event)
-                    ->withErrors([
-                        'status' => 'This game is full. You can still say Maybe or Not going.',
-                    ]);
-            }
-
-            $event->participants()->syncWithoutDetaching([
-                $request->user()->id => ['status' => 'going'],
-            ]);
-        }
-
-        return redirect()
-            ->route('events.show', $event)
-            ->with('status', 'You are in.');
+        return PendingJoin::markGoing($event, $user);
     }
 
     public function create(): View
@@ -153,10 +148,17 @@ class EventController extends Controller
         $user = $request->user();
 
         if ($user === null) {
-            return $this->preview($request, $event, $event->visibility === 'public' || $this->inviteTokenMatches($event, $request->query('token')));
+            $token = $request->query('token');
+
+            return $this->preview(
+                $request,
+                $event,
+                $event->visibility === 'public' || $event->matchesInviteToken($token),
+                $event->matchesInviteToken($token) ? $token : null,
+            );
         }
 
-        if ($this->inviteTokenMatches($event, $request->query('token'))) {
+        if ($event->matchesInviteToken($request->query('token'))) {
             $this->rememberInvite($event, $user);
         }
 
@@ -203,7 +205,7 @@ class EventController extends Controller
         $event = Event::where('invite_token', $token)->firstOrFail();
 
         if ($request->user() === null) {
-            return $this->preview($request, $event, true);
+            return $this->preview($request, $event, true, $token);
         }
 
         $this->rememberInvite($event, $request->user());
@@ -321,22 +323,14 @@ class EventController extends Controller
         }
     }
 
-    private function preview(Request $request, Event $event, bool $revealed): View
+    private function preview(Request $request, Event $event, bool $revealed, ?string $joinToken = null): View
     {
         redirect()->setIntendedUrl($request->fullUrl());
 
         return view('events.preview', [
             'preview' => LinkPreview::forEvent($event, $revealed),
             'event' => $revealed ? $event : null,
+            'joinToken' => $joinToken,
         ]);
-    }
-
-    private function inviteTokenMatches(Event $event, mixed $token): bool
-    {
-        if (! is_string($token) || $token === '' || strlen($token) !== strlen($event->invite_token)) {
-            return false;
-        }
-
-        return hash_equals($event->invite_token, $token);
     }
 }
