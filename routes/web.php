@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AvatarController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +16,8 @@ Route::view('/privacy', 'legal.privacy')->name('privacy');
 Route::view('/terms', 'legal.terms')->name('terms');
 
 Route::get('/games', [EventController::class, 'index'])->name('games.index');
+
+Route::get('/avatars/{user}', [AvatarController::class, 'show'])->name('avatars.show');
 
 Route::post('/events/{event}/join', [EventController::class, 'join'])
     ->middleware('throttle:writes')
@@ -52,6 +56,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/events/{event}/options/{option}/lock', [EventController::class, 'lock'])
         ->middleware('throttle:writes')
         ->name('events.options.lock');
+    Route::post('/events/{event}/comments', [CommentController::class, 'store'])
+        ->middleware('throttle:comments')
+        ->name('events.comments.store');
+    Route::delete('/events/{event}/comments/{comment}', [CommentController::class, 'destroy'])
+        ->middleware('throttle:writes')
+        ->name('events.comments.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -123,5 +123,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('events', function (Request $request) {
             return Limit::perHour(10)->by((string) ($request->user()?->id ?: $request->ip()));
         });
+
+        RateLimiter::for('comments', function (Request $request) {
+            return Limit::perMinute(10)->by((string) ($request->user()?->id ?: $request->ip()));
+        });
     }
 }

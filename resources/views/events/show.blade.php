@@ -16,7 +16,6 @@
     ];
     $goingCount = $groups['going']['people']->count();
     $full = $event->max_participants !== null && $goingCount >= $event->max_participants;
-    $inviteUrl = route('events.invite', $event->invite_token);
 @endphp
 
 <x-app-layout
@@ -136,21 +135,11 @@
             </x-ui.card>
         @endif
 
+        @include('events.partials.share')
+
         @if ($event->isCreator(auth()->user()))
             <x-ui.card class="space-y-3 p-4 sm:p-6">
-                <div class="flex items-start gap-3">
-                    <x-illustrations.empty variant="invites" class="hidden h-16 w-24 sm:block" />
-                    <div class="space-y-1">
-                        <h2 class="font-semibold text-ink">Invite link</h2>
-                        <p class="text-sm text-ink-muted">Paste this into WhatsApp. Anyone with the link can open the game after they log in, including a private one.</p>
-                    </div>
-                </div>
-                <p class="break-all rounded-control bg-canvas px-3 py-2 text-sm text-ink ring-1 ring-line">{{ $inviteUrl }}</p>
-                <x-ui.button
-                    type="button"
-                    class="w-full sm:w-auto"
-                    onclick="navigator.clipboard.writeText(@js($inviteUrl)); this.textContent = 'Copied';"
-                >Copy invite link</x-ui.button>
+                <h2 class="font-semibold text-ink">Your game</h2>
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <x-ui.button variant="secondary" :href="route('events.edit', $event)">Edit game</x-ui.button>
                     @unless ($event->isPoll())
@@ -180,7 +169,7 @@
                                 <ul class="space-y-2">
                                     @foreach ($group['people'] as $person)
                                         <li class="flex items-center gap-2 text-sm text-ink">
-                                            <x-ui.avatar :name="$person->name" class="h-7 w-7 text-[11px]" />
+                                            <x-ui.avatar :name="$person->name" :user="$person" class="h-7 w-7 text-[11px]" />
                                             @if ($group['label'] === 'Waitlist')
                                                 {{ $loop->iteration }}.
                                             @endif
@@ -194,5 +183,7 @@
                 </x-ui.card>
             </x-ui.section>
         @endunless
+
+        @include('events.partials.comments')
     </div>
 </x-app-layout>

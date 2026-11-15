@@ -19,6 +19,15 @@
                 <p class="text-base text-ink">{{ $event->event_date->format('D j M, H:i') }}</p>
             @endunless
             <a href="{{ $event->mapUrl() }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center text-base font-medium text-pitch-700 hover:text-pitch-800">{{ $event->location }}</a>
+            <div class="flex flex-col gap-2">
+                <x-ui.button variant="secondary" :href="$event->whatsAppUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Share on WhatsApp</x-ui.button>
+                <x-ui.button
+                    type="button"
+                    variant="secondary"
+                    class="w-full"
+                    onclick="navigator.clipboard.writeText(@js($event->shareUrl())); this.textContent = 'Copied';"
+                >Copy link</x-ui.button>
+            </div>
             @unless ($event->isPoll())
                 <div class="flex flex-col gap-2">
                     <x-ui.button variant="secondary" :href="route('events.calendar', ['event' => $event, 'token' => $joinToken])" class="w-full">Download .ics</x-ui.button>
