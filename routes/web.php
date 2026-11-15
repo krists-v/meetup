@@ -6,11 +6,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('dashboard')
-        : view('welcome');
-});
+Route::get('/', [EventController::class, 'home'])->name('home');
 
 Route::view('/privacy', 'legal.privacy')->name('privacy');
 Route::view('/terms', 'legal.terms')->name('terms');

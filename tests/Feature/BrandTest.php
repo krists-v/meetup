@@ -16,8 +16,8 @@ class BrandTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Varza')
-            ->assertSee('Get the crew together.')
-            ->assertSee('Pick a time, lock the pitch, play.');
+            ->assertSee('Bored at home? Go play.')
+            ->assertSee('Less scrolling, more playing.');
     }
 
     public function test_dashboard_shows_the_varza_name(): void
