@@ -24,9 +24,9 @@ class PromotedFromWaitlist extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('A spot opened on '.$this->event->title)
-            ->greeting('You are in')
-            ->line($this->event->title.' has a free spot. You were first on the waitlist, so you are going.')
+            ->subject('You\'re in for '.$this->event->title)
+            ->greeting('A spot opened')
+            ->line('You\'re in. A spot opened for '.$this->event->title.'.')
             ->action('See the game', route('events.show', $this->event))
             ->salutation('See you on the pitch.');
     }
@@ -38,7 +38,7 @@ class PromotedFromWaitlist extends Notification
     {
         return [
             'event_id' => $this->event->id,
-            'message' => 'A spot opened. You are going to '.$this->event->title.'.',
+            'message' => 'You\'re in. A spot opened for '.$this->event->title.'.',
         ];
     }
 }

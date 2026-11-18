@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Confirm it is you" description="Enter your password to continue.">
     <div class="space-y-1">
         <h1 class="text-2xl font-semibold tracking-tight">Confirm it is you</h1>
         <p class="text-sm text-ink-muted">Enter your password to continue.</p>

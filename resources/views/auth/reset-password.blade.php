@@ -1,7 +1,7 @@
-<x-guest-layout>
+<x-guest-layout title="Choose a new password" description="Make it long, and don't reuse it.">
     <div class="space-y-1">
         <h1 class="text-2xl font-semibold tracking-tight">Choose a new password</h1>
-        <p class="text-sm text-ink-muted">Use something long, and something you do not reuse.</p>
+        <p class="text-sm text-ink-muted">Make it long, and don't reuse it.</p>
     </div>
 
     <form method="POST" action="{{ route('password.store') }}" class="mt-6 space-y-4">
@@ -27,7 +27,7 @@
             <x-ui.error :messages="$errors->get('password_confirmation')" />
         </div>
 
-        <x-ui.button type="submit" class="w-full">{{ __('Save password') }}</x-ui.button>
+        <x-ui.button type="submit" class="w-full">Save</x-ui.button>
     </form>
 
     <p class="mt-4 text-sm">

@@ -21,7 +21,7 @@
             onclick="navigator.clipboard.writeText(@js($event->shareUrl())); this.textContent = 'Copied';"
         >Copy link</x-ui.button>
         @unless ($event->isPoll())
-            <x-ui.button variant="secondary" :href="route('events.calendar', $event)" class="w-full">Download .ics</x-ui.button>
+            <x-ui.button variant="secondary" :href="route('events.calendar', $event)" class="w-full">Add to your calendar</x-ui.button>
             <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Google Calendar</x-ui.button>
         @endunless
     </div>

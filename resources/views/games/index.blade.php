@@ -5,7 +5,7 @@
 @if (auth()->check())
     <x-app-layout title="What's on" description="See what's on near you and go play.">
         <x-slot name="header">
-            <x-ui.page-header title="What's on" subtitle="See what's on near you.">
+            <x-ui.page-header title="What's on" subtitle="Near you. Pick one and go.">
                 <x-slot name="actions">
                     <div class="hidden sm:block">
                         <x-ui.button :href="route('events.create')">Start a game</x-ui.button>
@@ -38,7 +38,7 @@
                 </header>
 
                 <main class="mx-auto w-full max-w-content px-4 pb-16">
-                    <x-ui.page-header title="What's on" subtitle="See what's on near you." />
+                    <x-ui.page-header title="What's on" subtitle="Near you. Pick one and go." />
                     <div class="mt-6">
                         @include($list)
                     </div>

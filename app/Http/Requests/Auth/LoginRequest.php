@@ -69,7 +69,7 @@ class LoginRequest extends FormRequest
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
-        throw new TooManyRequestsHttpException($seconds, 'Too many login attempts.');
+        throw new TooManyRequestsHttpException($seconds, 'Too many tries. Wait a minute, then try again.');
     }
 
     /**

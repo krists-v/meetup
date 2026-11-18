@@ -195,11 +195,12 @@ class Event extends Model
 
     public function shareText(): string
     {
+        $date = $this->event_date->timezone(config('app.timezone'));
         $when = $this->isPoll()
-            ? 'Time still to be chosen'
-            : $this->event_date->timezone(config('app.timezone'))->format('D j M, H:i');
+            ? 'time still open'
+            : $date->format('l').' at '.$date->format('H:i');
 
-        return $this->title.'. '.$this->sportLabel().', '.$when.', '.$this->location.'. '.$this->shareUrl();
+        return $this->title.', '.$when.', '.$this->location.'. Come play. '.$this->shareUrl();
     }
 
     public function whatsAppUrl(): string
@@ -241,7 +242,7 @@ class Event extends Model
     {
         if ($this->isPoll()) {
             return $this->max_participants
-                ? 'max '.$this->max_participants.' once a time is chosen'
+                ? 'Up to '.$this->max_participants.' can play'
                 : '';
         }
 

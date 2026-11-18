@@ -20,8 +20,8 @@
     </div>
 
     <div class="space-y-2">
-        <p class="text-sm font-medium text-ink">Category</p>
-        <div class="{{ $track }}" role="group" aria-label="Category" x-data="motionIndicator" data-indicator="category-{{ $route }}">
+        <p class="text-sm font-medium text-ink">Kind of game</p>
+        <div class="{{ $track }}" role="group" aria-label="Kind of game" x-data="motionIndicator" data-indicator="category-{{ $route }}">
             <span class="{{ $indicator }}" x-ref="indicator" hidden aria-hidden="true"></span>
             <a href="{{ $url(['category' => null]) }}" data-active="{{ $filters->category === null ? '1' : '0' }}" class="{{ $chip }} {{ $filters->category === null ? $on : $off }}">All</a>
             @foreach (App\Models\Event::CATEGORIES as $value => $label)

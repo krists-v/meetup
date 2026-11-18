@@ -245,7 +245,7 @@ class EventController extends Controller
 
         return redirect()
             ->route('events.show', $event)
-            ->with('status', 'Game updated.');
+            ->with('status', 'Saved.');
     }
 
     public function repeat(Event $event): RedirectResponse
@@ -261,7 +261,7 @@ class EventController extends Controller
 
         return redirect()
             ->route('events.edit', $copy)
-            ->with('status', 'Same time next week is ready. Change anything, then save.');
+            ->with('status', 'Next week is ready. Change anything, then save.');
     }
 
     public function calendar(Request $request, Event $event): Response
@@ -291,7 +291,7 @@ class EventController extends Controller
 
         return redirect()
             ->route('dashboard')
-            ->with('status', 'Game cancelled.');
+            ->with('status', 'That game is cancelled.');
     }
 
     public function invite(Request $request, string $token): RedirectResponse|View
@@ -365,7 +365,7 @@ class EventController extends Controller
             $message = "You're in.";
             $joined = true;
         } elseif ($status === 'waitlist') {
-            $message = "You're on the waitlist.";
+            $message = "You're on the waitlist. We'll move you up if a spot opens.";
         }
 
         return back()->with('status', $message)->with('joined', $joined);
@@ -379,7 +379,7 @@ class EventController extends Controller
 
         if ($option->hasPassed()) {
             return back()->withErrors([
-                'vote' => 'That time has passed.',
+                'vote' => 'This time has passed.',
             ]);
         }
 
@@ -404,7 +404,7 @@ class EventController extends Controller
             ['vote' => $validated['vote']],
         );
 
-        return back()->with('status', 'Vote saved.')->with('voted', $option->id);
+        return back()->with('status', 'Vote\'s in.')->with('voted', $option->id);
     }
 
     public function lock(Event $event, EventTimeOption $option): RedirectResponse
@@ -415,7 +415,7 @@ class EventController extends Controller
 
         if ($option->hasPassed()) {
             return back()->withErrors([
-                'option' => 'That time has passed.',
+                'option' => 'This time has passed.',
             ]);
         }
 
@@ -448,7 +448,7 @@ class EventController extends Controller
 
         return redirect()
             ->route('events.show', $event)
-            ->with('status', 'Time locked. Yes votes are marked Going while there is room.');
+            ->with('status', 'Time\'s set. People who said yes are in, while there\'s room.');
     }
 
     private function rememberInvite(Event $event, User $user): void

@@ -29,8 +29,8 @@ class LinkPreview
 
         if (! $revealed) {
             return new self(
-                title: "You're invited to a game on Varza",
-                description: 'Log in to see the sport, the time, and the place.',
+                title: 'Someone wants you in a game',
+                description: 'Log in to see when and where.',
                 image: self::image('default'),
                 url: $url,
             );
@@ -51,12 +51,13 @@ class LinkPreview
 
     private static function description(Event $event): string
     {
+        $date = $event->event_date->timezone(config('app.timezone'));
         $when = $event->isPoll()
-            ? 'Vote on a time'
-            : $event->event_date->format('l j F Y, H:i');
+            ? 'time still open'
+            : $date->format('l j F').' at '.$date->format('H:i');
 
         $places = $event->attendanceLabel();
 
-        return $event->sportLabel().', '.$when.', '.$event->location.($places === '' ? '.' : '. '.$places.'.');
+        return $event->sportLabel().', '.$when.', '.$event->location.'. Come play.'.($places === '' ? '' : ' '.$places.'.');
     }
 }

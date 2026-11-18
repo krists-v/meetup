@@ -21,7 +21,7 @@ class PasswordResetTest extends TestCase
         $response->assertOk()
             ->assertSee('Varza')
             ->assertSee('Forgot your password?')
-            ->assertSee('Send reset link');
+            ->assertSee('Send the link');
     }
 
     public function test_reset_password_link_can_be_requested(): void

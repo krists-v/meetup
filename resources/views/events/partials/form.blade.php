@@ -38,7 +38,7 @@
         </h2>
         <p class="text-sm text-ink-muted">An evening works for most people.</p>
         @if ($polling)
-            <p class="rounded-control bg-warn-soft px-3 py-2 text-sm text-warn">People are still picking a time. Lock one from the game page. The other details can still change.</p>
+            <p class="rounded-control bg-warn-soft px-3 py-2 text-sm text-warn">People are still picking a time. Set one from the game page. Everything else can still change.</p>
         @elseif ($editing)
             <div class="space-y-2">
                 <x-ui.label for="event_date" value="Date and time" />
@@ -47,7 +47,7 @@
             </div>
         @else
             <fieldset class="space-y-2">
-                <legend class="text-sm font-medium text-ink">Schedule</legend>
+                <legend class="text-sm font-medium text-ink">The time</legend>
                 <div class="flex flex-wrap gap-2">
                     <label class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-4 text-sm font-semibold text-ink ring-1 ring-line has-[:checked]:bg-pitch-700 has-[:checked]:text-white has-[:checked]:ring-pitch-700">
                         <input type="radio" name="schedule_type" value="fixed" class="sr-only" x-model="schedule" @checked(old('schedule_type', 'fixed') === 'fixed') />
@@ -67,7 +67,7 @@
             </div>
 
             <div x-show="schedule === 'poll'" x-cloak class="space-y-3">
-                <x-ui.label value="Time options" />
+                <x-ui.label value="Times" />
                 <template x-for="(time, index) in times" :key="index">
                     <input type="datetime-local" class="block min-h-11 w-full rounded-control border-line text-base text-ink focus:border-pitch-600 focus:ring-pitch-600" x-model="times[index]" :name="'options[' + index + ']'" />
                 </template>
@@ -101,7 +101,7 @@
         <div class="space-y-2">
             <x-ui.label for="max_participants" value="Spots (optional)" />
             <x-ui.input id="max_participants" name="max_participants" type="number" min="2" :value="old('max_participants', $editing ? $event->max_participants : '')" />
-            <p class="text-sm text-ink-muted">Leave this empty for no limit. Maybe is always allowed.</p>
+            <p class="text-sm text-ink-muted">Leave this empty if anyone can join. Maybe is always fine.</p>
             <x-ui.error :messages="$errors->get('max_participants')" />
         </div>
 

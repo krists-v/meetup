@@ -38,14 +38,14 @@ class LinkPreviewTest extends TestCase
             'event_date' => now()->addDays(3)->setTime(18, 0),
         ]);
 
-        $when = $event->event_date->format('l j F Y, H:i');
+        $when = $event->event_date->timezone(config('app.timezone'))->format('l j F').' at '.$event->event_date->timezone(config('app.timezone'))->format('H:i');
 
         $this->actingAs($user)
             ->get(route('events.show', $event))
             ->assertOk()
             ->assertSee('property="og:title" content="Sunday football"', false)
             ->assertSee('property="og:site_name" content="Varza"', false)
-            ->assertSee('Football, '.$when.', Park pitch. 0 of 10 going · 10 spots left.', false)
+            ->assertSee('Football, '.$when.', Park pitch. Come play. 0 of 10 going · 10 spots left.', false)
             ->assertSee('property="og:image" content="'.asset('images/og/football.png').'"', false)
             ->assertSee('name="twitter:card" content="summary_large_image"', false);
     }
@@ -67,7 +67,7 @@ class LinkPreviewTest extends TestCase
         $this->actingAs($user)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('Padel, Vote on a time, Court 2. max 4 once a time is chosen.', false)
+            ->assertSee('Padel, time still open, Court 2. Come play. Up to 4 can play.', false)
             ->assertDontSee($event->event_date->format('l j F Y, H:i'));
     }
 
@@ -82,7 +82,8 @@ class LinkPreviewTest extends TestCase
 
         $this->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee("You're invited to a game on Varza")
+            ->assertSee('Someone wants you in a game')
+            ->assertSee('Log in to see when and where.')
             ->assertSee('property="og:image" content="'.asset('images/og/default.png').'"', false)
             ->assertDontSee('Secret match')
             ->assertDontSee('Hidden pitch')
@@ -104,12 +105,12 @@ class LinkPreviewTest extends TestCase
             'event_date' => now()->addDays(2)->setTime(19, 30),
         ]);
 
-        $when = $event->event_date->format('l j F Y, H:i');
+        $when = $event->event_date->timezone(config('app.timezone'))->format('l j F').' at '.$event->event_date->timezone(config('app.timezone'))->format('H:i');
 
         $this->get(route('events.invite', $event->invite_token))
             ->assertOk()
             ->assertSee('property="og:title" content="Secret match"', false)
-            ->assertSee('Tennis, '.$when.', Hidden pitch. 0 of 6 going · 6 spots left.', false)
+            ->assertSee('Tennis, '.$when.', Hidden pitch. Come play. 0 of 6 going · 6 spots left.', false)
             ->assertSee('property="og:image" content="'.asset('images/og/tennis.png').'"', false)
             ->assertSee('property="og:url" content="'.route('events.invite', $event->invite_token).'"', false);
 

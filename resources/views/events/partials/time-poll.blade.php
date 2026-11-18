@@ -3,7 +3,7 @@
     $userId = auth()->id();
 @endphp
 
-<x-ui.section title="Availability" description="Vote Yes, Maybe, or No on each time. The best time is the one with the most Yes votes, then the most Maybe votes.">
+<x-ui.section title="Pick a time" description="Say yes, maybe, or no. The best time is the one most people can make.">
     <x-illustrations.empty variant="votes" class="h-24 w-full" />
     <x-ui.error :messages="$errors->get('vote')" />
     <x-ui.error :messages="$errors->get('option')" />
@@ -41,7 +41,7 @@
                         ])>{{ $vote->vote }}</span>
                     </li>
                 @empty
-                    <li class="py-2 text-ink-faint">No votes yet</li>
+                    <li class="py-2 text-ink-faint">No one yet.</li>
                 @endforelse
             </ul>
 
@@ -64,7 +64,7 @@
                 @if ($event->isCreator(auth()->user()))
                     <form method="POST" action="{{ route('events.options.lock', [$event, $option]) }}">
                         @csrf
-                        <x-ui.button type="submit" class="w-full">Lock in this time</x-ui.button>
+                        <x-ui.button type="submit" class="w-full">Set this time</x-ui.button>
                     </form>
                 @endif
             @endif

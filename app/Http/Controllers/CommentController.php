@@ -21,7 +21,7 @@ class CommentController extends Controller
 
         if ($body === '') {
             return back()
-                ->withErrors(['body' => 'Write a comment first.'])
+                ->withErrors(['body' => 'Write a note first.'])
                 ->withInput();
         }
 
@@ -30,7 +30,7 @@ class CommentController extends Controller
             'body' => $body,
         ]);
 
-        return back()->with('status', 'Comment posted.');
+        return back()->with('status', 'Note added.');
     }
 
     public function destroy(Event $event, Comment $comment): RedirectResponse
@@ -41,6 +41,6 @@ class CommentController extends Controller
 
         $comment->delete();
 
-        return back()->with('status', 'Comment removed.');
+        return back()->with('status', 'Note removed.');
     }
 }

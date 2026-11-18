@@ -18,7 +18,7 @@
                             <form method="POST" action="{{ route('events.comments.destroy', [$event, $comment]) }}">
                                 @csrf
                                 @method('DELETE')
-                                <x-ui.button type="submit" variant="ghost" class="px-2">Delete</x-ui.button>
+                                <x-ui.button type="submit" variant="ghost" class="px-2">Remove</x-ui.button>
                             </form>
                         @endif
                     </li>

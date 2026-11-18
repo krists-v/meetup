@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="You" description="This is the name people see when you show up.">
     <x-slot name="header">
         <x-ui.page-header title="You" subtitle="This is the name people see when you show up." />
     </x-slot>
