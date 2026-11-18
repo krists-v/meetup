@@ -407,9 +407,10 @@
 }
 
 body.filters-open {
-    overflow: hidden;
     position: fixed;
-    inset: 0;
+    width: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {

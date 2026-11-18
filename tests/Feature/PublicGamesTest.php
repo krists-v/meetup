@@ -214,6 +214,7 @@ class PublicGamesTest extends TestCase
             ->assertOk()
             ->assertDontSee('data-filter-count=', false)
             ->assertSee('Filters')
+            ->assertSee('document.documentElement.classList.add(\'js\')', false)
             ->assertSee('role="dialog"', false)
             ->assertSee('aria-modal="true"', false);
 

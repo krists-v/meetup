@@ -17,12 +17,16 @@ document.addEventListener('alpine:init', () => {
             });
         },
         show() {
-            this.open = true;
+            if (this.open) {
+                return;
+            }
+
             this.scrollY = window.scrollY;
+            document.body.style.top = `-${this.scrollY}px`;
+            this.open = true;
             this.$refs.dialog.hidden = false;
             this.$refs.backdrop.hidden = false;
             document.body.classList.add('filters-open');
-            document.body.style.top = `-${this.scrollY}px`;
             this.$nextTick(() => {
                 this.$refs.close?.focus();
                 window.dispatchEvent(new Event('resize'));
@@ -33,12 +37,14 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
+            const scrollY = this.scrollY;
+
             this.open = false;
             this.$refs.dialog.hidden = true;
             this.$refs.backdrop.hidden = true;
             document.body.classList.remove('filters-open');
             document.body.style.top = '';
-            window.scrollTo(0, this.scrollY);
+            window.scrollTo(0, scrollY);
             this.$refs.trigger?.focus();
         },
         trap(event) {
