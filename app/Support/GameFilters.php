@@ -45,12 +45,17 @@ class GameFilters
 
     public function active(): bool
     {
-        return $this->sport !== null
-            || $this->when !== 'all'
-            || $this->where !== null
-            || $this->setting !== null
-            || $this->level !== null
-            || $this->category !== null;
+        return $this->count() > 0;
+    }
+
+    public function count(): int
+    {
+        return ($this->sport !== null ? 1 : 0)
+            + ($this->when !== 'all' ? 1 : 0)
+            + ($this->where !== null ? 1 : 0)
+            + ($this->setting !== null ? 1 : 0)
+            + ($this->level !== null ? 1 : 0)
+            + ($this->category !== null ? 1 : 0);
     }
 
     /**

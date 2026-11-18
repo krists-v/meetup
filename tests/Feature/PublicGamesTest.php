@@ -208,6 +208,27 @@ class PublicGamesTest extends TestCase
             ->assertSee('Your next game');
     }
 
+    public function test_the_filter_button_counts_active_filters(): void
+    {
+        $this->get(route('games.index'))
+            ->assertOk()
+            ->assertDontSee('data-filter-count=', false)
+            ->assertSee('Filters')
+            ->assertSee('document.documentElement.classList.add(\'js\')', false)
+            ->assertSee('role="dialog"', false)
+            ->assertSee('aria-modal="true"', false);
+
+        $this->get(route('games.index', [
+            'sport' => 'padel',
+            'setting' => 'indoor',
+            'level' => 'beginner',
+        ]))
+            ->assertOk()
+            ->assertSee('data-filter-count="3"', false)
+            ->assertSee('Clear all')
+            ->assertSee('Show games');
+    }
+
     public function test_im_in_sends_a_guest_through_login_and_joins_the_game(): void
     {
         $player = User::factory()->create();
