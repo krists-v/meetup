@@ -59,8 +59,8 @@ class GameFlowTest extends TestCase
         $this->actingAs($first)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('Join waitlist')
-            ->assertSee('You are 1 on the waitlist.')
+            ->assertSee('Join the waitlist')
+            ->assertSee('You\'re 1 on the waitlist.')
             ->assertSeeInOrder(['1.', 'First Waiting', '2.', 'Second Waiting']);
 
         $this->actingAs($going)
@@ -74,7 +74,7 @@ class GameFlowTest extends TestCase
         $this->assertSame(1, $event->goingParticipants()->count());
 
         EventFacade::assertDispatched(MessageSent::class, function (MessageSent $message) {
-            return $message->message->getSubject() === 'A spot opened on Thursday five-a-side';
+            return $message->message->getSubject() === 'You\'re in for Thursday five-a-side';
         });
 
         $this->assertDatabaseHas('notifications', [
@@ -90,20 +90,20 @@ class GameFlowTest extends TestCase
         $this->actingAs($first)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('A spot opened. You are going to Thursday five-a-side.')
+            ->assertSee('You\'re in. A spot opened for Thursday five-a-side.')
             ->assertSee('Thursday five-a-side');
 
         $this->actingAs($first)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertDontSee('A spot opened. You are going to Thursday five-a-side.');
+            ->assertDontSee('You\'re in. A spot opened for Thursday five-a-side.');
 
         $this->assertNotNull($first->notifications()->first()->read_at);
 
         $this->actingAs($first)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertDontSee('A spot opened. You are going to Thursday five-a-side.');
+            ->assertDontSee('You\'re in. A spot opened for Thursday five-a-side.');
     }
 
     public function test_raising_the_limit_promotes_the_waitlist_and_lowering_it_does_not(): void
@@ -269,18 +269,18 @@ class GameFlowTest extends TestCase
             'dates' => '20261210T180000/20261210T200000',
             'ctz' => 'Europe/Riga',
             'location' => 'Park pitch',
-            'details' => 'Floorball on Varza',
+            'details' => 'Floorball. Come play.',
         ]);
 
         $this->actingAs($event->creator)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('Download .ics', false)
+            ->assertSee('Add to your calendar', false)
             ->assertSee(e($google), false);
 
         $this->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('Download .ics', false)
+            ->assertSee('Add to your calendar', false)
             ->assertSee('Google Calendar', false);
 
         $previousTimezone = date_default_timezone_get();
@@ -329,7 +329,7 @@ class GameFlowTest extends TestCase
             ->assertOk();
         $this->get(route('events.invite', $private->invite_token))
             ->assertOk()
-            ->assertSee('Download .ics', false)
+            ->assertSee('Add to your calendar', false)
             ->assertSee('Google Calendar', false);
 
         $this->actingAs($stranger)->get(route('events.calendar', $private))->assertForbidden();

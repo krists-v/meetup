@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Log in" description="Log in, then see what's on.">
     <div class="space-y-1">
         <h1 class="text-2xl font-semibold tracking-tight">Welcome back</h1>
         <p class="text-sm text-ink-muted">Log in, then see what's on.</p>
@@ -31,7 +31,7 @@
 
     <p class="mt-4 flex items-center justify-between gap-3 text-sm">
         @if (Route::has('password.request'))
-            <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('password.request') }}">{{ __('Forgot your password?') }}</a>
+            <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('password.request') }}">Forgot your password?</a>
         @endif
         <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('register') }}">Create an account</a>
     </p>

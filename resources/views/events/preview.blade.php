@@ -33,7 +33,7 @@
             </div>
             @unless ($event->isPoll())
                 <div class="flex flex-col gap-2">
-                    <x-ui.button variant="secondary" :href="route('events.calendar', ['event' => $event, 'token' => $joinToken])" class="w-full">Download .ics</x-ui.button>
+                    <x-ui.button variant="secondary" :href="route('events.calendar', ['event' => $event, 'token' => $joinToken])" class="w-full">Add to your calendar</x-ui.button>
                     <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Google Calendar</x-ui.button>
                 </div>
             @endunless

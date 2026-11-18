@@ -87,7 +87,7 @@ class AppServiceProvider extends ServiceProvider
             return (new MailMessage)
                 ->subject('Reset your Varza password')
                 ->greeting('Choose a new password')
-                ->line('Someone asked to reset the password for your Varza account. This link is good for '.$minutes.' minutes.')
+                ->line('You asked to reset your Varza password. This link works for '.$minutes.' minutes.')
                 ->action('Choose a new password', $url)
                 ->line('If you did not ask for this, you can ignore the email. Your password stays as it is.')
                 ->salutation('See you on the pitch.');
@@ -97,7 +97,7 @@ class AppServiceProvider extends ServiceProvider
             return (new MailMessage)
                 ->subject('Confirm your Varza email')
                 ->greeting('Confirm your email')
-                ->line('Tap the button so we know this inbox belongs to your Varza account.')
+                ->line('Tap the button so we know this is your email.')
                 ->action('Confirm email', $url)
                 ->line('If you did not create a Varza account, you can ignore this email.')
                 ->salutation('See you on the pitch.');

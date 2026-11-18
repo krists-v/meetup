@@ -106,13 +106,13 @@ class SafetyTest extends TestCase
             ->get(route('events.show', $event))
             ->assertForbidden()
             ->assertSee("You can't open this")
-            ->assertSee('This page is not available to you.')
+            ->assertSee("This one isn't for you. Head home.")
             ->assertDontSee('invite link');
 
         $this->actingAs($stranger)
             ->get(route('events.edit', $event))
             ->assertForbidden()
-            ->assertSee('This page is not available to you.')
+            ->assertSee("This one isn't for you. Head home.")
             ->assertDontSee('private');
 
         $this->get('/not-a-real-page')

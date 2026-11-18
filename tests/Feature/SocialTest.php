@@ -44,6 +44,10 @@ class SocialTest extends TestCase
             ->assertSee($event->shareUrl(), false);
 
         $this->assertStringContainsString($event->invite_token, $event->whatsAppUrl());
+        $this->assertSame(
+            'Thursday five-a-side, Thursday at 18:00, Park pitch. Come play. '.$event->shareUrl(),
+            $event->shareText(),
+        );
     }
 
     public function test_a_public_game_shares_its_public_link(): void

@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Create an account" description="An account takes a minute. Then say you're in, or start a game.">
     <div class="space-y-1">
         <h1 class="text-2xl font-semibold tracking-tight">Come play</h1>
         <p class="text-sm text-ink-muted">An account takes a minute. Then say you're in, or start a game.</p>

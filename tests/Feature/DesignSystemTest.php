@@ -186,8 +186,8 @@ class DesignSystemTest extends TestCase
         $event->loadCount('timeOptions');
 
         $this->blade('<x-ui.game-card :event="$event" />', ['event' => $event])
-            ->assertSee('Vote on a time')
-            ->assertSee('2 time options')
+            ->assertSee('Pick a time')
+            ->assertSee('2 times to pick')
             ->assertDontSee('Thu 10 Dec, 18:00');
     }
 

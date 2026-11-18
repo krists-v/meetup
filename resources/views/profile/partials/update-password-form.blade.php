@@ -1,7 +1,7 @@
 <section>
     <header>
         <h2 class="text-lg font-semibold text-ink">Password</h2>
-        <p class="mt-1 text-sm text-ink-muted">Use a long one you do not reuse.</p>
+        <p class="mt-1 text-sm text-ink-muted">Make it long, and don't reuse it.</p>
     </header>
 
     <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-4">
@@ -27,7 +27,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-ui.button type="submit" variant="secondary">{{ __('Save password') }}</x-ui.button>
+            <x-ui.button type="submit" variant="secondary">Save</x-ui.button>
 
             @if (session('status') === 'password-updated')
                 <p

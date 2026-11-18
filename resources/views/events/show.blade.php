@@ -26,7 +26,7 @@
         $rsvpSettled = true;
     } elseif ($offerWaitlist) {
         $rsvpValue = 'waitlist';
-        $rsvpLabel = 'Join waitlist';
+        $rsvpLabel = 'Join the waitlist';
     }
 @endphp
 
@@ -55,9 +55,9 @@
                 <x-ui.info-row variant="spots" label="Spots">
                     @if ($event->isPoll())
                         @if ($event->max_participants)
-                            Up to {{ $event->max_participants }} can go once a time is locked
+                            Up to {{ $event->max_participants }} can play, once a time is set
                         @else
-                            No limit once a time is locked
+                            No limit, once a time is set
                         @endif
                     @else
                         <span @class(['motion-tick' => $justJoined])>{{ $event->attendanceLabel() }}</span>
@@ -80,11 +80,11 @@
             @include('events.partials.time-poll')
         @else
             <x-ui.card class="space-y-3 p-4 sm:p-6">
-                <h2 class="font-semibold text-ink">Your RSVP</h2>
+                <h2 class="font-semibold text-ink">Are you in?</h2>
                 @if ($offerWaitlist)
                     <p class="text-sm text-warn">It's full. Join the waitlist, or say maybe.</p>
                     @if ($userStatus === 'waitlist')
-                        <p class="text-sm text-ink">You are {{ $event->waitlistPosition(auth()->user()) }} on the waitlist.</p>
+                        <p class="text-sm text-ink">{{ 'You\'re '.$event->waitlistPosition(auth()->user()).' on the waitlist.' }}</p>
                     @endif
                 @endif
                 <x-ui.error :messages="$errors->get('status')" />

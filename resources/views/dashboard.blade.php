@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Your games" description="The next one is up top.">
     <x-slot name="header">
         <x-ui.page-header title="Your games" subtitle="The next one is up top.">
             <x-slot name="actions">

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Start a game" description="A name, an activity, and a place. Set a time, or let people pick one.">
     <x-slot name="header">
         <x-ui.page-header title="Start a game" subtitle="A name, an activity, and a place. Set a time, or let people pick one." />
     </x-slot>

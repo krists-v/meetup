@@ -41,7 +41,7 @@ class EventPollTest extends TestCase
         $this->actingAs($user)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('Vote on a time')
+            ->assertSee('Pick a time')
             ->assertSee('Pick a kickoff');
     }
 
@@ -101,7 +101,7 @@ class EventPollTest extends TestCase
             ->get(route('events.show', $event))
             ->assertOk()
             ->assertSee('Best time')
-            ->assertSee('Availability');
+            ->assertSee('Pick a time');
     }
 
     public function test_private_polls_are_hidden_until_the_invite_link_is_opened(): void
@@ -183,13 +183,13 @@ class EventPollTest extends TestCase
         $this->actingAs($owner)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('Your RSVP')
-            ->assertDontSee('Lock in this time');
+            ->assertSee('Are you in?')
+            ->assertDontSee('Set this time');
 
         $this->actingAs($owner)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertDontSee('Vote on a time');
+            ->assertDontSee('Pick a time');
     }
 
     public function test_past_poll_times_cannot_be_voted_or_locked(): void
@@ -229,7 +229,7 @@ class EventPollTest extends TestCase
             ->get(route('events.show', $event))
             ->assertOk()
             ->assertSee('This time has passed')
-            ->assertSee('Lock in this time');
+            ->assertSee('Set this time');
 
         $this->actingAs($friend)
             ->post(route('events.options.vote', [$event, $future]), ['vote' => 'yes'])

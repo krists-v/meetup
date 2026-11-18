@@ -9,8 +9,8 @@
                 <x-ui.chip :sport="$event->sportSelection()" :label="$event->sportLabel()" />
             </div>
             @if ($event->isPoll())
-                <x-ui.badge tone="warn">Vote on a time</x-ui.badge>
-                <x-ui.info-row variant="time">{{ $event->time_options_count }} time options</x-ui.info-row>
+                <x-ui.badge tone="warn">Pick a time</x-ui.badge>
+                <x-ui.info-row variant="time">{{ (int) $event->time_options_count === 1 ? '1 time to pick' : ((int) $event->time_options_count).' times to pick' }}</x-ui.info-row>
             @else
                 <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
             @endif

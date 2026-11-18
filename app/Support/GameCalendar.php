@@ -37,7 +37,7 @@ class GameCalendar
             'dates' => $this->startsAt()->format('Ymd\THis').'/'.$this->endsAt()->format('Ymd\THis'),
             'ctz' => $this->timezone(),
             'location' => $this->event->location,
-            'details' => $this->event->sportLabel().' on Varza',
+            'details' => $this->event->sportLabel().'. Come play.',
         ]);
 
         return 'https://calendar.google.com/calendar/render?'.$query;
@@ -76,7 +76,7 @@ class GameCalendar
             $endLine,
             'SUMMARY:'.$this->escape($this->event->title),
             'LOCATION:'.$this->escape((string) $this->event->location),
-            'DESCRIPTION:'.$this->escape($this->event->sportLabel().' on Varza'),
+            'DESCRIPTION:'.$this->escape($this->event->sportLabel().'. Come play.'),
             'END:VEVENT',
             'END:VCALENDAR',
         );

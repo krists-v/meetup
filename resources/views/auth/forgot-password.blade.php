@@ -1,7 +1,7 @@
-<x-guest-layout>
+<x-guest-layout title="Forgot your password?" description="We'll send a link to choose a new one.">
     <div class="space-y-1">
         <h1 class="text-2xl font-semibold tracking-tight">Forgot your password?</h1>
-        <p class="text-sm text-ink-muted">Tell us your email and we will send a link to choose a new one.</p>
+        <p class="text-sm text-ink-muted">Tell us your email. We'll send a link to choose a new one.</p>
     </div>
 
     <x-auth-session-status class="mt-4" :status="session('status')" />
@@ -15,7 +15,7 @@
             <x-ui.error :messages="$errors->get('email')" />
         </div>
 
-        <x-ui.button type="submit" class="w-full">{{ __('Send reset link') }}</x-ui.button>
+        <x-ui.button type="submit" class="w-full">Send the link</x-ui.button>
     </form>
 
     <p class="mt-4 text-sm">
