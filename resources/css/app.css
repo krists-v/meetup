@@ -402,8 +402,14 @@
     box-shadow: 0 -8px 24px rgb(15 23 18 / 0.12);
 }
 
+.filters-sheet .overflow-y-auto {
+    overscroll-behavior: contain;
+}
+
 body.filters-open {
     overflow: hidden;
+    position: fixed;
+    inset: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -5,8 +5,6 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 document.addEventListener('alpine:init', () => {
-    document.documentElement.classList.add('js');
-
     Alpine.data('filterSheet', () => ({
         open: false,
         init() {
