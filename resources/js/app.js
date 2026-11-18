@@ -5,6 +5,65 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 document.addEventListener('alpine:init', () => {
+    document.documentElement.classList.add('js');
+
+    Alpine.data('filterSheet', () => ({
+        open: false,
+        init() {
+            const desktop = window.matchMedia('(min-width: 768px)');
+            desktop.addEventListener('change', () => {
+                if (desktop.matches) {
+                    this.close();
+                }
+            });
+        },
+        show() {
+            this.open = true;
+            this.$refs.dialog.hidden = false;
+            this.$refs.backdrop.hidden = false;
+            document.body.classList.add('filters-open');
+            this.$nextTick(() => {
+                this.$refs.close?.focus();
+                window.dispatchEvent(new Event('resize'));
+            });
+        },
+        close() {
+            if (! this.open) {
+                return;
+            }
+
+            this.open = false;
+            this.$refs.dialog.hidden = true;
+            this.$refs.backdrop.hidden = true;
+            document.body.classList.remove('filters-open');
+            this.$refs.trigger?.focus();
+        },
+        trap(event) {
+            if (! this.open || event.key !== 'Tab') {
+                return;
+            }
+
+            const dialog = this.$refs.dialog;
+            const focusable = [...dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])')]
+                .filter((node) => node.getClientRects().length > 0);
+
+            if (focusable.length === 0) {
+                return;
+            }
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (! event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        },
+    }));
+
     Alpine.data('motionIndicator', () => ({
         init() {
             const place = () => {
