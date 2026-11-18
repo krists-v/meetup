@@ -25,6 +25,7 @@
                 'description' => "See what's on near you and go play.",
                 'url' => url()->full(),
             ])
+            <script>document.documentElement.classList.add('js');</script>
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         </head>
         <body class="bg-canvas font-sans text-ink antialiased">

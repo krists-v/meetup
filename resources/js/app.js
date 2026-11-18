@@ -7,6 +7,7 @@ window.Alpine = Alpine;
 document.addEventListener('alpine:init', () => {
     Alpine.data('filterSheet', () => ({
         open: false,
+        scrollY: 0,
         init() {
             const desktop = window.matchMedia('(min-width: 768px)');
             desktop.addEventListener('change', () => {
@@ -17,9 +18,11 @@ document.addEventListener('alpine:init', () => {
         },
         show() {
             this.open = true;
+            this.scrollY = window.scrollY;
             this.$refs.dialog.hidden = false;
             this.$refs.backdrop.hidden = false;
             document.body.classList.add('filters-open');
+            document.body.style.top = `-${this.scrollY}px`;
             this.$nextTick(() => {
                 this.$refs.close?.focus();
                 window.dispatchEvent(new Event('resize'));
@@ -34,6 +37,8 @@ document.addEventListener('alpine:init', () => {
             this.$refs.dialog.hidden = true;
             this.$refs.backdrop.hidden = true;
             document.body.classList.remove('filters-open');
+            document.body.style.top = '';
+            window.scrollTo(0, this.scrollY);
             this.$refs.trigger?.focus();
         },
         trap(event) {
