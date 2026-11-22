@@ -343,10 +343,16 @@ class Event extends Model
         return '€'.$this->money($each).' / person';
     }
 
-    public function photoUrl(): string
+    public function photoUrl(?string $token = null): string
     {
         if (filled($this->photo_path)) {
-            return route('events.photo', $this).'?v='.$this->updated_at?->getTimestamp();
+            $url = route('events.photo', $this).'?v='.$this->updated_at?->getTimestamp();
+
+            if ($this->visibility !== 'public' && filled($token)) {
+                $url .= '&token='.urlencode($token);
+            }
+
+            return $url;
         }
 
         return asset('images/sports/'.$this->defaultPhotoSlug().'.svg');

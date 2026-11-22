@@ -12,7 +12,7 @@
     @if ($event)
         <div class="mt-6 space-y-4">
             <div class="overflow-hidden rounded-card border border-line bg-white">
-                <img src="{{ $event->photoUrl() }}" alt="" class="h-48 w-full object-cover" />
+                <img src="{{ $event->photoUrl($joinToken) }}" alt="" class="h-48 w-full object-cover" />
             </div>
             @unless ($event->isPoll())
                 <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>

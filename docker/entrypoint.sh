@@ -23,7 +23,8 @@ fi
 
 export LOG_CHANNEL="${LOG_CHANNEL:-stderr}"
 export AVATAR_ROOT="${AVATAR_ROOT:-/data/avatars}"
-mkdir -p "$AVATAR_ROOT"
+export PHOTO_ROOT="${PHOTO_ROOT:-/data/photos}"
+mkdir -p "$AVATAR_ROOT" "$PHOTO_ROOT"
 
 php artisan migrate --force --no-interaction
 

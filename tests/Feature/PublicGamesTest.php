@@ -108,14 +108,14 @@ class PublicGamesTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->get(route('events.show', $full))
             ->assertOk()
-            ->assertSee('1 of 1 going · 0 spots left')
+            ->assertSee('1 / 1 players')
             ->assertSee('Full')
             ->assertSee('https://www.google.com/maps/search/?api=1&query=Hall');
 
         $this->actingAs(User::factory()->create())
             ->get(route('events.show', $open))
             ->assertOk()
-            ->assertSee('2 going')
+            ->assertSee('2 players')
             ->assertDontSee('spots left');
     }
 

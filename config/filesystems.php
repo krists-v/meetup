@@ -56,7 +56,7 @@ return [
 
         'photos' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/photos'),
+            'root' => env('PHOTO_ROOT', storage_path('app/public/photos')),
             'throw' => false,
             'report' => false,
         ],

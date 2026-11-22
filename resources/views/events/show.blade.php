@@ -55,24 +55,21 @@
                     <x-ui.info-row variant="date" label="When">{{ $event->whenLabel() }}</x-ui.info-row>
                 @endif
                 <x-ui.info-row variant="place" label="Where" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
-                <x-ui.info-row variant="spots" label="Players">{{ $event->playersLabel() }}</x-ui.info-row>
+                <x-ui.info-row variant="spots" label="Players">
+                    <span @class(['motion-tick' => $justJoined])>{{ $event->playersLabel() }}</span>
+                </x-ui.info-row>
                 @if ($event->priceLabel())
                     <p class="text-lg font-bold text-ink">{{ $event->priceLabel() }}</p>
                 @endif
-                <x-ui.info-row variant="spots" label="Spots">
-                    @if ($event->isPoll())
+                @if ($event->isPoll())
+                    <x-ui.info-row variant="spots" label="Spots">
                         @if ($event->max_participants)
                             Up to {{ $event->max_participants }} can play, once a time is set
                         @else
                             No limit, once a time is set
                         @endif
-                    @else
-                        <span @class(['motion-tick' => $justJoined])>{{ $event->attendanceLabel() }}</span>
-                        @if ($event->isFull())
-                            <x-ui.badge preset="full" />
-                        @endif
-                    @endif
-                </x-ui.info-row>
+                    </x-ui.info-row>
+                @endif
                 <x-ui.activity-facts :event="$event" />
                 <x-ui.badge :tone="$event->visibility === 'public' ? 'pitch' : 'neutral'">
                     {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
