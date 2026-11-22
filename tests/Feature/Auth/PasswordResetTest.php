@@ -19,7 +19,7 @@ class PasswordResetTest extends TestCase
         $response = $this->get('/forgot-password');
 
         $response->assertOk()
-            ->assertSee('Varza')
+            ->assertSee('Ejam')
             ->assertSee('Forgot your password?')
             ->assertSee('Send the link');
     }

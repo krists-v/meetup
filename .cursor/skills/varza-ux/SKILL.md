@@ -1,9 +1,9 @@
 ---
 name: varza-ux
-description: "Varza UX and UI practices. Use when changing screens, layout, navigation, cards, forms, empty states, icons, or motion. Triggers on hierarchy, primary action, info row, mobile sticky button, accessibility, and empty states."
+description: "Ejam UX and UI practices. Use when changing screens, layout, navigation, cards, forms, empty states, icons, or motion. Triggers on hierarchy, primary action, info row, mobile sticky button, accessibility, and empty states."
 ---
 
-# Varza UX
+# Ejam UX
 
 One screen, one next step. The person should know what to do and where to look without reading the whole page.
 

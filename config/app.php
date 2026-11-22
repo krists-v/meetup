@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Varza'),
+    'name' => env('APP_NAME', 'Ejam'),
 
     'contact_email' => env('CONTACT_EMAIL', 'hello@example.com'),
 

@@ -71,5 +71,5 @@ jobs:
               gh issue comment "$number" --body-file "$body"
             done <<< "$open_issues"
           else
-            gh issue create --label downtime --title "Varza is down" --body-file "$body"
+            gh issue create --label downtime --title "Ejam is down" --body-file "$body"
           fi

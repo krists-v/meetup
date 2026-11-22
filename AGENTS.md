@@ -5,7 +5,7 @@
 
 ## Design
 
-Varza gets people off the couch to play and meet someone new. It is not a friend-group scheduler. Before any user-facing change:
+Ejam gets people off the couch to play and meet someone new. It is not a friend-group scheduler. Before any user-facing change:
 
 - `.cursor/rules/varza-design.mdc` (always on): color, Lucide icons, motion, what marketing pages may do, and the calmer logged-in app.
 - `.cursor/skills/varza-voice/SKILL.md`: tone and copy. Run its checklist before writing any user-facing text.

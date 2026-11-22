@@ -1,4 +1,4 @@
 @extends('errors.layout')
 
-@section('title', 'Varza is briefly down')
+@section('title', 'Ejam is briefly down')
 @section('message', 'Back in a moment. Try again soon.')

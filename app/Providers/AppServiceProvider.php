@@ -85,9 +85,9 @@ class AppServiceProvider extends ServiceProvider
             $minutes = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
 
             return (new MailMessage)
-                ->subject('Reset your Varza password')
+                ->subject('Reset your Ejam password')
                 ->greeting('Choose a new password')
-                ->line('You asked to reset your Varza password. This link works for '.$minutes.' minutes.')
+                ->line('You asked to reset your Ejam password. This link works for '.$minutes.' minutes.')
                 ->action('Choose a new password', $url)
                 ->line('If you did not ask for this, you can ignore the email. Your password stays as it is.')
                 ->salutation('See you on the pitch.');
@@ -95,11 +95,11 @@ class AppServiceProvider extends ServiceProvider
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
-                ->subject('Confirm your Varza email')
+                ->subject('Confirm your Ejam email')
                 ->greeting('Confirm your email')
                 ->line('Tap the button so we know this is your email.')
                 ->action('Confirm email', $url)
-                ->line('If you did not create a Varza account, you can ignore this email.')
+                ->line('If you did not create a Ejam account, you can ignore this email.')
                 ->salutation('See you on the pitch.');
         });
     }

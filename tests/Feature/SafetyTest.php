@@ -132,7 +132,7 @@ class SafetyTest extends TestCase
 
         $this->get('/_safety/down')
             ->assertStatus(503)
-            ->assertSee('Varza is briefly down');
+            ->assertSee('Ejam is briefly down');
 
         $this->get('/_safety/hour')
             ->assertStatus(429)

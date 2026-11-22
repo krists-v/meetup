@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.meta', [
-            'title' => 'Varza',
+            'title' => 'Ejam',
             'description' => "Bored at home? See what's on near you and go play.",
             'url' => url('/'),
         ])

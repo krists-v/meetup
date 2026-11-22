@@ -1,6 +1,6 @@
 ---
 name: varza-new-activity
-description: "Checklist for adding an activity to Varza. Use when adding a sport, activity, category, indoor or outdoor default, beginners badge, activity icon, accent color, illustration, or OG image."
+description: "Checklist for adding an activity to Ejam. Use when adding a sport, activity, category, indoor or outdoor default, beginners badge, activity icon, accent color, illustration, or OG image."
 ---
 
 # Add an activity
