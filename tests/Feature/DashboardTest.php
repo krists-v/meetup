@@ -75,7 +75,7 @@ class DashboardTest extends TestCase
         ]);
         $invited->participants()->attach($user->id, ['status' => 'invited']);
 
-        $this->actingAs($user)
+        $response = $this->actingAs($user)
             ->get(route('dashboard'))
             ->assertOk()
             ->assertSeeInOrder([
@@ -91,7 +91,11 @@ class DashboardTest extends TestCase
                 'Open climb',
             ])
             ->assertDontSee('Declined run')
-            ->assertDontSee('Past hosted');
+            ->assertDontSee('Past hosted')
+            ->assertSee('data-highlight="1"', false)
+            ->assertDontSee('border border-line p-2', false);
+
+        $this->assertSame(1, substr_count($response->getContent(), 'data-highlight="1"'));
     }
 
     public function test_create_form_defaults_to_a_favorite_and_an_evening(): void

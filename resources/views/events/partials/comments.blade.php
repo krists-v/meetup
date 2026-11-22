@@ -37,7 +37,7 @@
             <x-ui.label for="comment-body" value="Note" />
             <x-ui.textarea id="comment-body" name="body" rows="3" maxlength="1000" required placeholder="Who is bringing a ball?">{{ old('body') }}</x-ui.textarea>
             <x-ui.error :messages="$errors->get('body')" />
-            <x-ui.button type="submit" variant="secondary" class="w-full sm:w-auto">Add a note</x-ui.button>
+            <x-ui.button type="submit" variant="secondary">Add a note</x-ui.button>
         </form>
     </x-ui.card>
 </x-ui.section>

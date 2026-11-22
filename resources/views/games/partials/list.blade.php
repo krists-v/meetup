@@ -13,7 +13,7 @@
                 @if ($filters->active())
                     <x-ui.button variant="secondary" :href="route('games.index')">Clear filters</x-ui.button>
                 @else
-                    <x-ui.button :href="auth()->check() ? route('events.create') : route('register')">Start a game</x-ui.button>
+                    <x-ui.button :href="auth()->check() ? route('events.create') : route('register')" block>Start a game</x-ui.button>
                 @endif
             </x-slot>
         </x-ui.empty-state>

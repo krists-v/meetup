@@ -38,7 +38,7 @@
             <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('privacy') }}">privacy policy</a>.
         </p>
 
-        <x-ui.button type="submit" class="w-full">Create an account</x-ui.button>
+        <x-ui.button type="submit" block>Create an account</x-ui.button>
     </form>
 
     <p class="mt-4 text-sm text-ink-muted">
