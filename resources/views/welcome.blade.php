@@ -106,6 +106,7 @@
                             <p class="mt-1 text-base text-ink-muted">Meet someone new and play.</p>
                         </li>
                     </ol>
+                    <a href="{{ route('how-it-works') }}" class="mt-6 inline-flex min-h-11 items-center text-base font-medium text-ink underline">See how a game works</a>
                 </section>
 
                 <section class="mx-auto w-full max-w-5xl px-4 pb-16">

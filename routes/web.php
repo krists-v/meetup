@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [EventController::class, 'home'])->name('home');
 
+Route::view('/how-it-works', 'how-it-works')->name('how-it-works');
 Route::view('/privacy', 'legal.privacy')->name('privacy');
 Route::view('/terms', 'legal.terms')->name('terms');
 
