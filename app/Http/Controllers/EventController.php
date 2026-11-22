@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Models\Block;
 use App\Models\Event;
 use App\Models\EventTimeOption;
 use App\Models\EventTimeVote;
@@ -351,6 +352,12 @@ class EventController extends Controller
 
         if ($current === $status) {
             return back();
+        }
+
+        if (in_array($status, ['going', 'waitlist'], true) && Block::separates($request->user()->id, $event->user_id)) {
+            return back()->withErrors([
+                'status' => 'You can\'t join this game.',
+            ]);
         }
 
         $event->participants()->syncWithoutDetaching([

@@ -75,7 +75,7 @@ Set these variables on the service:
 | `RESEND_API_KEY` | API key from Resend. Leave it empty and mail is written to the log instead of failing. |
 | `MAIL_FROM_ADDRESS` | a sender address on a domain you have verified in Resend |
 | `MAIL_FROM_NAME` | `Varza` |
-| `CONTACT_EMAIL` | address on the privacy and terms pages |
+| `CONTACT_EMAIL` | address on the privacy and terms pages. Player reports are emailed here when it is set. Leave it blank and the report is still saved. |
 | `LOG_CHANNEL` | `stderr` in production, so logs show up in Railway. The image sets this, and `docker/entrypoint.sh` falls back to stderr when it is unset. Local `.env` keeps `stack` / `single`, which writes `storage/logs/laravel.log`. |
 | `SENTRY_LARAVEL_DSN` | optional. Leave it empty and Sentry stays off: the app still boots and serves requests, and it does not call Sentry. |
 | `SENTRY_TRACES_SAMPLE_RATE` | `0`. Raise it only if you want performance traces. |

@@ -144,7 +144,7 @@ class RosterTest extends TestCase
             ->get(route('events.show', $future))
             ->assertOk()
             ->assertSee('Remove')
-            ->assertDontSee('No-show');
+            ->assertDontSee(route('events.roster.attendance', [$future, $player]), false);
 
         $this->actingAs($host)
             ->post(route('events.roster.attendance', [$future, $player]), ['attended' => '0'])

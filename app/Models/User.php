@@ -106,6 +106,45 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(Block::class, 'blocker_id');
+    }
+
+    public function blockedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'blocks', 'blocker_id', 'blocked_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * @var Collection<int, int>|null
+     */
+    protected ?Collection $blockedUserIdCache = null;
+
+    /**
+     * @return Collection<int, int>
+     */
+    public function blockedUserIds(): Collection
+    {
+        if ($this->blockedUserIdCache === null) {
+            $this->blockedUserIdCache = $this->blocks()
+                ->pluck('blocked_id')
+                ->map(fn ($id) => (int) $id);
+        }
+
+        return $this->blockedUserIdCache;
+    }
+
+    public function hasBlocked(self $user): bool
+    {
+        if ($this->is($user)) {
+            return false;
+        }
+
+        return $this->blockedUserIds()->contains($user->id);
+    }
+
     /**
      * @var array{showed: int, total: int}|null
      */

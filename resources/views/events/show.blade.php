@@ -156,15 +156,22 @@
                     @if ($groups['going']['people']->isEmpty())
                         <p class="text-sm text-ink-muted">No one yet. Be the first in.</p>
                     @else
-                        <ul class="flex flex-wrap gap-4">
+                        <ul class="space-y-4">
                             @foreach ($groups['going']['people'] as $person)
-                                <li @class(['flex max-w-28 flex-col items-center gap-1 text-center', 'motion-avatar' => $justJoined && $person->is(auth()->user())])>
-                                    <x-ui.avatar :name="$person->name" :user="$person" class="h-11 w-11" />
-                                    <span class="w-full truncate text-xs text-ink">{{ $person->name }}</span>
-                                    @if ($person->sportLevelLabel($event->sportSelection()))
-                                        <x-ui.badge tone="neutral" class="px-2 py-0.5" data-player-level="{{ $person->sportLevel($event->sportSelection()) }}">{{ $person->sportLevelLabel($event->sportSelection()) }}</x-ui.badge>
-                                    @endif
-                                    <x-ui.badge tone="neutral" class="px-2 py-0.5" data-attendance="{{ $person->attendanceLabel() }}">{{ $person->attendanceLabel() }}</x-ui.badge>
+                                <li @class(['space-y-2', 'motion-avatar' => $justJoined && $person->is(auth()->user())])>
+                                    <div class="flex items-center gap-3">
+                                        <x-ui.avatar :name="$person->name" :user="$person" class="h-11 w-11" />
+                                        <div class="min-w-0">
+                                            <a href="{{ route('players.show', $person) }}" class="block truncate text-sm font-medium text-ink">{{ $person->name }}</a>
+                                            <div class="mt-1 flex flex-wrap gap-1">
+                                                @if ($person->sportLevelLabel($event->sportSelection()))
+                                                    <x-ui.badge tone="neutral" class="px-2 py-0.5" data-player-level="{{ $person->sportLevel($event->sportSelection()) }}">{{ $person->sportLevelLabel($event->sportSelection()) }}</x-ui.badge>
+                                                @endif
+                                                <x-ui.badge tone="neutral" class="px-2 py-0.5" data-attendance="{{ $person->attendanceLabel() }}">{{ $person->attendanceLabel() }}</x-ui.badge>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @include('players.partials.actions', ['player' => $person, 'prefix' => 'going'])
                                 </li>
                             @endforeach
                         </ul>
@@ -176,12 +183,15 @@
                             <p class="text-xs font-semibold uppercase tracking-wide text-ink-muted">{{ $groups[$key]['label'] }} · {{ $groups[$key]['people']->count() }}</p>
                             <ul class="space-y-2">
                                 @foreach ($groups[$key]['people'] as $person)
-                                    <li class="flex min-h-11 items-center gap-2 text-sm text-ink">
-                                        <x-ui.avatar :name="$person->name" :user="$person" class="h-7 w-7 text-[11px]" />
-                                        @if ($key === 'waitlist')
-                                            {{ $loop->iteration }}.
-                                        @endif
-                                        {{ $person->name }}
+                                    <li class="space-y-2 text-sm text-ink">
+                                        <div class="flex min-h-11 items-center gap-2">
+                                            <x-ui.avatar :name="$person->name" :user="$person" class="h-7 w-7 text-[11px]" />
+                                            @if ($key === 'waitlist')
+                                                {{ $loop->iteration }}.
+                                            @endif
+                                            <a href="{{ route('players.show', $person) }}" class="font-medium">{{ $person->name }}</a>
+                                        </div>
+                                        @include('players.partials.actions', ['player' => $person, 'prefix' => $key])
                                     </li>
                                 @endforeach
                             </ul>
@@ -195,11 +205,12 @@
             <h2 class="font-semibold text-ink">Host</h2>
             <div class="flex items-center gap-3">
                 <x-ui.avatar :name="$event->creator->name" :user="$event->creator" class="h-11 w-11" />
-                <div>
-                    <p class="font-semibold text-ink">{{ $event->creator->name }}</p>
+                <div class="min-w-0">
+                    <a href="{{ route('players.show', $event->creator) }}" class="block truncate font-semibold text-ink">{{ $event->creator->name }}</a>
                     <p class="text-sm text-ink-muted">Hosting this game</p>
                 </div>
             </div>
+            @include('players.partials.actions', ['player' => $event->creator, 'prefix' => 'host'])
             @if ($event->isCreator(auth()->user()))
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <x-ui.button variant="secondary" :href="route('events.edit', $event)">Edit game</x-ui.button>
