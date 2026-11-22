@@ -5,6 +5,4 @@
     <path d="M-128 30H148" fill="none" stroke="#40582A" stroke-width="16" stroke-linecap="round"/>
     <path d="M-88-64L-64-28M-66-70L-42-30M-44-60L-22-28" fill="none" stroke="#40582A" stroke-width="5" stroke-linecap="round"/>
   </g>
-  <rect x="40" y="300" width="128" height="48" rx="24" fill="#ffffff"/>
-  <text x="104" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#40582A">Hiking</text>
 </svg>

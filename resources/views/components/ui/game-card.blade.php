@@ -7,11 +7,11 @@
 @endphp
 
 <article style="--vt-name: game-{{ $event->id }}" @if ($highlight) data-highlight="1" @endif {{ $attributes->merge(['class' => "overflow-hidden rounded-card border {$frame}"]) }}>
-    <div class="relative px-3 pt-3">
-        <a href="{{ route('events.show', $event) }}" class="block overflow-hidden rounded-2xl">
+    <div class="px-3 pt-3">
+        <a href="{{ route('events.show', $event) }}" class="relative block overflow-hidden rounded-2xl">
             <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-48 w-full object-cover" />
+            <x-ui.image-pill :label="$event->sportLabel()" />
         </a>
-        <span class="absolute bottom-3 left-6 rounded-full bg-white px-3 py-1 text-sm font-medium text-ink">{{ $event->areaLabel() }}</span>
     </div>
 
     <div class="space-y-4 px-5 pb-5 pt-4">
