@@ -4,6 +4,7 @@ use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventPhotoController;
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RosterController;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +75,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/events/{event}/comments/{comment}', [CommentController::class, 'destroy'])
         ->middleware('throttle:writes')
         ->name('events.comments.destroy');
+
+    Route::get('/players/{user}', [PlayerController::class, 'show'])->name('players.show');
+    Route::post('/players/{user}/report', [PlayerController::class, 'report'])
+        ->middleware('throttle:reports')
+        ->name('players.report');
+    Route::post('/players/{user}/block', [PlayerController::class, 'block'])
+        ->middleware('throttle:writes')
+        ->name('players.block');
+    Route::delete('/players/{user}/block', [PlayerController::class, 'unblock'])
+        ->middleware('throttle:writes')
+        ->name('players.unblock');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

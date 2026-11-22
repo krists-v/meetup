@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\Block;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -54,6 +55,14 @@ class PendingJoin
         }
 
         if ($event->getUserStatus($user) !== 'going') {
+            if (Block::separates($user->id, $event->user_id)) {
+                return redirect()
+                    ->route('events.show', $event)
+                    ->withErrors([
+                        'status' => 'You can\'t join this game.',
+                    ]);
+            }
+
             if ($event->hasReachedCapacity()) {
                 return redirect()
                     ->route('events.show', $event)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Block;
 use App\Models\Event;
 use App\Models\User;
 use App\Notifications\PlayerNotice;
@@ -10,10 +11,16 @@ use Illuminate\Http\Request;
 
 class RosterController extends Controller
 {
-    public function confirm(Event $event, User $user): RedirectResponse
+    public function confirm(Request $request, Event $event, User $user): RedirectResponse
     {
         $this->authorize('roster', $event);
         abort_unless($event->getUserStatus($user) === 'requested', 404);
+
+        if (Block::separates($request->user()->id, $user->id)) {
+            return back()->withErrors([
+                'roster' => 'You can\'t add them.',
+            ]);
+        }
 
         if ($event->hasReachedCapacity()) {
             return back()->withErrors([
