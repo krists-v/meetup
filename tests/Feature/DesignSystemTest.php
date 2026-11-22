@@ -245,5 +245,32 @@ class DesignSystemTest extends TestCase
             ->assertSee('bg-white', false)
             ->assertSee('border-line', false)
             ->assertSee('shadow-card', false);
+
+        $this->assertStringContainsString('--highlight: 240 250 243;', $css);
+        $this->assertStringContainsString('--highlight-line: 197 232 208;', $css);
+    }
+
+    public function test_the_highlight_card_has_one_green_edge(): void
+    {
+        $event = Event::factory()->create([
+            'title' => 'Thursday padel',
+            'sport' => 'padel',
+            'sport_type' => 'padel',
+            'visibility' => 'public',
+        ]);
+
+        $plain = (string) $this->blade('<x-ui.game-card :event="$event" />', ['event' => $event]);
+        $this->assertStringContainsString('border-line bg-white shadow-card', $plain);
+        $this->assertStringNotContainsString('data-highlight="1"', $plain);
+        $this->assertStringContainsString('bg-ink', $plain);
+
+        $highlight = (string) $this->blade('<x-ui.game-card :event="$event" highlight />', ['event' => $event]);
+        $this->assertStringContainsString('data-highlight="1"', $highlight);
+        $this->assertStringContainsString('border-highlight-line bg-highlight', $highlight);
+        $this->assertStringNotContainsString('border-line bg-white', $highlight);
+        $this->assertStringNotContainsString('shadow-card', $highlight);
+        $this->assertStringContainsString('text-ink', $highlight);
+        $this->assertStringContainsString('bg-ink', $highlight);
+        $this->assertStringContainsString("I'm in", $highlight);
     }
 }

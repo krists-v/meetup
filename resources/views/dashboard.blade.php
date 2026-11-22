@@ -12,9 +12,7 @@
     <div class="space-y-8">
         @if ($nextGame)
             <x-ui.section title="Your next game">
-                <div class="rounded-card border border-line p-2">
-                    <x-ui.game-card :event="$nextGame" />
-                </div>
+                <x-ui.game-card :event="$nextGame" highlight />
             </x-ui.section>
         @elseif (! $hasGames)
             <x-ui.empty-state

@@ -24,6 +24,7 @@ Locked strings, until a copy change updates the tests too: "Your next game", "Op
 Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. The page is light grey (`canvas`, `#F5F5F7`), text is near-black (`ink`), secondary text is grey (`ink-muted`, `ink-faint`), soft fills are `mist` (a step darker than the page), and borders are `line`. `success` and `success-soft` are the only green, and only for status. Do not color a link, a button, a logo, or a page with pitch green.
 
 - The page, header, and mobile nav use `canvas`. The header keeps a bottom `line` border and `shadow-card` so the bar still reads on the grey. Cards, sheets, menus, and inputs stay white with a 1px `line` border, a large radius, and `shadow-card`. No heavy shadow, no gradient, no mesh.
+- Highlight variant: one card on a page, such as "Your next game", uses `bg-highlight` (`#F0FAF3`) and a single 1px `border-highlight-line` (light green, green-200ish). No second border, no ring, no shadow. Text stays `ink`. The primary button stays near-black.
 - Pitch green is for status only: spots left, you're in, a warning, a danger. It is not a button color.
 - Primary buttons, including "I'm in", are `bg-ink` with white text. Hover is `bg-ink/90`. Secondary buttons are `bg-mist` with ink text and a `line` ring, so they read on both the grey page and a white card. Focus rings are ink.
 - Chips are `bg-mist` with a `line` border and ink text. Neutral badges are white with a `line` ring and ink text. Status badges stay on `success-soft` or `warn-soft`. Each of these has to stay visible on `canvas` and on white.
@@ -91,7 +92,7 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Primary is the one next step. Includes `.motion-press`. |
 | `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
 | `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, What's on, Start a game, account menu. |
-| `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. |
+| `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. Pass `highlight` for the green tint and one green border. |
 | `x-ui.chip` | Activity name on a mist chip with a line border. |
 | `x-ui.label` | Every control's label. |
 | `x-ui.input` | Text, email, password, number, date. |
@@ -111,4 +112,4 @@ Game photos are the host's upload, or the grey picture in `public/images/sports/
 
 ## Checklist
 
-Point at the one primary action. Facts are info rows. Grey page, white cards, near-black primary, color only for status. Then run the `varza-voice` and `varza-ux` checklists.
+Point at the one primary action. Facts are info rows. Grey page, white cards, near-black primary, color only for status, except the highlight variant. Then run the `varza-voice` and `varza-ux` checklists.
