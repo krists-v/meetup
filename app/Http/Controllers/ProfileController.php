@@ -55,6 +55,10 @@ class ProfileController extends Controller
             $user->avatar_path = null;
         }
 
+        if ($request->exists('game_reminders')) {
+            $user->game_reminders = $request->boolean('game_reminders');
+        }
+
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }

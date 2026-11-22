@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('join-requests:expire')->everyMinute()->withoutOverlapping(5);
+Schedule::command('games:remind')->everyMinute()->withoutOverlapping(5);
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
