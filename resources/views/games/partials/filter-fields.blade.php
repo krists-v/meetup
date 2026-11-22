@@ -37,7 +37,7 @@
 
 <div class="{{ $track }}" role="group" aria-label="Level" x-data="motionIndicator" data-indicator="level-{{ $mark }}{{ $route }}">
     <span class="{{ $indicator }}" x-ref="indicator" hidden aria-hidden="true"></span>
-    <a href="{{ $url(['level' => null]) }}" data-active="{{ $filters->level === null ? '1' : '0' }}" class="{{ $chip }} {{ $filters->level === null ? $on : $off }}">Any</a>
+    <a href="{{ $url(['level' => 'any']) }}" data-active="{{ $filters->level === null ? '1' : '0' }}" class="{{ $chip }} {{ $filters->level === null ? $on : $off }}">Any</a>
     <a href="{{ $url(['level' => 'all']) }}" data-active="{{ $filters->level === 'all' ? '1' : '0' }}" class="{{ $chip }} {{ $filters->level === 'all' ? $on : $off }}">All levels</a>
     @foreach (App\Models\Event::LEVELS as $value => $label)
         <a href="{{ $url(['level' => $value]) }}" data-active="{{ $filters->level === $value ? '1' : '0' }}" class="{{ $chip }} {{ $filters->level === $value ? $on : $off }}">{{ $label }}</a>
@@ -63,6 +63,8 @@
     @endif
     @if ($filters->level)
         <input type="hidden" name="level" value="{{ $filters->level }}">
+    @elseif (request('level') === 'any')
+        <input type="hidden" name="level" value="any">
     @endif
     @if ($filters->category)
         <input type="hidden" name="category" value="{{ $filters->category }}">

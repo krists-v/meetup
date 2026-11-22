@@ -150,9 +150,12 @@
                     @else
                         <ul class="flex flex-wrap gap-4">
                             @foreach ($groups['going']['people'] as $person)
-                                <li @class(['flex w-16 flex-col items-center gap-1 text-center', 'motion-avatar' => $justJoined && $person->is(auth()->user())])>
+                                <li @class(['flex max-w-28 flex-col items-center gap-1 text-center', 'motion-avatar' => $justJoined && $person->is(auth()->user())])>
                                     <x-ui.avatar :name="$person->name" :user="$person" class="h-11 w-11" />
                                     <span class="w-full truncate text-xs text-ink">{{ $person->name }}</span>
+                                    @if ($person->sportLevelLabel($event->sportSelection()))
+                                        <x-ui.badge tone="neutral" class="px-2 py-0.5" data-player-level="{{ $person->sportLevel($event->sportSelection()) }}">{{ $person->sportLevelLabel($event->sportSelection()) }}</x-ui.badge>
+                                    @endif
                                 </li>
                             @endforeach
                         </ul>

@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Event;
+use App\Models\User;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -35,12 +36,25 @@ class GameFilters
         $setting = is_string($setting) && in_array($setting, ['indoor', 'outdoor'], true) ? $setting : null;
 
         $level = $request->query('level');
-        $level = is_string($level) && (array_key_exists($level, Event::LEVELS) || $level === 'all') ? $level : null;
+        $level = $level === 'any'
+            ? null
+            : (is_string($level) && (array_key_exists($level, Event::LEVELS) || $level === 'all') ? $level : null);
 
         $category = $request->query('category');
         $category = is_string($category) && array_key_exists($category, Event::CATEGORIES) ? $category : null;
 
         return new self($sport, $when, $where, $setting, $level, $category);
+    }
+
+    public function levelFromProfile(Request $request): ?string
+    {
+        $user = $request->user();
+
+        if (! $user instanceof User || $this->sport === null || $request->has('level')) {
+            return null;
+        }
+
+        return $user->sportLevel($this->sport);
     }
 
     public function active(): bool

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Event;
 use App\Support\AvatarStore;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,23 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $user->fill($request->safe()->only(['name', 'email']));
-        $user->favorite_sports = array_values($request->validated('favorite_sports', []));
+        $favorites = array_values($request->validated('favorite_sports', []));
+        $user->favorite_sports = $favorites;
+
+        if ($request->exists('sport_levels')) {
+            $incoming = $request->validated('sport_levels') ?? [];
+            $levels = [];
+
+            foreach ($favorites as $sport) {
+                $level = $incoming[$sport] ?? null;
+
+                if (is_string($level) && array_key_exists($level, Event::LEVELS)) {
+                    $levels[$sport] = $level;
+                }
+            }
+
+            $user->sport_levels = $levels === [] ? null : $levels;
+        }
 
         if ($request->hasFile('avatar')) {
             $user->avatar_path = app(AvatarStore::class)->store($request->file('avatar'), $user);

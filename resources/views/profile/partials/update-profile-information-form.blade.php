@@ -55,25 +55,51 @@
             @endif
         </div>
 
-        <fieldset class="space-y-2">
+        <fieldset class="space-y-3">
             <legend class="text-sm font-medium text-ink">Sports you play</legend>
+            <p class="text-sm text-ink-muted">Add your level if you want. People see it when you show up.</p>
             @php($selectedSports = old('favorite_sports', $user->favorite_sports ?? []))
-            <div class="flex flex-wrap gap-2">
+            @php($savedLevels = old('sport_levels', $user->sport_levels ?? []))
+            @if (collect($user->sport_levels ?? [])->filter(fn ($level, $sport) => $user->sportLevel($sport))->isNotEmpty())
+                <div class="flex flex-wrap gap-2">
+                    @foreach (App\Models\Event::SPORTS as $value => $label)
+                        @if ($user->sportLevelLabel($value))
+                            <x-ui.badge tone="neutral" data-sport-level="{{ $value }}:{{ $user->sportLevel($value) }}">{{ $label }} · {{ $user->sportLevelLabel($value) }}</x-ui.badge>
+                        @endif
+                    @endforeach
+                </div>
+            @endif
+            <div class="space-y-2">
                 @foreach (App\Models\Event::SPORTS as $value => $label)
-                    <div>
-                        <input
-                            id="favorite-{{ $value }}"
-                            type="checkbox"
-                            name="favorite_sports[]"
-                            value="{{ $value }}"
-                            class="peer sr-only"
-                            @checked(in_array($value, $selectedSports, true))
-                        />
-                        <label for="favorite-{{ $value }}" class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-line transition duration-150 peer-checked:bg-pitch-700 peer-checked:text-white peer-checked:ring-pitch-700 peer-focus-visible:ring-2 peer-focus-visible:ring-pitch-600 peer-focus-visible:ring-offset-2">{{ $label }}</label>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <div>
+                            <input
+                                id="favorite-{{ $value }}"
+                                type="checkbox"
+                                name="favorite_sports[]"
+                                value="{{ $value }}"
+                                class="peer sr-only"
+                                @checked(in_array($value, $selectedSports, true))
+                            />
+                            <label for="favorite-{{ $value }}" class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-line transition duration-150 peer-checked:bg-pitch-700 peer-checked:text-white peer-checked:ring-pitch-700 peer-focus-visible:ring-2 peer-focus-visible:ring-pitch-600 peer-focus-visible:ring-offset-2">{{ $label }}</label>
+                        </div>
+                        <div class="min-w-40 flex-1 sm:flex-none">
+                            <x-ui.label :for="'sport-level-'.$value" value="{{ $label }} level" class="sr-only" />
+                            <x-ui.select :id="'sport-level-'.$value" :name="'sport_levels['.$value.']'" class="min-h-11 sm:w-44">
+                                <option value="" @selected(($savedLevels[$value] ?? '') === '' || ($savedLevels[$value] ?? null) === null)>No level</option>
+                                @foreach (App\Models\Event::LEVELS as $level => $levelLabel)
+                                    <option value="{{ $level }}" @selected(($savedLevels[$value] ?? null) === $level)>{{ $levelLabel }}</option>
+                                @endforeach
+                            </x-ui.select>
+                        </div>
                     </div>
                 @endforeach
             </div>
             <x-ui.error :messages="$errors->get('favorite_sports')" />
+            <x-ui.error :messages="$errors->get('sport_levels')" />
+            @foreach (App\Models\Event::SPORTS as $value => $label)
+                <x-ui.error :messages="$errors->get('sport_levels.'.$value)" />
+            @endforeach
         </fieldset>
 
         <div class="flex items-center gap-4">

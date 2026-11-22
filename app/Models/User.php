@@ -27,6 +27,7 @@ class User extends Authenticatable
         'password',
         'avatar_path',
         'favorite_sports',
+        'sport_levels',
     ];
 
     /**
@@ -50,7 +51,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'favorite_sports' => 'array',
+            'sport_levels' => 'array',
         ];
+    }
+
+    public function sportLevel(?string $sport): ?string
+    {
+        if ($sport === null || ! array_key_exists($sport, Event::SPORTS)) {
+            return null;
+        }
+
+        $level = ($this->sport_levels ?? [])[$sport] ?? null;
+
+        return is_string($level) && array_key_exists($level, Event::LEVELS) ? $level : null;
+    }
+
+    public function sportLevelLabel(?string $sport): ?string
+    {
+        $level = $this->sportLevel($sport);
+
+        return $level === null ? null : Event::LEVELS[$level];
     }
 
     public function avatarUrl(): ?string
