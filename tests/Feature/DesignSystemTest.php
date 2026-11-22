@@ -87,7 +87,7 @@ class DesignSystemTest extends TestCase
         $view->assertSee('Full')
             ->assertSee('bg-warn-soft', false)
             ->assertSee('Beginners welcome')
-            ->assertSee('bg-pitch-100', false)
+            ->assertSee('bg-success-soft', false)
             ->assertSee('Indoor')
             ->assertSee('Outdoor')
             ->assertSee('bg-canvas', false);

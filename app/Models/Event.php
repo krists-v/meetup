@@ -528,32 +528,12 @@ class Event extends Model
 
     public static function accentInk(?string $sport): string
     {
-        if (preg_match('/text-activity-[\w-]+/', self::accentClasses($sport), $match) === 1) {
-            return $match[0];
-        }
-
-        return 'text-pitch-700';
+        return 'text-success';
     }
 
     public static function accentClasses(?string $sport): string
     {
-        $sport = array_key_exists((string) $sport, self::SPORTS) ? (string) $sport : 'other';
-
-        return match ($sport) {
-            'padel' => 'bg-activity-padel-soft text-activity-padel',
-            'tennis' => 'bg-activity-tennis-soft text-activity-tennis',
-            'table-tennis' => 'bg-activity-table-tennis-soft text-activity-table-tennis',
-            'basketball' => 'bg-activity-basketball-soft text-activity-basketball',
-            'football' => 'bg-activity-football-soft text-activity-football',
-            'hockey' => 'bg-activity-hockey-soft text-activity-hockey',
-            'volleyball' => 'bg-activity-volleyball-soft text-activity-volleyball',
-            'bowling' => 'bg-activity-bowling-soft text-activity-bowling',
-            'climbing' => 'bg-activity-climbing-soft text-activity-climbing',
-            'running' => 'bg-activity-running-soft text-activity-running',
-            'cycling' => 'bg-activity-cycling-soft text-activity-cycling',
-            'hiking' => 'bg-activity-hiking-soft text-activity-hiking',
-            default => 'bg-activity-other-soft text-activity-other',
-        };
+        return 'bg-mist text-ink';
     }
 
     public function sportTone(): string

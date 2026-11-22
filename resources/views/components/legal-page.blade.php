@@ -13,7 +13,7 @@
         <x-ui.shell>
             <main class="mx-auto w-full max-w-content space-y-4 px-4 py-8">
                 <div class="space-y-1">
-                    <h1 class="text-3xl font-semibold tracking-tight">{{ $title }}</h1>
+                    <h1 class="text-3xl font-bold tracking-tight">{{ $title }}</h1>
                     <p class="text-sm text-ink-muted">Plain language, not legal advice.</p>
                 </div>
 

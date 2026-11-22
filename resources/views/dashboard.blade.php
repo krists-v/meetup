@@ -12,7 +12,7 @@
     <div class="space-y-8">
         @if ($nextGame)
             <x-ui.section title="Your next game">
-                <div class="rounded-card bg-pitch-50 p-2 ring-1 ring-pitch-600">
+                <div class="rounded-card border border-line p-2">
                     <x-ui.game-card :event="$nextGame" />
                 </div>
             </x-ui.section>

@@ -36,7 +36,7 @@
                 <span class="block text-sm text-ink-muted">{{ $label }}</span>
             @endif
             <span @class([
-                'flex flex-wrap items-center gap-2 text-base',
+                'flex flex-wrap items-center gap-2 text-lg',
                 'font-medium text-ink group-hover:underline' => $variant === 'place' && $linked,
                 'text-ink' => ! ($variant === 'place' && $linked),
             ])>{{ $slot }}</span>

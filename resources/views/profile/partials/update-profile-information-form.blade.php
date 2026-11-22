@@ -41,13 +41,13 @@
                 <div>
                     <p class="text-sm text-ink">
                         We still need to confirm your email.
-                        <button form="send-verification" class="font-medium text-pitch-700 underline">
+                        <button form="send-verification" class="font-medium text-ink underline underline-offset-2">
                             Send it again.
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 text-sm font-medium text-pitch-700">
+                        <p class="mt-2 text-sm font-medium text-success">
                             A new link is on its way.
                         </p>
                     @endif

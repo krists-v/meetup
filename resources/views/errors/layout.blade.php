@@ -11,7 +11,7 @@
         <x-ui.shell>
             <main class="mx-auto w-full max-w-md px-4 py-8">
                 <x-ui.card class="space-y-4 px-5 py-6">
-                    <h1 class="text-2xl font-semibold tracking-tight">@yield('title')</h1>
+                    <h1 class="text-3xl font-bold tracking-tight">@yield('title')</h1>
                     <p class="text-sm text-ink-muted">@yield('message')</p>
                     <x-ui.button :href="url('/')">Back home</x-ui.button>
                 </x-ui.card>

@@ -16,7 +16,7 @@ Every page is the same quiet page: white, 1px grey borders, big type, mist butto
 - One primary action per screen. Everything else is `secondary`, `ghost`, or a text link.
 - Page title first, then the primary action, then supporting facts.
 - Do not make two filled buttons compete. The sticky mobile action and the in-page primary are the same action, not two different ones. Primary buttons are mist with bold ink text.
-- Marketing pages may use a larger headline. App pages stay `text-2xl` or `text-3xl`.
+- Marketing headlines are `text-5xl` or `text-6xl font-bold`. App page titles are `text-3xl font-bold`.
 
 ## Info row
 

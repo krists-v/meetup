@@ -21,7 +21,7 @@ Locked strings, until a copy change updates the tests too: "Your next game", "Op
 
 ## Color
 
-Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. Channel variables (`--pitch-700: 28 99 59`) feed Tailwind as `rgb(var(--pitch-700) / <alpha-value>)`, so opacity modifiers such as `bg-pitch-950/40` work. The `--color-*` variables are the same colors without an alpha, for plain CSS.
+Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. The page is white (`canvas`), text is near-black (`ink`), secondary text is grey (`ink-muted`, `ink-faint`), fills are `mist`, and borders are `line`. `success` and `success-soft` are the only green, and only for status. Do not color a link, a button, a logo, or a page with pitch green.
 
 - The page is white. Cards are white with a 1px `line` border and a large radius. No heavy shadow, no gradient, no mesh.
 - Pitch green is for status only: spots left, you're in, a warning, a danger. It is not a button color.
@@ -35,13 +35,13 @@ Logged-in screens use canvas and white cards. No mesh, grain, or glass there.
 
 ## Marketing pages
 
-The homepage uses the same white page, grey borders, and mist buttons as the app. No mesh, grain, dark band, or glass. Headlines may be `text-5xl` or `text-6xl`, still Inter, still `font-semibold tracking-tight`.
+The homepage uses the same tokens as the app. The hero and the closing line are `text-5xl` or `text-6xl font-bold tracking-tight`. Section titles are `text-3xl font-bold`. No mesh, grain, dark band, or glass.
 
 ## Typography
 
 Inter, self-hosted in `public/fonts`, with the system sans fallback. Weights in use: 400, 500, 600, 700.
 
-Type scale, already mapped onto Tailwind's text sizes: xs 12, sm 14, base 16, lg 18, xl 20, 2xl 24, 3xl 30, 4xl 36, 5xl 48, 6xl 60. App page titles are `text-2xl` or `text-3xl font-semibold tracking-tight`. Marketing headlines may use `text-5xl` or `text-6xl`. Body copy is `text-base` or `text-sm` with `text-ink-muted`. Do not set a font below 16px on inputs (iOS zoom).
+Inter, weights 400, 500, 600, 700. Page titles are `text-3xl font-bold tracking-tight`. Section titles are `text-lg font-bold`. Card facts are `text-lg`. Body copy is `text-base` or `text-lg` with `text-ink-muted`. Links are ink with an underline, not green. Do not set a font below 16px on inputs (iOS zoom).
 
 ## Spacing
 
@@ -49,8 +49,8 @@ Use the 4px scale: 1, 2, 3, 4, 6, 8, 12, 16 (`--space-*`). Stack related items w
 
 ## Radius and shadow
 
-- `rounded-control` (12px) on inputs, buttons, and chips.
-- `rounded-card` (24px) on cards. Photos inside a card are `rounded-2xl`.
+- `rounded-control` (14px) on inputs, buttons, and chips.
+- `rounded-card` (28px) on cards. Photos inside a card are `rounded-2xl`.
 - `rounded-full` on badges, avatars, and activity chips.
 - No drop shadow on cards or buttons. A 1px `line` border is the edge. `shadow-card` and `shadow-lift` are empty.
 

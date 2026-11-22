@@ -5,17 +5,14 @@
     :url="$preview->url"
 >
     <div class="space-y-1">
-        <h1 class="text-2xl font-semibold tracking-tight">{{ $preview->title }}</h1>
+        <h1 class="text-3xl font-bold tracking-tight">{{ $preview->title }}</h1>
         <p class="text-sm text-ink-muted">{{ $preview->description }}</p>
     </div>
 
     @if ($event)
         <div class="mt-6 space-y-4">
-            <div class="overflow-hidden rounded-card bg-white ring-1 ring-line">
-                <div class="px-4 py-3 {{ \App\Models\Event::accentClasses($event->sportSelection()) }}">
-                    <x-ui.chip :sport="$event->sportSelection()" :label="$event->sportLabel()" />
-                </div>
-                <x-illustrations.sport :sport="$event->sportSelection()" class="h-32 w-full" />
+            <div class="overflow-hidden rounded-card border border-line bg-white">
+                <img src="{{ $event->photoUrl() }}" alt="" class="h-48 w-full object-cover" />
             </div>
             @unless ($event->isPoll())
                 <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
