@@ -63,7 +63,7 @@
     @endif
     @if ($filters->level)
         <input type="hidden" name="level" value="{{ $filters->level }}">
-    @elseif (request('level') === 'any')
+    @elseif ($filters->anyLevel)
         <input type="hidden" name="level" value="any">
     @endif
     @if ($filters->category)

@@ -148,7 +148,12 @@ class ProfileSkillTest extends TestCase
             ->get(route('games.index', ['sport' => 'padel', 'level' => 'any']))
             ->assertOk()
             ->assertSee('Easy padel')
-            ->assertSee('Club padel');
+            ->assertSee('Club padel')
+            ->assertSee(route('games.index', ['sport' => 'padel', 'when' => 'weekend', 'level' => 'any']));
+
+        $this->actingAs($user)
+            ->get(route('games.index', ['sport' => 'padel', 'when' => 'weekend', 'level' => 'any']))
+            ->assertOk();
 
         $this->actingAs($user)
             ->get(route('games.index'))
