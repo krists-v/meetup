@@ -1,10 +1,13 @@
 @php
     $best = $event->bestTimeOption();
     $userId = auth()->id();
+    $pollHasVotes = $event->timeOptions->contains(fn ($option) => $option->votes->isNotEmpty());
 @endphp
 
 <x-ui.section title="Pick a time" description="Say yes, maybe, or no. The best time is the one most people can make.">
-    <x-illustrations.empty variant="votes" class="h-24 w-full" />
+    @if ($event->timeOptions->isEmpty() || ! $pollHasVotes)
+        <x-illustrations.empty variant="votes" class="h-24 w-full" />
+    @endif
     <x-ui.error :messages="$errors->get('vote')" />
     <x-ui.error :messages="$errors->get('option')" />
 
@@ -13,11 +16,11 @@
             $mine = $option->votes->firstWhere('user_id', $userId);
             $isBest = $best && $best->is($option);
         @endphp
-        <x-ui.card @class(['space-y-3 p-4', 'outline outline-2 outline-success' => $isBest, 'motion-pop' => (int) session('voted') === $option->id])>
+        <x-ui.card :highlight="$isBest" @class(['space-y-3', 'motion-pop' => (int) session('voted') === $option->id])>
             <div class="flex items-start justify-between gap-3">
                 <div>
-                    <h3 class="font-semibold text-ink">{{ $option->starts_at->format('D j M, H:i') }}</h3>
-                    <p @class(['mt-1 text-xs text-ink-muted', 'motion-tick' => (int) session('voted') === $option->id])>
+                    <h3 class="text-lg font-bold text-ink">{{ $option->starts_at->format('D j M, H:i') }}</h3>
+                    <p @class(['mt-1 text-base text-ink-muted', 'motion-tick' => (int) session('voted') === $option->id])>
                         {{ $option->voteCount('yes') }} yes · {{ $option->voteCount('maybe') }} maybe · {{ $option->voteCount('no') }} no
                     </p>
                 </div>
@@ -26,15 +29,15 @@
                 @endif
             </div>
 
-            <ul class="divide-y divide-line text-sm text-ink">
+            <ul class="divide-y divide-line text-base text-ink">
                 @forelse ($option->votes->sortBy('user.name') as $vote)
                     <li class="flex items-center justify-between gap-3 py-2">
                         <span class="flex items-center gap-2">
-                            <x-ui.avatar :name="$vote->user->name" :user="$vote->user" class="h-7 w-7 text-[11px]" />
+                            <x-ui.avatar :name="$vote->user->name" :user="$vote->user" />
                             {{ $vote->user->name }}
                         </span>
                         <span @class([
-                            'text-xs font-semibold uppercase tracking-wide',
+                            'text-sm font-semibold uppercase tracking-wide',
                             'text-success' => $vote->vote === 'yes',
                             'text-warn' => $vote->vote === 'maybe',
                             'text-ink-faint' => $vote->vote === 'no',
@@ -46,7 +49,7 @@
             </ul>
 
             @if ($option->hasPassed())
-                <p class="text-sm text-ink-muted">This time has passed.</p>
+                <p class="text-base text-ink-muted">This time has passed.</p>
             @else
                 <form method="POST" action="{{ route('events.options.vote', [$event, $option]) }}" class="grid grid-cols-3 gap-2">
                     @csrf

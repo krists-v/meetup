@@ -5,7 +5,7 @@
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <p class="mt-4 text-sm font-medium text-success">
+        <p class="mt-4 text-base font-medium text-success">
             A new link is on its way.
         </p>
     @endif

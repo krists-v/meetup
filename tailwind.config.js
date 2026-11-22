@@ -39,6 +39,10 @@ export default {
                     DEFAULT: 'rgb(var(--success) / <alpha-value>)',
                     soft: 'rgb(var(--success-soft) / <alpha-value>)',
                 },
+                highlight: {
+                    DEFAULT: 'rgb(var(--highlight) / <alpha-value>)',
+                    line: 'rgb(var(--highlight-line) / <alpha-value>)',
+                },
                 warn: {
                     DEFAULT: 'rgb(var(--warn) / <alpha-value>)',
                     soft: 'rgb(var(--warn-soft) / <alpha-value>)',

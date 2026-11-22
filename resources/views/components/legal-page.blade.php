@@ -14,10 +14,10 @@
             <main class="mx-auto w-full max-w-content space-y-4 px-4 py-8">
                 <div class="space-y-1">
                     <h1 class="text-3xl font-bold tracking-tight">{{ $title }}</h1>
-                    <p class="text-sm text-ink-muted">Plain language, not legal advice.</p>
+                    <p class="text-base text-ink-muted">Plain language, not legal advice.</p>
                 </div>
 
-                <x-ui.card class="space-y-4 px-5 py-6 text-sm leading-6 text-ink-muted">
+                <x-ui.card class="space-y-4 text-base leading-6 text-ink-muted">
                     {{ $slot }}
                     <p>
                         Questions go to

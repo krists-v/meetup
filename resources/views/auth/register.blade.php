@@ -31,7 +31,7 @@
             <x-ui.error :messages="$errors->get('password_confirmation')" />
         </div>
 
-        <p class="text-sm text-ink-muted">
+        <p class="text-base text-ink-muted">
             By creating an account you agree to the
             <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('terms') }}">terms</a>
             and the
@@ -41,7 +41,7 @@
         <x-ui.button type="submit" class="w-full">Create an account</x-ui.button>
     </form>
 
-    <p class="mt-4 text-sm text-ink-muted">
+    <p class="mt-4 text-base text-ink-muted">
         Already playing?
         <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('login') }}">Log in</a>
     </p>

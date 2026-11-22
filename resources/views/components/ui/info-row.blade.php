@@ -33,7 +33,7 @@
         @endif
         <span class="min-w-0">
             @if ($label)
-                <span class="block text-sm text-ink-muted">{{ $label }}</span>
+                <span class="block text-base text-ink-muted">{{ $label }}</span>
             @endif
             <span @class([
                 'flex flex-wrap items-center gap-2 text-lg',

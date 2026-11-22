@@ -1,7 +1,7 @@
 <section class="space-y-4">
     <header>
-        <h2 class="text-lg font-semibold text-ink">Delete account</h2>
-        <p class="mt-1 text-sm text-ink-muted">This removes your account for good. Games you created go with it.</p>
+        <h2 class="text-lg font-bold text-ink">Delete account</h2>
+        <p class="mt-1 text-base text-ink-muted">This removes your account for good. Games you created go with it.</p>
     </header>
 
     <x-ui.button
@@ -11,13 +11,13 @@
         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
     >{{ __('Delete account') }}</x-ui.button>
 
-    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+    <x-ui.modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
         <form method="post" action="{{ route('profile.destroy') }}" class="space-y-4 p-6">
             @csrf
             @method('delete')
 
-            <h2 class="text-lg font-semibold text-ink">Delete your account?</h2>
-            <p class="text-sm text-ink-muted">Enter your password to confirm. This cannot be undone.</p>
+            <h2 class="text-lg font-bold text-ink">Delete your account?</h2>
+            <p class="text-base text-ink-muted">Enter your password to confirm. This cannot be undone.</p>
 
             <div class="space-y-2">
                 <x-ui.label for="password" value="Password" class="sr-only" />
@@ -30,5 +30,5 @@
                 <x-ui.button type="submit" variant="danger">Delete account</x-ui.button>
             </div>
         </form>
-    </x-modal>
+    </x-ui.modal>
 </section>

@@ -36,70 +36,87 @@
     :image="$preview->image"
     :url="$preview->url"
 >
-    <div class="space-y-4">
+    <x-ui.page-header :title="$event->title" />
+
+    <div class="mt-6 space-y-4">
         <article class="overflow-hidden rounded-card border border-line bg-white shadow-card" style="--vt-name: game-{{ $event->id }}">
             <div class="relative px-3 pt-3">
                 <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-56 w-full rounded-2xl object-cover" />
-                <span class="absolute bottom-3 left-6 rounded-full bg-white/75 px-3 py-1 text-sm font-medium text-ink backdrop-blur-md">{{ $event->areaLabel() }}</span>
+                <span class="absolute bottom-3 left-6 rounded-full bg-white px-3 py-1 text-sm font-medium text-ink">{{ $event->areaLabel() }}</span>
             </div>
             <div class="space-y-4 p-5 sm:p-6">
                 <div class="flex items-start justify-between gap-3">
-                    <h1 class="text-3xl font-bold tracking-tight text-ink">{{ $event->title }}</h1>
+                    <h2 class="text-xl font-bold tracking-tight text-ink">{{ $event->title }}</h2>
                     @if ($event->spotsLeftLabel())
                         <x-ui.badge class="shrink-0" :tone="$event->isFull() || $event->isPoll() ? 'warn' : 'pitch'">{{ $event->spotsLeftLabel() }}</x-ui.badge>
                     @endif
                 </div>
-                @if ($event->isPoll())
-                    <x-ui.info-row variant="time" label="When">{{ $event->whenLabel() }}</x-ui.info-row>
-                @else
-                    <x-ui.info-row variant="date" label="When">{{ $event->whenLabel() }}</x-ui.info-row>
-                @endif
-                <x-ui.info-row variant="place" label="Where" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
-                <x-ui.info-row variant="spots" label="Players">
-                    <span @class(['motion-tick' => $justJoined])>{{ $event->playersLabel() }}</span>
-                </x-ui.info-row>
-                @if ($event->priceLabel())
-                    <p class="text-lg font-bold text-ink">{{ $event->priceLabel() }}</p>
-                @endif
-                @if ($event->isPoll())
-                    <x-ui.info-row variant="spots" label="Spots">
-                        @if ($event->max_participants)
-                            Up to {{ $event->max_participants }} can play, once a time is set
-                        @else
-                            No limit, once a time is set
-                        @endif
+                <div class="space-y-3 text-lg">
+                    @if ($event->isPoll())
+                        <x-ui.info-row variant="time">{{ $event->whenLabel() }}</x-ui.info-row>
+                    @else
+                        <x-ui.info-row variant="date">{{ $event->whenLabel() }}</x-ui.info-row>
+                    @endif
+                    <x-ui.info-row variant="place" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
+                    <x-ui.info-row variant="spots">
+                        <span @class(['motion-tick' => $justJoined])>{{ $event->playersLabel() }}</span>
                     </x-ui.info-row>
-                @endif
-                <x-ui.activity-facts :event="$event" />
-                <x-ui.badge :tone="$event->visibility === 'public' ? 'pitch' : 'neutral'">
-                    {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
-                </x-ui.badge>
-                @if ($event->description)
-                    <p class="whitespace-pre-line text-sm text-ink">{{ $event->description }}</p>
-                @endif
+                    <x-ui.info-row variant="level">{{ $event->levelLabel() }}</x-ui.info-row>
+                </div>
+                <div class="border-t border-line pt-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <p class="text-base text-ink-muted">Hosted by {{ $event->creator->name }}</p>
+                        @if ($event->priceLabel())
+                            <p class="text-base font-bold text-ink">{{ $event->priceLabel() }}</p>
+                        @endif
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <x-ui.info-row :variant="$event->isIndoor() ? 'indoor' : 'outdoor'">
+                        {{ $event->isIndoor() ? 'Indoors' : 'Outdoors' }}
+                    </x-ui.info-row>
+                    @if ($event->welcomesBeginners())
+                        <x-ui.badge preset="beginners" />
+                    @endif
+                    @if ($event->isPoll())
+                        <x-ui.info-row variant="spots">
+                            @if ($event->max_participants)
+                                Up to {{ $event->max_participants }} can play, once a time is set
+                            @else
+                                No limit, once a time is set
+                            @endif
+                        </x-ui.info-row>
+                    @endif
+                    <x-ui.badge tone="neutral">
+                        {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
+                    </x-ui.badge>
+                    @if ($event->description)
+                        <p class="whitespace-pre-line text-base text-ink">{{ $event->description }}</p>
+                    @endif
+                </div>
             </div>
         </article>
 
         @if ($userStatus === 'expired')
-            <p class="text-sm text-ink-muted" role="status" data-request-expired="1">Request expired</p>
+            <p class="text-base text-ink-muted" role="status" data-request-expired="1">Request expired</p>
         @endif
 
         @if ($event->isPoll())
             @include('events.partials.time-poll')
         @else
-            <x-ui.card class="space-y-3 p-4 sm:p-6">
-                <h2 class="font-semibold text-ink">Are you in?</h2>
+            <x-ui.card class="space-y-3">
+                <h2 class="text-lg font-bold text-ink">Are you in?</h2>
                 @if ($offerWaitlist)
-                    <p class="text-sm text-warn">It's full. Join the waitlist, or say maybe.</p>
+                    <p class="text-base text-warn">It's full. Join the waitlist, or say maybe.</p>
                     @if ($userStatus === 'waitlist')
-                        <p class="text-sm text-ink">{{ 'You\'re '.$event->waitlistPosition(auth()->user()).' on the waitlist.' }}</p>
+                        <p class="text-base text-ink">{{ 'You\'re '.$event->waitlistPosition(auth()->user()).' on the waitlist.' }}</p>
                     @endif
                 @endif
                 <x-ui.error :messages="$errors->get('status')" />
                 @if ($userStatus === 'maybe')
-                    <p class="text-sm text-ink-muted">You're a maybe.</p>
+                    <p class="text-base text-ink-muted">You're a maybe.</p>
                 @elseif ($userStatus === 'not_going')
-                    <p class="text-sm text-ink-muted">You said not going.</p>
+                    <p class="text-base text-ink-muted">You said not going.</p>
                 @endif
                 <form id="rsvp-form" method="POST" action="{{ route('events.rsvp', $event) }}" class="space-y-2">
                     @csrf
@@ -152,17 +169,17 @@
 
         @unless ($event->isPoll())
             <x-ui.section title="Who's going">
-                <x-ui.card class="space-y-4 p-4 sm:p-6">
+                <x-ui.card class="space-y-4">
                     @if ($groups['going']['people']->isEmpty())
-                        <p class="text-sm text-ink-muted">No one yet. Be the first in.</p>
+                        <p class="text-base text-ink-muted">No one yet. Be the first in.</p>
                     @else
                         <ul class="space-y-4">
                             @foreach ($groups['going']['people'] as $person)
                                 <li @class(['space-y-2', 'motion-avatar' => $justJoined && $person->is(auth()->user())])>
                                     <div class="flex items-center gap-3">
-                                        <x-ui.avatar :name="$person->name" :user="$person" class="h-11 w-11" />
+                                        <x-ui.avatar :name="$person->name" :user="$person" />
                                         <div class="min-w-0">
-                                            <a href="{{ route('players.show', $person) }}" class="block truncate text-sm font-medium text-ink">{{ $person->name }}</a>
+                                            <a href="{{ route('players.show', $person) }}" class="block truncate text-base font-medium text-ink">{{ $person->name }}</a>
                                             <div class="mt-1 flex flex-wrap gap-1">
                                                 @if ($person->sportLevelLabel($event->sportSelection()))
                                                     <x-ui.badge tone="neutral" class="px-2 py-0.5" data-player-level="{{ $person->sportLevel($event->sportSelection()) }}">{{ $person->sportLevelLabel($event->sportSelection()) }}</x-ui.badge>
@@ -180,12 +197,12 @@
                     @foreach (['waitlist', 'maybe', 'not_going'] as $key)
                         @continue($groups[$key]['people']->isEmpty())
                         <div class="space-y-2">
-                            <p class="text-xs font-semibold uppercase tracking-wide text-ink-muted">{{ $groups[$key]['label'] }} · {{ $groups[$key]['people']->count() }}</p>
+                            <p class="text-sm font-semibold uppercase tracking-wide text-ink-muted">{{ $groups[$key]['label'] }} · {{ $groups[$key]['people']->count() }}</p>
                             <ul class="space-y-2">
                                 @foreach ($groups[$key]['people'] as $person)
-                                    <li class="space-y-2 text-sm text-ink">
+                                    <li class="space-y-2 text-base text-ink">
                                         <div class="flex min-h-11 items-center gap-2">
-                                            <x-ui.avatar :name="$person->name" :user="$person" class="h-7 w-7 text-[11px]" />
+                                            <x-ui.avatar :name="$person->name" :user="$person" />
                                             @if ($key === 'waitlist')
                                                 {{ $loop->iteration }}.
                                             @endif
@@ -201,13 +218,13 @@
             </x-ui.section>
         @endunless
 
-        <x-ui.card class="space-y-3 p-4 sm:p-6">
-            <h2 class="font-semibold text-ink">Host</h2>
+        <x-ui.card class="space-y-3">
+            <h2 class="text-lg font-bold text-ink">Host</h2>
             <div class="flex items-center gap-3">
-                <x-ui.avatar :name="$event->creator->name" :user="$event->creator" class="h-11 w-11" />
+                <x-ui.avatar :name="$event->creator->name" :user="$event->creator" />
                 <div class="min-w-0">
-                    <a href="{{ route('players.show', $event->creator) }}" class="block truncate font-semibold text-ink">{{ $event->creator->name }}</a>
-                    <p class="text-sm text-ink-muted">Hosting this game</p>
+                    <a href="{{ route('players.show', $event->creator) }}" class="block truncate text-base font-semibold text-ink">{{ $event->creator->name }}</a>
+                    <p class="text-base text-ink-muted">Hosting this game</p>
                 </div>
             </div>
             @include('players.partials.actions', ['player' => $event->creator, 'prefix' => 'host'])

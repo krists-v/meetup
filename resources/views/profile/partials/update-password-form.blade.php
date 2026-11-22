@@ -1,7 +1,7 @@
 <section>
     <header>
-        <h2 class="text-lg font-semibold text-ink">Password</h2>
-        <p class="mt-1 text-sm text-ink-muted">Make it long, and don't reuse it.</p>
+        <h2 class="text-lg font-bold text-ink">Password</h2>
+        <p class="mt-1 text-base text-ink-muted">Make it long, and don't reuse it.</p>
     </header>
 
     <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-4">
@@ -35,7 +35,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-ink-muted"
+                    class="text-base text-ink-muted"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>

@@ -26,7 +26,12 @@ Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailw
 - The page, header, and mobile nav use `canvas`. The header keeps a bottom `line` border and `shadow-card` so the bar still reads on the grey. Cards, sheets, menus, and inputs stay white with a 1px `line` border, a large radius, and `shadow-card`. No heavy shadow, no gradient, no mesh.
 - Pitch green is for status only: spots left, you're in, a warning, a danger. It is not a button color.
 - Primary buttons, including "I'm in", are `bg-ink` with white text. Hover is `bg-ink/90`. Secondary buttons are `bg-mist` with ink text and a `line` ring, so they read on both the grey page and a white card. Focus rings are ink.
-- Chips are `bg-mist` with a `line` border and ink text. Neutral badges are white with a `line` ring and ink text. Status badges stay on `success-soft` or `warn-soft`. Each of these has to stay visible on `canvas` and on white.
+- Chips share one style through `x-ui.chip`: white, a `line` ring, ink text, at least 44px tall. The selected chip is `bg-ink` with white text. Use it for filters, the sport picker, activity options, form choices, homepage activities, and the activity name. Neutral badges, including "Public game", are white with a `line` ring and ink text. Green is status only: spots left, you're in, best time, a warning, a danger. Each of these has to stay visible on `canvas` and on white.
+- A highlighted card (the next game, the best time) uses `bg-highlight` (`#F0FAF3`) and a single 1px `border-highlight-line`. No second border, no 2px outline, no ring, no shadow. Text stays ink. Primary stays near-black.
+- Area pills are solid `bg-white`. No translucent fill and no backdrop blur.
+- Body and helper text is `text-base`. `text-sm` is for badges, chips, and timestamps.
+- People lists use a 44px avatar. A smaller avatar is only for a tight meta row, such as the header or a note next to its time.
+- Page titles sit in the main column with `x-ui.page-header`. There is no extra bordered title bar. The footer is `max-w-content`. Only the footer adds space for the mobile nav.
 - Neutrals: `canvas` page background, `ink` text, `ink-muted` secondary text, `ink-faint` placeholders, `line` borders, `sand` inside illustrations.
 - Status: `success` (same green family), `warn`, `danger`, each with a `soft` background.
 - Do not color a chip, a button, or a page with an activity accent.
@@ -42,7 +47,7 @@ The homepage uses the same tokens as the app. The hero and the closing line are 
 
 Inter, self-hosted in `public/fonts`, with the system sans fallback. Weights in use: 400, 500, 600, 700.
 
-Inter, weights 400, 500, 600, 700. Page titles are `text-3xl font-bold tracking-tight`. Section titles are `text-lg font-bold`. Card facts are `text-lg`. Body copy is `text-base` or `text-lg` with `text-ink-muted`. Links are ink with an underline, not green. Do not set a font below 16px on inputs (iOS zoom).
+Inter, weights 400, 500, 600, 700. Page titles are `text-3xl font-bold tracking-tight`. Section and card titles are `text-lg font-bold`. Card facts are `text-lg`. Body and helper copy is `text-base` with `text-ink-muted`. `text-sm` is for badges, chips, and timestamps. Links are ink with an underline, not green. Do not set a font below 16px on inputs (iOS zoom).
 
 ## Spacing
 
@@ -87,21 +92,25 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.wordmark` | The mark plus the word Varza. Link it home. |
 | `x-ui.page-header` | The title of a screen, with optional subtitle and `actions` slot. |
 | `x-ui.section` | A labeled group on a page. |
-| `x-ui.card` | A white surface for a form, a detail block, or a poll option. |
+| `x-ui.card` | A white surface for a form, a detail block, or a poll option. Padding is `p-4 sm:p-6`. Pass `highlight` for the soft green best-time card. |
 | `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Primary is the one next step. Includes `.motion-press`. |
 | `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
 | `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, What's on, Start a game, account menu. |
 | `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. |
-| `x-ui.chip` | Activity name on a mist chip with a line border. |
+| `x-ui.chip` | The one chip. A link, a radio label (`for`), or a static name. Selected is ink. |
 | `x-ui.label` | Every control's label. |
-| `x-ui.input` | Text, email, password, number, date. |
+| `x-ui.input` | Text, email, password, number, date, and poll datetimes. |
 | `x-ui.select` | A native select when there are many short options and chips would wrap into a mess. |
 | `x-ui.textarea` | Notes and descriptions. |
 | `x-ui.error` | Validation messages for one field. |
-| `x-ui.badge` | Status such as "Vote on a time" or "Best time". Tones: `pitch`, `warn`, `neutral`. Presets: `full`, `beginners`, `indoor`, `outdoor`. |
+| `x-ui.badge` | Status such as "Best time". Tones: `pitch`, `warn`, `neutral`. Presets: `full`, `beginners`, `indoor`, `outdoor`. "Public game" is neutral. |
 | `x-ui.sport-chip` | The activity name. Delegates to `x-ui.chip`. |
-| `x-ui.avatar` | Photo, or initials from a person's name. |
+| `x-ui.avatar` | Photo, or initials. People lists are 44px. `size="meta"` is the small row. `size="photo"` is the profile picture. |
 | `x-ui.empty-state` | A titled empty list with an illustration and an optional action. |
+| `x-ui.checkbox` | Remember me, reminders, and remove photo. |
+| `x-ui.file` | The one file input, for a game photo or an avatar. |
+| `x-ui.modal` | Confirm dialogs. |
+| `x-ui.status` | A short success line, such as a reset link sent. |
 | `x-ui.icon` | The Lucide set. |
 | `x-illustrations.hero` | Landing hero only. |
 | `x-illustrations.sport` | Unused on the game card. A game shows its photo, or `public/images/sports/{sport}.svg`. |

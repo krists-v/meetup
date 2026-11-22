@@ -55,6 +55,8 @@
     --sand: 231 211 191;
     --success: 28 99 59;
     --success-soft: 227 244 232;
+    --highlight: 240 250 243;
+    --highlight-line: 197 232 208;
     --warn: 154 103 0;
     --warn-soft: 255 248 235;
     --danger: 180 35 24;
@@ -105,6 +107,8 @@
     --color-sand: rgb(var(--sand));
     --color-success: rgb(var(--success));
     --color-success-soft: rgb(var(--success-soft));
+    --color-highlight: rgb(var(--highlight));
+    --color-highlight-line: rgb(var(--highlight-line));
     --color-warn: rgb(var(--warn));
     --color-warn-soft: rgb(var(--warn-soft));
     --color-danger: rgb(var(--danger));
@@ -162,18 +166,6 @@
     display: block;
 }
 
-.bg-pitch-wash,
-.bg-pitch-mesh,
-.bg-pitch-band,
-.glass-card {
-    background: var(--color-canvas);
-    color: var(--color-ink);
-    box-shadow: none;
-}
-
-.bg-grain::after {
-    content: none;
-}
 
 @keyframes motion-pop {
     from { transform: scale(0.96); }

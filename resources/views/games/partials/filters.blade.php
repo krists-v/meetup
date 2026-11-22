@@ -1,8 +1,5 @@
 @php
     $url = fn (array $overrides = []) => route($route, $filters->parameters($overrides));
-    $chip = 'relative z-10 inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold transition duration-150';
-    $on = 'bg-ink text-white';
-    $off = 'bg-white text-ink ring-1 ring-line';
     $track = 'relative flex flex-wrap gap-2';
     $indicator = 'motion-slide pointer-events-none absolute rounded-full ring-2 ring-ink';
     $sheetId = 'filters-'.str_replace('.', '-', $route);
@@ -44,7 +41,7 @@
         aria-labelledby="{{ $sheetId }}-title"
     >
         <div class="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
-            <h2 id="{{ $sheetId }}-title" class="text-lg font-semibold text-ink">Filters</h2>
+            <h2 id="{{ $sheetId }}-title" class="text-lg font-bold text-ink">Filters</h2>
             <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-control text-ink hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink" x-ref="close" @click="close()" aria-label="Close">
                 <x-ui.icon name="x" />
             </button>
