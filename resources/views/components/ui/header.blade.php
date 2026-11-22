@@ -30,8 +30,8 @@
             </div>
         @else
             <div class="flex items-center gap-2">
-                <x-ui.button variant="ghost" :href="route('login')">Log in</x-ui.button>
-                <x-ui.button variant="secondary" :href="route('register')">Sign up</x-ui.button>
+                <a href="{{ route('login') }}" @class([$current => request()->routeIs('login'), $link => ! request()->routeIs('login')])>Log in</a>
+                <a href="{{ route('register') }}" @class([$current => request()->routeIs('register'), $link => ! request()->routeIs('register')])>Sign up</a>
             </div>
         @endauth
     </div>

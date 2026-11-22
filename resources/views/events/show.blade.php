@@ -230,18 +230,18 @@
             </div>
             @include('players.partials.actions', ['player' => $event->creator, 'prefix' => 'host'])
             @if ($event->isCreator(auth()->user()))
-                <div class="flex flex-col gap-2 sm:flex-row">
-                    <x-ui.button variant="secondary" :href="route('events.edit', $event)">Edit game</x-ui.button>
+                <div class="grid gap-2">
+                    <x-ui.button variant="secondary" :href="route('events.edit', $event)" block>Edit game</x-ui.button>
                     @unless ($event->isPoll())
                         <form method="POST" action="{{ route('events.repeat', $event) }}">
                             @csrf
-                            <x-ui.button type="submit" variant="secondary">Same time next week</x-ui.button>
+                            <x-ui.button type="submit" variant="secondary" block>Same time next week</x-ui.button>
                         </form>
                     @endunless
                     <form method="POST" action="{{ route('events.destroy', $event) }}" onsubmit="return confirm('Cancel this game?');">
                         @csrf
                         @method('DELETE')
-                        <x-ui.button type="submit" variant="danger">Cancel game</x-ui.button>
+                        <x-ui.button type="submit" variant="danger" block>Cancel game</x-ui.button>
                     </form>
                 </div>
             @endif

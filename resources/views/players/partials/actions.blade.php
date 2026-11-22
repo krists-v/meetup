@@ -23,7 +23,7 @@
             <x-ui.textarea id="{{ $prefix }}-note-{{ $player->id }}" name="note" rows="2" maxlength="1000">{{ old('note') }}</x-ui.textarea>
             <x-ui.error :messages="$errors->get('note')" />
             <x-ui.error :messages="$errors->get('report')" />
-            <x-ui.button type="submit" :variant="$open ? 'primary' : 'secondary'" :block="$open">Report</x-ui.button>
+            <x-ui.button type="submit" :variant="$open ? 'primary' : 'secondary'" block>Report</x-ui.button>
         </form>
         @unless ($open)
             </details>
@@ -33,12 +33,12 @@
             <form method="POST" action="{{ route('players.unblock', $player) }}">
                 @csrf
                 @method('DELETE')
-                <x-ui.button type="submit" variant="secondary">Unblock</x-ui.button>
+                <x-ui.button type="submit" variant="secondary" block>Unblock</x-ui.button>
             </form>
         @else
             <form method="POST" action="{{ route('players.block', $player) }}">
                 @csrf
-                <x-ui.button type="submit" variant="ghost" class="px-2">Block</x-ui.button>
+                <x-ui.button type="submit" variant="ghost" block>Block</x-ui.button>
             </form>
         @endif
     </div>

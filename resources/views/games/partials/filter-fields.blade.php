@@ -51,7 +51,7 @@
     @endforeach
 </div>
 
-<div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+<div class="grid gap-2">
     @if ($filters->sport)
         <input type="hidden" name="sport" value="{{ $filters->sport }}">
     @endif

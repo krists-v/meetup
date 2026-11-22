@@ -21,8 +21,8 @@
             @else
                 <ul class="space-y-2">
                     @foreach ($blocked as $person)
-                        <li class="flex min-h-11 items-center justify-between gap-3">
-                            <a href="{{ route('players.show', $person) }}" class="truncate text-base font-medium text-ink">{{ $person->name }}</a>
+                        <li class="space-y-2">
+                            <a href="{{ route('players.show', $person) }}" class="flex min-h-11 min-w-0 items-center text-base font-medium text-ink"><span class="min-w-0 truncate">{{ $person->name }}</span></a>
                             <form method="POST" action="{{ route('players.unblock', $person) }}">
                                 @csrf
                                 @method('DELETE')

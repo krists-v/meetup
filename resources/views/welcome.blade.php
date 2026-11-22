@@ -15,9 +15,9 @@
                     <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">Bored at home? Go play.</h1>
                     <p class="text-xl text-ink-muted">Less scrolling, more playing.</p>
                     <p class="max-w-md text-lg text-ink-muted">See what's on near you. Padel, tennis, bowling, climbing. Then go.</p>
-                    <div class="flex flex-col gap-3 sm:flex-row">
-                        <x-ui.button :href="route('games.index')" class="sm:min-w-44">See what's on</x-ui.button>
-                        <x-ui.button variant="secondary" :href="route('register')" class="sm:min-w-44">Start a game</x-ui.button>
+                    <div class="grid gap-3">
+                        <x-ui.button :href="route('games.index')">See what's on</x-ui.button>
+                        <x-ui.button variant="secondary" :href="route('register')">Start a game</x-ui.button>
                     </div>
                 </div>
 
@@ -106,6 +106,7 @@
                             <p class="mt-1 text-base text-ink-muted">Meet someone new and play.</p>
                         </li>
                     </ol>
+                    <a href="{{ route('how-it-works') }}" class="mt-6 inline-flex min-h-11 items-center text-base font-medium text-ink underline">See how a game works</a>
                 </section>
 
                 <section class="mx-auto w-full max-w-5xl px-4 pb-16">
@@ -130,7 +131,7 @@
                 <section class="mx-auto w-full max-w-5xl px-4 pb-16 text-center">
                     <h2 class="text-5xl font-bold tracking-tight sm:text-6xl">Your weekend just got a plan.</h2>
                     <p class="mx-auto mt-3 max-w-md text-ink-muted">Less time on the couch. More time on a court, a lane, or a trail.</p>
-                    <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                    <div class="mx-auto mt-6 grid max-w-sm gap-3">
                         <x-ui.button :href="route('games.index')">See what's on</x-ui.button>
                         <x-ui.button variant="secondary" :href="route('register')">Start a game</x-ui.button>
                     </div>
