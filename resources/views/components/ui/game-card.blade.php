@@ -42,7 +42,7 @@
                     <p class="text-base font-bold text-ink">{{ $event->priceLabel() }}</p>
                 @endif
             </div>
-            <x-ui.button :href="route('events.show', $event)" class="mt-4 w-full">I'm in</x-ui.button>
+            <x-ui.button :href="route('events.show', $event)" block class="mt-4">I'm in</x-ui.button>
         </div>
     </div>
 </article>

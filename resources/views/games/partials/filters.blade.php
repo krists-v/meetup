@@ -53,8 +53,8 @@
             @include('games.partials.filter-fields', ['sheet' => true])
         </div>
         <div class="flex gap-2 border-t border-line bg-white p-3">
-            <x-ui.button variant="secondary" :href="route($route)" class="flex-1">Clear all</x-ui.button>
-            <x-ui.button type="submit" class="flex-1">Show games</x-ui.button>
+            <x-ui.button variant="secondary" :href="route($route)" block class="flex-1">Clear all</x-ui.button>
+            <x-ui.button type="submit" block class="flex-1">Show games</x-ui.button>
         </div>
     </form>
 </div>

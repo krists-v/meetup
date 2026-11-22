@@ -27,7 +27,7 @@
             <x-ui.error :messages="$errors->get('password_confirmation')" />
         </div>
 
-        <x-ui.button type="submit" class="w-full">Save</x-ui.button>
+        <x-ui.button type="submit" block>Save</x-ui.button>
     </form>
 
     <p class="mt-4 text-sm">
