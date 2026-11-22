@@ -8,6 +8,4 @@
     <path d="M-46 -40H8"/>
     <circle cx="-16" cy="-40" r="7" fill="#305A48" stroke="none"/>
   </g>
-  <rect x="40" y="300" width="136" height="48" rx="24" fill="#ffffff"/>
-  <text x="108" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#305A48">Cycling</text>
 </svg>

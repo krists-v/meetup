@@ -9,9 +9,11 @@
 
     @if ($event)
         <article class="mt-6 overflow-hidden rounded-card border border-line bg-white shadow-card">
-            <div class="relative px-3 pt-3">
-                <img src="{{ $event->photoUrl($joinToken) }}" alt="{{ $event->sportLabel() }}" class="h-48 w-full rounded-2xl object-cover" />
-                <span class="absolute bottom-3 left-6 rounded-full bg-white px-3 py-1 text-sm font-medium text-ink">{{ $event->areaLabel() }}</span>
+            <div class="px-3 pt-3">
+                <div class="relative overflow-hidden rounded-2xl">
+                    <img src="{{ $event->photoUrl($joinToken) }}" alt="{{ $event->sportLabel() }}" class="h-48 w-full object-cover" />
+                    <x-ui.image-pill :label="$event->sportLabel()" />
+                </div>
             </div>
             <div class="space-y-4 px-5 pb-5 pt-4">
                 <h2 class="text-xl font-bold tracking-tight text-ink">{{ $event->title }}</h2>

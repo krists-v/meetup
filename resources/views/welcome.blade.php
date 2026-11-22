@@ -23,9 +23,11 @@
 
                 <div class="mx-auto w-full max-w-sm" aria-hidden="true">
                     <div class="overflow-hidden rounded-card border border-line bg-white shadow-card">
-                        <div class="relative px-3 pt-3">
-                            <img src="{{ asset('images/sports/padel.svg') }}" alt="" class="h-48 w-full rounded-2xl object-cover" />
-                            <span class="absolute bottom-3 left-6 rounded-full bg-white px-3 py-1 text-sm font-medium text-ink">Mežaparks</span>
+                        <div class="px-3 pt-3">
+                            <div class="relative overflow-hidden rounded-2xl">
+                                <img src="{{ asset('images/sports/padel.svg') }}" alt="" class="h-48 w-full object-cover" />
+                                <x-ui.image-pill label="Padel" />
+                            </div>
                         </div>
                         <div class="space-y-4 px-5 pb-5 pt-4">
                             <div class="flex items-start justify-between gap-3">
