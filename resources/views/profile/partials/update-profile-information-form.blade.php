@@ -2,6 +2,9 @@
     <header>
         <h2 class="text-lg font-semibold text-ink">Your details</h2>
         <p class="mt-1 text-sm text-ink-muted">This is the name people see when you show up.</p>
+        <p class="mt-3">
+            <x-ui.badge tone="neutral" data-attendance="{{ $user->attendanceLabel() }}">{{ $user->attendanceLabel() }}</x-ui.badge>
+        </p>
     </header>
 
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">

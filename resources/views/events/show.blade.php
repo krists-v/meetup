@@ -160,6 +160,7 @@
                                     @if ($person->sportLevelLabel($event->sportSelection()))
                                         <x-ui.badge tone="neutral" class="px-2 py-0.5" data-player-level="{{ $person->sportLevel($event->sportSelection()) }}">{{ $person->sportLevelLabel($event->sportSelection()) }}</x-ui.badge>
                                     @endif
+                                    <x-ui.badge tone="neutral" class="px-2 py-0.5" data-attendance="{{ $person->attendanceLabel() }}">{{ $person->attendanceLabel() }}</x-ui.badge>
                                 </li>
                             @endforeach
                         </ul>
