@@ -220,6 +220,7 @@ class EventController extends Controller
         $request->user()->unsetRelation('unreadNotifications');
 
         $event->load(['creator', 'participants', 'comments.user', 'timeOptions.votes.user']);
+        User::loadAttendance($event->participants);
 
         return view('events.show', [
             'event' => $event,

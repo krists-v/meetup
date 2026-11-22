@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
@@ -97,7 +99,77 @@ class User extends Authenticatable
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class, 'event_user')
-            ->withPivot('status')
+            ->using(EventUser::class)
+            ->withPivot('id', 'status', 'attended')
             ->withTimestamps();
+    }
+
+    /**
+     * @var array{showed: int, total: int}|null
+     */
+    protected ?array $attendanceCache = null;
+
+    /**
+     * Past games this person was going to, and how many of those they showed up for.
+     * A blank flag counts as showed up. False is a no-show. Fewer than three past games is a new player.
+     *
+     * @return array{showed: int, total: int, label: string}
+     */
+    public function attendance(): array
+    {
+        if ($this->attendanceCache === null) {
+            self::loadAttendance([$this]);
+        }
+
+        $showed = $this->attendanceCache['showed'];
+        $total = $this->attendanceCache['total'];
+
+        return [
+            'showed' => $showed,
+            'total' => $total,
+            'label' => $total < 3 ? 'New player' : 'Shows up '.$showed.'/'.$total,
+        ];
+    }
+
+    public function attendanceLabel(): string
+    {
+        return $this->attendance()['label'];
+    }
+
+    /**
+     * @param  iterable<int, User>  $users
+     */
+    public static function loadAttendance(iterable $users): void
+    {
+        $users = $users instanceof Collection ? $users : collect($users);
+        $users = $users->filter(fn ($user) => $user instanceof self);
+
+        if ($users->isEmpty()) {
+            return;
+        }
+
+        $rows = DB::table('event_user')
+            ->join('events', 'events.id', '=', 'event_user.event_id')
+            ->whereIn('event_user.user_id', $users->pluck('id')->unique()->all())
+            ->where('event_user.status', 'going')
+            ->where('events.event_date', '<', now())
+            ->get(['event_user.user_id', 'event_user.attended']);
+
+        $grouped = $rows->groupBy('user_id');
+
+        foreach ($users as $user) {
+            $mine = $grouped->get($user->id, collect());
+            $total = $mine->count();
+            $showed = $mine->reject(fn (object $row) => self::markedNoShow($row->attended))->count();
+            $user->attendanceCache = [
+                'showed' => $showed,
+                'total' => $total,
+            ];
+        }
+    }
+
+    private static function markedNoShow(mixed $attended): bool
+    {
+        return $attended === false || $attended === 0 || $attended === '0';
     }
 }

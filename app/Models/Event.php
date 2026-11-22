@@ -160,7 +160,8 @@ class Event extends Model
     public function participants(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'event_user')
-            ->withPivot('id', 'status')
+            ->using(EventUser::class)
+            ->withPivot('id', 'status', 'attended')
             ->withTimestamps();
     }
 
