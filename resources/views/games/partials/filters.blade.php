@@ -13,7 +13,7 @@
 >
     <button
         type="button"
-        class="filters-trigger motion-press min-h-11 items-center gap-2 rounded-control bg-mist px-4 py-2.5 text-sm font-bold text-ink ring-1 ring-line hover:bg-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
+        class="filters-trigger motion-press min-h-11 w-full items-center justify-center gap-2 rounded-control bg-mist px-4 py-2.5 text-sm font-bold text-ink ring-1 ring-line hover:bg-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
         x-ref="trigger"
         @click="show()"
         :aria-expanded="open.toString()"

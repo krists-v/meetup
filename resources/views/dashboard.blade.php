@@ -1,11 +1,9 @@
 <x-app-layout title="Your games" description="The next one is up top.">
-    <x-ui.page-header title="Your games" subtitle="The next one is up top.">
-        <x-slot name="actions">
-            <div class="hidden sm:block">
-                <x-ui.button :href="route('events.create')">Start a game</x-ui.button>
-            </div>
-        </x-slot>
-    </x-ui.page-header>
+    <x-ui.page-header title="Your games" subtitle="The next one is up top." />
+
+    <div class="mt-4">
+        <x-ui.button :href="route('events.create')">Start a game</x-ui.button>
+    </div>
 
     <div class="mt-6 space-y-8">
         @if ($nextGame)

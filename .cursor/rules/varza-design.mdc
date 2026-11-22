@@ -27,7 +27,7 @@ Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailw
 - Highlight variant: the next game and the best time use `bg-highlight` (`#F0FAF3`) and a single 1px `border-highlight-line`. No second border, no 2px outline, no ring, no shadow. Text stays ink. The primary button stays near-black.
 - Pitch green is for status only: spots left, you're in, a warning, a danger. It is not a button color.
 - Primary buttons, including "I'm in", are `bg-ink` with white text. Hover is `bg-ink/90`. Secondary buttons are `bg-mist` with ink text and a `line` ring, so they read on both the grey page and a white card. Focus rings are ink.
-- Button width lives on `x-ui.button`. Do not set it with a one-off class. A primary button is full width on mobile and sizes to its label from `sm` (`w-full sm:w-fit`). Pass `block` for `w-full` in a card, a form, a sheet, or an auth page. On a game page (the game, the preview, create, and edit) every action button is `w-full`: stack them, or put a pair in `grid grid-cols-2`. Secondary, ghost, and danger buttons are `w-full` unless you pass `compact` (`w-fit`). `compact` is only for a header action or a tiny inline control, such as a roster row icon or an icon-only copy control.
+- Button width lives on `x-ui.button`. Every button is `w-full`. Do not set a content width, and do not pass a one-off width class. `block` is accepted and does not change the width. Stack buttons, or put a pair in an equal grid. The only exceptions are an icon-only control (copy, close, a menu kebab, a roster row icon) and a header or nav item. Those are not `x-ui.button`.
 - Chips share one style through `x-ui.chip`: white, a `line` ring, ink text, at least 44px tall. The selected chip is `bg-ink` with white text. Use it for filters, the sport picker, activity options, form choices, homepage activities, and the activity name. Neutral badges, including "Public game", are white with a `line` ring and ink text. Green is status only: spots left, you're in, best time, a warning, a danger. Each of these has to stay visible on `canvas` and on white.
 - Area pills are solid `bg-white`. No translucent fill and no backdrop blur.
 - Body and helper text is `text-base`. `text-sm` is for badges, chips, and timestamps.
@@ -94,7 +94,7 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.page-header` | The title of a screen, with optional subtitle and `actions` slot. |
 | `x-ui.section` | A labeled group on a page. |
 | `x-ui.card` | A white surface for a form, a detail block, or a poll option. Padding is `p-4 sm:p-6`. Pass `highlight` for the soft green best-time card. |
-| `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Pass `block` for a full-width action. On a game page every action is full width. Pass `compact` only for a header action or a tiny inline control. Primary is the one next step. Includes `.motion-press`. |
+| `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Always `w-full`. Pass `href` for a link. Primary is the one next step. Includes `.motion-press`. |
 | `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
 | `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, What's on, Start a game, account menu. |
 | `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. Pass `highlight` for the green tint and one green border. |

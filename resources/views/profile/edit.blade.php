@@ -20,12 +20,12 @@
             @else
                 <ul class="space-y-2">
                     @foreach ($blocked as $person)
-                        <li class="flex min-h-11 items-center justify-between gap-3">
-                            <a href="{{ route('players.show', $person) }}" class="truncate text-base font-medium text-ink">{{ $person->name }}</a>
+                        <li class="space-y-2">
+                            <a href="{{ route('players.show', $person) }}" class="flex min-h-11 items-center truncate text-base font-medium text-ink">{{ $person->name }}</a>
                             <form method="POST" action="{{ route('players.unblock', $person) }}">
                                 @csrf
                                 @method('DELETE')
-                                <x-ui.button type="submit" variant="secondary" compact>Unblock</x-ui.button>
+                                <x-ui.button type="submit" variant="secondary">Unblock</x-ui.button>
                             </form>
                         </li>
                     @endforeach

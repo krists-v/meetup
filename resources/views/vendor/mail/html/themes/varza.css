@@ -232,9 +232,10 @@ img {
     -webkit-text-size-adjust: none;
     border-radius: 12px;
     color: #fff;
-    display: inline-block;
+    display: block;
     overflow: hidden;
     text-decoration: none;
+    width: 100%;
 }
 
 .button-blue,

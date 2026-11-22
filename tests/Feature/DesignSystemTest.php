@@ -78,35 +78,26 @@ class DesignSystemTest extends TestCase
             ->assertSee('bg-transparent', false)
             ->assertSee('w-full', false)
             ->assertDontSee('w-fit', false);
-
-        $this->blade('<x-ui.button variant="ghost" href="/games" compact>Start a game</x-ui.button>')
-            ->assertSee('w-fit', false)
-            ->assertDontSee('w-full', false);
     }
 
-    public function test_primary_buttons_fill_a_card_and_a_phone(): void
+    public function test_every_button_is_full_width(): void
     {
-        $this->blade('<x-ui.button>I\'m in</x-ui.button>')
-            ->assertSee('w-full', false)
-            ->assertSee('sm:w-fit', false)
-            ->assertSee('bg-ink', false);
-
-        $blocked = (string) $this->blade('<x-ui.button block>Save</x-ui.button>');
-        $this->assertStringContainsString('w-full', $blocked);
-        $this->assertStringNotContainsString('sm:w-fit', $blocked);
-
-        $secondary = (string) $this->blade('<x-ui.button variant="secondary">Confirm</x-ui.button>');
-        $this->assertStringContainsString('w-full', $secondary);
-        $this->assertStringNotContainsString('w-fit', $secondary);
-
-        $compact = (string) $this->blade('<x-ui.button variant="secondary" compact>Log in</x-ui.button>');
-        $this->assertStringContainsString('w-fit', $compact);
-        $this->assertStringNotContainsString('w-full', $compact);
+        foreach (['primary' => 'I\'m in', 'secondary' => 'Confirm', 'ghost' => 'Cancel', 'danger' => 'Cancel game'] as $variant => $label) {
+            $html = (string) $this->blade('<x-ui.button variant="'.$variant.'">'.$label.'</x-ui.button>');
+            $this->assertStringContainsString('w-full', $html);
+            $this->assertStringNotContainsString('w-fit', $html);
+            $this->assertStringNotContainsString('sm:w-fit', $html);
+        }
 
         $this->get(route('login'))
             ->assertOk()
             ->assertSee('Log in')
             ->assertDontSee('sm:w-fit', false);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('sm:w-fit', false)
+            ->assertDontSee('sm:min-w-44', false);
     }
 
     public function test_badges_render_the_presets(): void

@@ -7,6 +7,6 @@
         <p class="mt-1 text-base text-ink-muted">{{ $description }}</p>
     @endif
     @isset($action)
-        <div class="mt-4 flex justify-center">{{ $action }}</div>
+        <div class="mt-4">{{ $action }}</div>
     @endisset
 </div>
