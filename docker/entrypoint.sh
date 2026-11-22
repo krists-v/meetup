@@ -28,4 +28,7 @@ mkdir -p "$AVATAR_ROOT" "$PHOTO_ROOT"
 
 php artisan migrate --force --no-interaction
 
+# Railway has no cron. This runs the Laravel scheduler every minute in the same container.
+php artisan schedule:work --no-interaction &
+
 exec php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"

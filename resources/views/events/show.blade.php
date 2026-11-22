@@ -80,6 +80,10 @@
             </div>
         </article>
 
+        @if ($userStatus === 'expired')
+            <p class="text-sm text-ink-muted" role="status" data-request-expired="1">Request expired</p>
+        @endif
+
         @if ($event->isPoll())
             @include('events.partials.time-poll')
         @else
