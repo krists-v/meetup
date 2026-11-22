@@ -19,12 +19,10 @@
     $rsvp = null;
 
     if ($tab === 'playing' && ! $event->isPoll() && ! $past && $status !== 'requested') {
-        if ($status === 'going') {
+        if ($status === 'going' || ($status === 'waitlist' && $event->isFull())) {
             $rsvp = ['value' => 'not_going', 'label' => "Can't make it", 'variant' => 'secondary'];
         } elseif ($event->isFull()) {
-            if ($status !== 'waitlist') {
-                $rsvp = ['value' => 'waitlist', 'label' => 'Join the waitlist', 'variant' => 'primary'];
-            }
+            $rsvp = ['value' => 'waitlist', 'label' => 'Join the waitlist', 'variant' => 'primary'];
         } else {
             $rsvp = ['value' => 'going', 'label' => "I'm in", 'variant' => 'primary'];
         }

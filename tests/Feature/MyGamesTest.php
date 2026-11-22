@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class MyGamesTest extends TestCase
@@ -235,8 +236,15 @@ class MyGamesTest extends TestCase
         $this->get(route('my-games.index', ['tab' => 'playing']))
             ->assertOk()
             ->assertSee('Waitlist')
+            ->assertSee("Can't make it")
             ->assertDontSee('Join the waitlist')
             ->assertDontSee("I'm in");
+
+        $this->from(route('my-games.index', ['tab' => 'playing']))
+            ->post(route('events.rsvp', $full), ['status' => 'not_going'])
+            ->assertRedirect(route('my-games.index', ['tab' => 'playing']));
+
+        $this->assertSame('not_going', $full->fresh()->getUserStatus($player));
 
         $invited = Event::factory()->create([
             'user_id' => $host->id,
@@ -252,5 +260,36 @@ class MyGamesTest extends TestCase
             ->assertSee('Invited')
             ->assertSee("I'm in")
             ->assertDontSee('Requested');
+    }
+
+    public function test_poll_rows_count_their_times_in_one_query(): void
+    {
+        $user = User::factory()->create();
+
+        foreach (['Morning poll', 'Evening poll'] as $title) {
+            $poll = Event::factory()->create([
+                'user_id' => $user->id,
+                'title' => $title,
+                'schedule_type' => 'poll',
+                'event_date' => now()->addDay(),
+                'visibility' => 'public',
+            ]);
+            $poll->timeOptions()->create(['starts_at' => now()->addDays(2), 'position' => 0]);
+            $poll->timeOptions()->create(['starts_at' => now()->addDays(3), 'position' => 1]);
+        }
+
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+
+        $this->actingAs($user)
+            ->get(route('my-games.index'))
+            ->assertOk()
+            ->assertSee('2 times to pick');
+
+        $timeQueries = collect(DB::getQueryLog())
+            ->filter(fn (array $query) => str_contains(strtolower($query['query']), 'event_time_options'))
+            ->count();
+
+        $this->assertSame(1, $timeQueries);
     }
 }

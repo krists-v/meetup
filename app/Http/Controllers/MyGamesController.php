@@ -28,7 +28,7 @@ class MyGamesController extends Controller
                     $query->where('users.id', $user->id);
                 },
             ])
-            ->withCount('goingParticipants')
+            ->withCount(['goingParticipants', 'timeOptions'])
             ->when($tab === 'hosting', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
