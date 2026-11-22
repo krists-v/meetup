@@ -1,6 +1,6 @@
 @props(['event'])
 
-<article style="--vt-name: game-{{ $event->id }}" {{ $attributes->merge(['class' => 'overflow-hidden rounded-card border border-line bg-white']) }}>
+<article style="--vt-name: game-{{ $event->id }}" {{ $attributes->merge(['class' => 'overflow-hidden rounded-card border border-line bg-white shadow-card']) }}>
     <div class="relative px-3 pt-3">
         <a href="{{ route('events.show', $event) }}" class="block overflow-hidden rounded-2xl">
             <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-48 w-full object-cover" />

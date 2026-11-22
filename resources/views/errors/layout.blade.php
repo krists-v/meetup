@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title') · Varza</title>
-        <meta name="theme-color" content="#ffffff">
+        <meta name="theme-color" content="#F5F5F7">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-white font-sans text-ink antialiased">
+    <body class="bg-canvas font-sans text-ink antialiased">
         <x-ui.shell>
             <main class="mx-auto w-full max-w-md px-4 py-8">
                 <x-ui.card class="space-y-4 px-5 py-6">

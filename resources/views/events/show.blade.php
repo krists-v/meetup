@@ -37,7 +37,7 @@
     :url="$preview->url"
 >
     <div class="space-y-4">
-        <article class="overflow-hidden rounded-card border border-line bg-white" style="--vt-name: game-{{ $event->id }}">
+        <article class="overflow-hidden rounded-card border border-line bg-white shadow-card" style="--vt-name: game-{{ $event->id }}">
             <div class="relative px-3 pt-3">
                 <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-56 w-full rounded-2xl object-cover" />
                 <span class="absolute bottom-3 left-6 rounded-full bg-white/75 px-3 py-1 text-sm font-medium text-ink backdrop-blur-md">{{ $event->areaLabel() }}</span>

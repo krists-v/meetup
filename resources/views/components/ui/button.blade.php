@@ -6,10 +6,10 @@
 
 @php
     $classes = match ($variant) {
-        'secondary' => 'bg-white text-ink ring-1 ring-line hover:bg-mist',
+        'secondary' => 'bg-mist text-ink ring-1 ring-line hover:bg-line',
         'ghost' => 'bg-transparent text-ink hover:bg-mist',
         'danger' => 'bg-white text-danger ring-1 ring-danger/30 hover:bg-danger-soft',
-        default => 'bg-mist text-ink hover:bg-line',
+        default => 'bg-ink text-white hover:bg-ink/90',
     };
 @endphp
 

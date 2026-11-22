@@ -11,7 +11,7 @@
 
     @if ($event)
         <div class="mt-6 space-y-4">
-            <div class="overflow-hidden rounded-card border border-line bg-white">
+            <div class="overflow-hidden rounded-card border border-line bg-white shadow-card">
                 <img src="{{ $event->photoUrl($joinToken) }}" alt="" class="h-48 w-full object-cover" />
             </div>
             @unless ($event->isPoll())

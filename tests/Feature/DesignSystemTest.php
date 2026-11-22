@@ -63,11 +63,14 @@ class DesignSystemTest extends TestCase
         $this->blade('<x-ui.button>I\'m in</x-ui.button>')
             ->assertSee('I\'m in', false)
             ->assertSee('motion-press', false)
-            ->assertSee('bg-mist', false);
+            ->assertSee('bg-ink', false)
+            ->assertSee('text-white', false);
 
         $this->blade('<x-ui.button variant="secondary">See what\'s on</x-ui.button>')
             ->assertSee('motion-press', false)
-            ->assertSee('bg-white', false);
+            ->assertSee('bg-mist', false)
+            ->assertSee('ring-line', false)
+            ->assertSee('text-ink', false);
 
         $this->blade('<x-ui.button variant="ghost" href="/games">Start a game</x-ui.button>')
             ->assertSee('href="/games"', false)
@@ -90,7 +93,9 @@ class DesignSystemTest extends TestCase
             ->assertSee('bg-success-soft', false)
             ->assertSee('Indoor')
             ->assertSee('Outdoor')
-            ->assertSee('bg-canvas', false);
+            ->assertSee('bg-white', false)
+            ->assertSee('ring-line', false)
+            ->assertSee('text-ink', false);
     }
 
     public function test_chip_uses_the_activity_accent_and_falls_back(): void
@@ -98,12 +103,15 @@ class DesignSystemTest extends TestCase
         foreach (Event::SPORTS as $sport => $label) {
             $this->blade('<x-ui.chip :sport="$sport" />', ['sport' => $sport])
                 ->assertSee($label)
-                ->assertSee('bg-mist', false);
+                ->assertSee('bg-mist', false)
+                ->assertSee('border-line', false)
+                ->assertSee('text-ink', false);
         }
 
         $this->blade('<x-ui.chip sport="curling" />')
             ->assertSee('Other')
-            ->assertSee('bg-mist', false);
+            ->assertSee('bg-mist', false)
+            ->assertSee('border-line', false);
     }
 
     public function test_empty_state_offers_a_next_step(): void
@@ -217,5 +225,25 @@ class DesignSystemTest extends TestCase
             ->assertSee('Players')
             ->assertSee('https://www.google.com/maps/search/?api=1&amp;query=Park%20pitch', false)
             ->assertSee('images/sports/padel.svg', false);
+    }
+
+    public function test_the_page_is_grey_and_cards_stay_white(): void
+    {
+        $css = file_get_contents(resource_path('css/app.css'));
+
+        $this->assertIsString($css);
+        $this->assertStringContainsString('--canvas: 245 245 247;', $css);
+        $this->assertStringContainsString('--mist: 229 229 234;', $css);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('bg-canvas', false)
+            ->assertSee('data-app-header', false)
+            ->assertSee('content="#F5F5F7"', false);
+
+        $this->blade('<x-ui.card>Thursday padel</x-ui.card>')
+            ->assertSee('bg-white', false)
+            ->assertSee('border-line', false)
+            ->assertSee('shadow-card', false);
     }
 }
