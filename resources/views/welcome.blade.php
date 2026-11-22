@@ -60,7 +60,7 @@
                             description="See what's on another day, or start a game."
                         >
                             <x-slot:action>
-                                <x-ui.button :href="route('games.index')">See what's on</x-ui.button>
+                                <x-ui.button :href="route('games.index')" block>See what's on</x-ui.button>
                             </x-slot:action>
                         </x-ui.empty-state>
                     @else

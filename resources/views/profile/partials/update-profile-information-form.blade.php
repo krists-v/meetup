@@ -115,8 +115,8 @@
             <p class="text-sm text-ink-muted">About three hours before. You'll get the time, the place, and who's in.</p>
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-ui.button type="submit">{{ __('Save') }}</x-ui.button>
+        <div class="space-y-3">
+            <x-ui.button type="submit" block>{{ __('Save') }}</x-ui.button>
 
             @if (session('status') === 'profile-updated')
                 <p

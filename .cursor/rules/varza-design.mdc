@@ -24,8 +24,10 @@ Locked strings, until a copy change updates the tests too: "Your next game", "Op
 Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. The page is light grey (`canvas`, `#F5F5F7`), text is near-black (`ink`), secondary text is grey (`ink-muted`, `ink-faint`), soft fills are `mist` (a step darker than the page), and borders are `line`. `success` and `success-soft` are the only green, and only for status. Do not color a link, a button, a logo, or a page with pitch green.
 
 - The page, header, and mobile nav use `canvas`. The header keeps a bottom `line` border and `shadow-card` so the bar still reads on the grey. Cards, sheets, menus, and inputs stay white with a 1px `line` border, a large radius, and `shadow-card`. No heavy shadow, no gradient, no mesh.
+- Highlight variant: one card on a page, such as "Your next game", uses `bg-highlight` (`#F0FAF3`) and a single 1px `border-highlight-line` (light green, green-200ish). No second border, no ring, no shadow. Text stays `ink`. The primary button stays near-black.
 - Pitch green is for status only: spots left, you're in, a warning, a danger. It is not a button color.
 - Primary buttons, including "I'm in", are `bg-ink` with white text. Hover is `bg-ink/90`. Secondary buttons are `bg-mist` with ink text and a `line` ring, so they read on both the grey page and a white card. Focus rings are ink.
+- Button width lives on `x-ui.button`. A primary button is full width on mobile and sizes to its label from `sm` (`w-full sm:w-fit`). Pass `block` so it stays full width inside a card, a form, a sheet, or an auth page. Secondary, ghost, and danger buttons size to the label (`w-fit`): header actions, chips, inline actions, and roster row actions. Pass `block` on those only when they fill a grid cell or a sheet footer.
 - Chips are `bg-mist` with a `line` border and ink text. Neutral badges are white with a `line` ring and ink text. Status badges stay on `success-soft` or `warn-soft`. Each of these has to stay visible on `canvas` and on white.
 - Neutrals: `canvas` page background, `ink` text, `ink-muted` secondary text, `ink-faint` placeholders, `line` borders, `sand` inside illustrations.
 - Status: `success` (same green family), `warn`, `danger`, each with a `soft` background.
@@ -88,10 +90,10 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.page-header` | The title of a screen, with optional subtitle and `actions` slot. |
 | `x-ui.section` | A labeled group on a page. |
 | `x-ui.card` | A white surface for a form, a detail block, or a poll option. |
-| `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Primary is the one next step. Includes `.motion-press`. |
+| `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Pass `block` for a full-width main action in a card, form, sheet, or auth page. Primary is the one next step. Includes `.motion-press`. |
 | `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
 | `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, What's on, Start a game, account menu. |
-| `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. |
+| `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. Pass `highlight` for the green tint and one green border. |
 | `x-ui.chip` | Activity name on a mist chip with a line border. |
 | `x-ui.label` | Every control's label. |
 | `x-ui.input` | Text, email, password, number, date. |
@@ -111,4 +113,4 @@ Game photos are the host's upload. With no upload, the card uses `public/images/
 
 ## Checklist
 
-Point at the one primary action. Facts are info rows. Grey page, white cards, near-black primary, color only for status. Then run the `varza-voice` and `varza-ux` checklists.
+Point at the one primary action. Facts are info rows. Grey page, white cards, near-black primary, color only for status, except the highlight variant. Then run the `varza-voice` and `varza-ux` checklists.

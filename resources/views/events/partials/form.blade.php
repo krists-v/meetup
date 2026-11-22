@@ -152,14 +152,14 @@
         </div>
     </x-ui.card>
 
-    <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
-        <x-ui.button variant="ghost" :href="$editing ? route('events.show', $event) : route('dashboard')">Cancel</x-ui.button>
+    <div class="flex flex-col gap-3">
         @if ($editing)
-            <x-ui.button type="submit">Save</x-ui.button>
+            <x-ui.button type="submit" block>Save</x-ui.button>
         @else
             <div class="hidden sm:block">
-                <x-ui.button type="submit">Start the game</x-ui.button>
+                <x-ui.button type="submit" block>Start the game</x-ui.button>
             </div>
         @endif
+        <x-ui.button variant="ghost" :href="$editing ? route('events.show', $event) : route('dashboard')">Cancel</x-ui.button>
     </div>
 </form>

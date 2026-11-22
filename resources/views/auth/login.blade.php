@@ -26,7 +26,7 @@
             <span class="text-sm text-ink-muted">{{ __('Remember me') }}</span>
         </label>
 
-        <x-ui.button type="submit" class="w-full">{{ __('Log in') }}</x-ui.button>
+        <x-ui.button type="submit" block>{{ __('Log in') }}</x-ui.button>
     </form>
 
     <p class="mt-4 flex items-center justify-between gap-3 text-sm">

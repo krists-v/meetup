@@ -1,6 +1,12 @@
-@props(['event'])
+@props(['event', 'highlight' => false])
 
-<article style="--vt-name: game-{{ $event->id }}" {{ $attributes->merge(['class' => 'overflow-hidden rounded-card border border-line bg-white shadow-card']) }}>
+@php
+    $frame = $highlight
+        ? 'border-highlight-line bg-highlight'
+        : 'border-line bg-white shadow-card';
+@endphp
+
+<article style="--vt-name: game-{{ $event->id }}" @if ($highlight) data-highlight="1" @endif {{ $attributes->merge(['class' => "overflow-hidden rounded-card border {$frame}"]) }}>
     <div class="relative px-3 pt-3">
         <a href="{{ route('events.show', $event) }}" class="block overflow-hidden rounded-2xl">
             <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-48 w-full object-cover" />
@@ -36,7 +42,7 @@
                     <p class="text-base font-bold text-ink">{{ $event->priceLabel() }}</p>
                 @endif
             </div>
-            <x-ui.button :href="route('events.show', $event)" class="mt-4 w-full">I'm in</x-ui.button>
+            <x-ui.button :href="route('events.show', $event)" block class="mt-4">I'm in</x-ui.button>
         </div>
     </div>
 </article>

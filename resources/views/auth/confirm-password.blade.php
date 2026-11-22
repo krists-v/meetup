@@ -13,6 +13,6 @@
             <x-ui.error :messages="$errors->get('password')" />
         </div>
 
-        <x-ui.button type="submit" class="w-full">{{ __('Continue') }}</x-ui.button>
+        <x-ui.button type="submit" block>{{ __('Continue') }}</x-ui.button>
     </form>
 </x-guest-layout>
