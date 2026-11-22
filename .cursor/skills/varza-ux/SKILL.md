@@ -36,7 +36,7 @@ Icon is Lucide, 20px, `text-ink-faint`, `aria-hidden`. Text is `text-lg text-ink
 
 ## Cards
 
-Same anatomy on every game card. White, 1px grey border, big radius, generous type. Color only on the status chip.
+Same anatomy on every game card. White, 1px grey border, big radius, generous type. Color only on the status chip. The highlight variant (`highlight` on `x-ui.game-card`) is the one exception: `#F0FAF3` fill, one thin green border, ink text, and the same near-black I'm in button. No second border.
 
 1. Rounded photo. A frosted grey pill on the bottom left names the area. No photo from the host means the bundled picture for that sport.
 2. Bold title on the left. Status chip on the right, soft green when there are spots left (`2 spots left`).

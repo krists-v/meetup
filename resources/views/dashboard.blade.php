@@ -10,9 +10,7 @@
     <div class="mt-6 space-y-8">
         @if ($nextGame)
             <x-ui.section title="Your next game">
-                <div class="rounded-card border border-line p-2">
-                    <x-ui.game-card :event="$nextGame" />
-                </div>
+                <x-ui.game-card :event="$nextGame" highlight />
             </x-ui.section>
         @elseif (! $hasGames)
             <x-ui.empty-state
@@ -21,7 +19,7 @@
                 description="Start a game, or see what's on nearby."
             >
                 <x-slot name="action">
-                    <x-ui.button :href="route('events.create')">Start a game</x-ui.button>
+                    <x-ui.button :href="route('events.create')" block>Start a game</x-ui.button>
                 </x-slot>
             </x-ui.empty-state>
         @endif
@@ -57,7 +55,7 @@
                         @if ($filters->active())
                             <x-ui.button variant="secondary" :href="route('dashboard')">Clear filters</x-ui.button>
                         @else
-                            <x-ui.button :href="route('events.create')">Start a game</x-ui.button>
+                            <x-ui.button :href="route('events.create')" block>Start a game</x-ui.button>
                         @endif
                     </x-slot>
                 </x-ui.empty-state>

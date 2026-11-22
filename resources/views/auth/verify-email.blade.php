@@ -10,10 +10,10 @@
         </p>
     @endif
 
-    <div class="mt-6 flex items-center justify-between gap-3">
+    <div class="mt-6 space-y-3">
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
-            <x-ui.button type="submit">Send it again</x-ui.button>
+            <x-ui.button type="submit" block>Send it again</x-ui.button>
         </form>
 
         <form method="POST" action="{{ route('logout') }}">

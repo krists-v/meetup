@@ -59,7 +59,8 @@
                             name="vote"
                             value="{{ $value }}"
                             :variant="$mine?->vote === $value ? 'primary' : 'secondary'"
-                            class="w-full px-2"
+                            block
+                            class="px-2"
                         >{{ $label }}</x-ui.button>
                     @endforeach
                 </form>
@@ -67,7 +68,7 @@
                 @if ($event->isCreator(auth()->user()))
                     <form method="POST" action="{{ route('events.options.lock', [$event, $option]) }}">
                         @csrf
-                        <x-ui.button type="submit" class="w-full">Set this time</x-ui.button>
+                        <x-ui.button type="submit" block>Set this time</x-ui.button>
                     </form>
                 @endif
             @endif

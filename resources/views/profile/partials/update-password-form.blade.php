@@ -26,8 +26,8 @@
             <x-ui.error :messages="$errors->updatePassword->get('password_confirmation')" />
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-ui.button type="submit" variant="secondary">Save</x-ui.button>
+        <div class="space-y-3">
+            <x-ui.button type="submit" variant="secondary" block>Save</x-ui.button>
 
             @if (session('status') === 'password-updated')
                 <p

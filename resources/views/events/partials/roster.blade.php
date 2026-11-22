@@ -23,11 +23,11 @@
                             <span class="flex flex-col gap-2 sm:flex-row">
                                 <form method="POST" action="{{ route('events.roster.confirm', [$event, $person]) }}">
                                     @csrf
-                                    <x-ui.button type="submit" variant="secondary" class="w-full">Confirm</x-ui.button>
+                                    <x-ui.button type="submit" variant="secondary">Confirm</x-ui.button>
                                 </form>
                                 <form method="POST" action="{{ route('events.roster.decline', [$event, $person]) }}">
                                     @csrf
-                                    <x-ui.button type="submit" variant="danger" class="w-full">Decline</x-ui.button>
+                                    <x-ui.button type="submit" variant="danger">Decline</x-ui.button>
                                 </form>
                             </span>
                         </li>
@@ -61,14 +61,14 @@
                                     <form method="POST" action="{{ route('events.roster.remove', [$event, $person]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <x-ui.button type="submit" variant="danger" class="w-full">Remove</x-ui.button>
+                                        <x-ui.button type="submit" variant="danger">Remove</x-ui.button>
                                     </form>
                                 @endunless
                                 @if ($started)
                                     <form method="POST" action="{{ route('events.roster.attendance', [$event, $person]) }}" class="flex flex-col gap-2 sm:flex-row">
                                         @csrf
-                                        <x-ui.button type="submit" name="attended" value="1" variant="secondary" class="w-full">Showed up</x-ui.button>
-                                        <x-ui.button type="submit" name="attended" value="0" variant="secondary" class="w-full">No-show</x-ui.button>
+                                        <x-ui.button type="submit" name="attended" value="1" variant="secondary">Showed up</x-ui.button>
+                                        <x-ui.button type="submit" name="attended" value="0" variant="secondary">No-show</x-ui.button>
                                     </form>
                                 @endif
                             </span>

@@ -23,7 +23,7 @@
 
         <x-ui.checkbox id="remember_me" name="remember">{{ __('Remember me') }}</x-ui.checkbox>
 
-        <x-ui.button type="submit" class="w-full">{{ __('Log in') }}</x-ui.button>
+        <x-ui.button type="submit" block>{{ __('Log in') }}</x-ui.button>
     </form>
 
     <p class="mt-4 flex items-center justify-between gap-3 text-base">

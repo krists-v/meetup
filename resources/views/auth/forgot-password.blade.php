@@ -15,7 +15,7 @@
             <x-ui.error :messages="$errors->get('email')" />
         </div>
 
-        <x-ui.button type="submit" class="w-full">Send the link</x-ui.button>
+        <x-ui.button type="submit" block>Send the link</x-ui.button>
     </form>
 
     <p class="mt-4 text-base">

@@ -132,7 +132,7 @@
                         </div>
                     @else
                         <div class="hidden sm:block">
-                            <x-ui.button type="submit" name="status" value="{{ $rsvpValue }}" class="w-full">{{ $rsvpLabel }}</x-ui.button>
+                            <x-ui.button type="submit" name="status" value="{{ $rsvpValue }}" block>{{ $rsvpLabel }}</x-ui.button>
                         </div>
                     @endif
                     <div class="grid grid-cols-2 gap-2">
@@ -142,7 +142,8 @@
                                 name="status"
                                 value="{{ $value }}"
                                 variant="secondary"
-                                class="w-full px-2"
+                                block
+                                class="px-2"
                             >{{ $label }}</x-ui.button>
                         @endforeach
                     </div>
@@ -161,7 +162,7 @@
                         {{ $rsvpLabel }}
                     </div>
                 @else
-                    <x-ui.button type="submit" form="rsvp-form" name="status" value="{{ $rsvpValue }}" class="w-full">{{ $rsvpLabel }}</x-ui.button>
+                    <x-ui.button type="submit" form="rsvp-form" name="status" value="{{ $rsvpValue }}" block>{{ $rsvpLabel }}</x-ui.button>
                 @endif
             </div>
             <div class="h-16 sm:hidden" aria-hidden="true"></div>
@@ -234,13 +235,13 @@
                     @unless ($event->isPoll())
                         <form method="POST" action="{{ route('events.repeat', $event) }}">
                             @csrf
-                            <x-ui.button type="submit" variant="secondary" class="w-full">Same time next week</x-ui.button>
+                            <x-ui.button type="submit" variant="secondary">Same time next week</x-ui.button>
                         </form>
                     @endunless
                     <form method="POST" action="{{ route('events.destroy', $event) }}" onsubmit="return confirm('Cancel this game?');">
                         @csrf
                         @method('DELETE')
-                        <x-ui.button type="submit" variant="danger" class="w-full">Cancel game</x-ui.button>
+                        <x-ui.button type="submit" variant="danger">Cancel game</x-ui.button>
                     </form>
                 </div>
             @endif

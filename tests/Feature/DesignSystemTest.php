@@ -75,7 +75,29 @@ class DesignSystemTest extends TestCase
         $this->blade('<x-ui.button variant="ghost" href="/games">Start a game</x-ui.button>')
             ->assertSee('href="/games"', false)
             ->assertSee('motion-press', false)
-            ->assertSee('bg-transparent', false);
+            ->assertSee('bg-transparent', false)
+            ->assertSee('w-fit', false);
+    }
+
+    public function test_primary_buttons_fill_a_card_and_a_phone(): void
+    {
+        $this->blade('<x-ui.button>I\'m in</x-ui.button>')
+            ->assertSee('w-full', false)
+            ->assertSee('sm:w-fit', false)
+            ->assertSee('bg-ink', false);
+
+        $blocked = (string) $this->blade('<x-ui.button block>Save</x-ui.button>');
+        $this->assertStringContainsString('w-full', $blocked);
+        $this->assertStringNotContainsString('sm:w-fit', $blocked);
+
+        $secondary = (string) $this->blade('<x-ui.button variant="secondary">Confirm</x-ui.button>');
+        $this->assertStringContainsString('w-fit', $secondary);
+        $this->assertStringNotContainsString('w-full', $secondary);
+
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertSee('Log in')
+            ->assertDontSee('sm:w-fit', false);
     }
 
     public function test_badges_render_the_presets(): void
@@ -257,5 +279,29 @@ class DesignSystemTest extends TestCase
             ->assertSee('border-highlight-line', false)
             ->assertDontSee('shadow-card', false)
             ->assertDontSee('outline-2', false);
+    }
+
+    public function test_the_highlight_card_has_one_green_edge(): void
+    {
+        $event = Event::factory()->create([
+            'title' => 'Thursday padel',
+            'sport' => 'padel',
+            'sport_type' => 'padel',
+            'visibility' => 'public',
+        ]);
+
+        $plain = (string) $this->blade('<x-ui.game-card :event="$event" />', ['event' => $event]);
+        $this->assertStringContainsString('border-line bg-white shadow-card', $plain);
+        $this->assertStringNotContainsString('data-highlight="1"', $plain);
+        $this->assertStringContainsString('bg-ink', $plain);
+
+        $highlight = (string) $this->blade('<x-ui.game-card :event="$event" highlight />', ['event' => $event]);
+        $this->assertStringContainsString('data-highlight="1"', $highlight);
+        $this->assertStringContainsString('border-highlight-line bg-highlight', $highlight);
+        $this->assertStringNotContainsString('border-line bg-white', $highlight);
+        $this->assertStringNotContainsString('shadow-card', $highlight);
+        $this->assertStringContainsString('text-ink', $highlight);
+        $this->assertStringContainsString('bg-ink', $highlight);
+        $this->assertStringContainsString("I'm in", $highlight);
     }
 }

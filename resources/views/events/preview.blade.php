@@ -43,18 +43,17 @@
 
         <div class="mt-6 space-y-4">
             <div class="flex flex-col gap-2">
-                <x-ui.button variant="secondary" :href="$event->whatsAppUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Share on WhatsApp</x-ui.button>
+                <x-ui.button variant="secondary" :href="$event->whatsAppUrl()" target="_blank" rel="noopener noreferrer">Share on WhatsApp</x-ui.button>
                 <x-ui.button
                     type="button"
                     variant="secondary"
-                    class="w-full"
                     onclick="navigator.clipboard.writeText(@js($event->shareUrl())); this.textContent = 'Copied';"
                 >Copy link</x-ui.button>
             </div>
             @unless ($event->isPoll())
                 <div class="flex flex-col gap-2">
-                    <x-ui.button variant="secondary" :href="route('events.calendar', ['event' => $event, 'token' => $joinToken])" class="w-full">Add to your calendar</x-ui.button>
-                    <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Google Calendar</x-ui.button>
+                    <x-ui.button variant="secondary" :href="route('events.calendar', ['event' => $event, 'token' => $joinToken])">Add to your calendar</x-ui.button>
+                    <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer">Google Calendar</x-ui.button>
                 </div>
             @endunless
         </div>
@@ -64,17 +63,17 @@
                 <input type="hidden" name="token" value="{{ $joinToken }}">
             @endif
             <div class="hidden sm:block">
-                <x-ui.button type="submit" class="w-full">I'm in</x-ui.button>
+                <x-ui.button type="submit" block>I'm in</x-ui.button>
             </div>
-            <x-ui.button type="submit" name="account" value="new" variant="secondary" class="w-full">Create an account</x-ui.button>
+            <x-ui.button type="submit" name="account" value="new" variant="secondary">Create an account</x-ui.button>
         </form>
         <div class="h-16 sm:hidden" aria-hidden="true"></div>
         <div class="sticky-action fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white p-3 sm:hidden">
-            <x-ui.button type="submit" form="join-form" class="w-full">I'm in</x-ui.button>
+            <x-ui.button type="submit" form="join-form" block>I'm in</x-ui.button>
         </div>
     @else
         <div class="mt-6">
-            <x-ui.button :href="route('login')" class="w-full">Log in</x-ui.button>
+            <x-ui.button :href="route('login')" block>Log in</x-ui.button>
         </div>
     @endif
 </x-guest-layout>

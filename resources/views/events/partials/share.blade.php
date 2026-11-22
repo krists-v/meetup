@@ -10,19 +10,18 @@
     </div>
     <p class="break-all rounded-control bg-canvas px-3 py-2 text-base text-ink ring-1 ring-line">{{ $event->shareUrl() }}</p>
     <div class="flex flex-col gap-2">
-        <x-ui.button variant="secondary" :href="$event->whatsAppUrl()" target="_blank" rel="noopener noreferrer" class="w-full">
+        <x-ui.button variant="secondary" :href="$event->whatsAppUrl()" target="_blank" rel="noopener noreferrer">
             <x-ui.icon name="link" />
             Share on WhatsApp
         </x-ui.button>
         <x-ui.button
             type="button"
             variant="secondary"
-            class="w-full"
             onclick="navigator.clipboard.writeText(@js($event->shareUrl())); this.textContent = 'Copied';"
         >Copy link</x-ui.button>
         @unless ($event->isPoll())
-            <x-ui.button variant="secondary" :href="route('events.calendar', $event)" class="w-full">Add to your calendar</x-ui.button>
-            <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer" class="w-full">Google Calendar</x-ui.button>
+            <x-ui.button variant="secondary" :href="route('events.calendar', $event)">Add to your calendar</x-ui.button>
+            <x-ui.button variant="secondary" :href="\App\Support\GameCalendar::for($event)->googleUrl()" target="_blank" rel="noopener noreferrer">Google Calendar</x-ui.button>
         @endunless
     </div>
 </x-ui.card>

@@ -13,7 +13,7 @@
                 <x-ui.card class="space-y-4">
                     <h1 class="text-3xl font-bold tracking-tight">@yield('title')</h1>
                     <p class="text-base text-ink-muted">@yield('message')</p>
-                    <x-ui.button :href="url('/')">Back home</x-ui.button>
+                    <x-ui.button :href="url('/')" block>Back home</x-ui.button>
                 </x-ui.card>
             </main>
         </x-ui.shell>
