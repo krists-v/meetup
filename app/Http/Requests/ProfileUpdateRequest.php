@@ -68,6 +68,7 @@ class ProfileUpdateRequest extends FormRequest
             'favorite_sports.*' => ['in:'.implode(',', array_keys(Event::SPORTS))],
             'sport_levels' => ['sometimes', 'array'],
             'sport_levels.*' => ['nullable', Rule::in(array_keys(Event::LEVELS))],
+            'game_reminders' => ['sometimes', 'boolean'],
         ];
     }
 }

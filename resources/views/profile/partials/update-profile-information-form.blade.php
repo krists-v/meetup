@@ -105,6 +105,16 @@
             @endforeach
         </fieldset>
 
+        <div class="space-y-2">
+            <x-ui.label for="game_reminders" value="Reminders" />
+            <input type="hidden" name="game_reminders" value="0">
+            <label for="game_reminders" class="flex min-h-11 items-center gap-2 text-sm text-ink">
+                <input id="game_reminders" type="checkbox" name="game_reminders" value="1" class="rounded border-line text-ink focus:ring-ink" @checked(old('game_reminders', $user->game_reminders)) />
+                Remind me before a game
+            </label>
+            <p class="text-sm text-ink-muted">About three hours before. You'll get the time, the place, and who's in.</p>
+        </div>
+
         <div class="flex items-center gap-4">
             <x-ui.button type="submit">{{ __('Save') }}</x-ui.button>
 

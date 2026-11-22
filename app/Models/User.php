@@ -30,6 +30,7 @@ class User extends Authenticatable
         'avatar_path',
         'favorite_sports',
         'sport_levels',
+        'game_reminders',
     ];
 
     /**
@@ -54,6 +55,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'favorite_sports' => 'array',
             'sport_levels' => 'array',
+            'game_reminders' => 'boolean',
         ];
     }
 
