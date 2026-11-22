@@ -11,7 +11,7 @@ class OpenGames
 {
     /**
      * Soonest public game today or this weekend that still has a free spot.
-     * Skips past games, full games, polls, and games this person is hosting.
+     * Skips past games, full games, polls, games this person is hosting, and games they have already joined.
      */
     public static function soonest(?User $user): ?Event
     {
@@ -72,7 +72,10 @@ class OpenGames
                     ->orWhere('schedule_type', '!=', 'poll');
             })
             ->where('event_date', '>=', now())
-            ->when($except, fn (Builder $query) => $query->where('user_id', '!=', $except->id))
+            ->when($except, function (Builder $query) use ($except) {
+                $query->where('user_id', '!=', $except->id)
+                    ->whereDoesntHave('participants', fn ($q) => $q->whereKey($except->id));
+            })
             ->where(function (Builder $query) {
                 $query->whereNull('max_participants')
                     ->orWhereRaw(

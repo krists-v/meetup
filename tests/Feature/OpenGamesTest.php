@@ -103,6 +103,35 @@ class OpenGamesTest extends TestCase
             ->assertRedirect(route('events.show', Event::query()->where('title', 'My game')->first()));
     }
 
+    public function test_bored_skips_a_game_you_have_already_joined(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-11-25 10:00:00'));
+
+        $viewer = User::factory()->create();
+        $host = User::factory()->create();
+
+        $joined = Event::factory()->create([
+            'user_id' => $host->id,
+            'title' => 'Already in',
+            'visibility' => 'public',
+            'event_date' => now()->addHours(2),
+            'max_participants' => 8,
+        ]);
+        $joined->participants()->attach($viewer->id, ['status' => 'maybe']);
+
+        $later = Event::factory()->create([
+            'user_id' => $host->id,
+            'title' => 'Saturday kickabout',
+            'visibility' => 'public',
+            'event_date' => Carbon::parse('2026-11-28 15:00:00'),
+            'max_participants' => 8,
+        ]);
+
+        $this->actingAs($viewer)
+            ->get(route('bored'))
+            ->assertRedirect(route('events.show', $later));
+    }
+
     public function test_bored_shows_a_host_prompt_when_nothing_is_open(): void
     {
         Carbon::setTestNow(Carbon::parse('2026-11-25 10:00:00'));
