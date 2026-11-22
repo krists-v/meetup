@@ -96,7 +96,7 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.card` | A white surface for a form, a detail block, or a poll option. Padding is `p-4 sm:p-6`. Pass `highlight` for the soft green best-time card. |
 | `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Always `w-full`. Pass `href` for a link. Primary is the one next step. Includes `.motion-press`. |
 | `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
-| `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, What's on, Start a game, account menu. |
+| `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, My games, What's on, Start a game, account menu. |
 | `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. Pass `highlight` for the green tint and one green border. |
 | `x-ui.chip` | The one chip. A link, a radio label (`for`), or a static name. Selected is ink. |
 | `x-ui.label` | Every control's label. |

@@ -2,6 +2,7 @@
     <x-ui.page-header title="You" subtitle="This is the name people see when you show up." />
 
     <div class="mt-6 space-y-4">
+        <x-ui.button :href="route('my-games.index')" variant="secondary" block>My games</x-ui.button>
         <x-ui.card >
             @include('profile.partials.update-profile-information-form')
         </x-ui.card>
