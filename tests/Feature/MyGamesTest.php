@@ -68,7 +68,8 @@ class MyGamesTest extends TestCase
             ->assertSee('Requested bowls')
             ->assertSee("You're in")
             ->assertSee('Requested')
-            ->assertSee("Can't make it", false)
+            ->assertSee("Can't make it")
+            ->assertDontSee("I'm in")
             ->assertSee('Open')
             ->assertDontSee('Hosted tomorrow')
             ->assertDontSee('Not mine')
@@ -139,7 +140,9 @@ class MyGamesTest extends TestCase
             ->assertOk()
             ->assertSee('Old padel')
             ->assertDontSee('Already played')
-            ->assertDontSee('Still ahead');
+            ->assertDontSee('Still ahead')
+            ->assertDontSee("Can't make it")
+            ->assertDontSee("I'm in");
 
         $this->get(route('my-games.index', ['tab' => 'playing']))
             ->assertOk()
@@ -170,7 +173,7 @@ class MyGamesTest extends TestCase
             ->from(route('my-games.index', ['tab' => 'playing']))
             ->get(route('my-games.index', ['tab' => 'playing']))
             ->assertOk()
-            ->assertSee("Can't make it", false);
+            ->assertSee("Can't make it");
 
         $this->post(route('events.rsvp', $event), ['status' => 'not_going'])
             ->assertRedirect(route('my-games.index', ['tab' => 'playing']));
@@ -180,7 +183,7 @@ class MyGamesTest extends TestCase
         $this->get(route('my-games.index', ['tab' => 'playing']))
             ->assertOk()
             ->assertSee('Thursday padel')
-            ->assertSee("I'm in", false)
+            ->assertSee("I'm in")
             ->assertSee("Can't make it");
 
         $this->post(route('events.rsvp', $event), ['status' => 'going'])
@@ -196,5 +199,55 @@ class MyGamesTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->post(route('events.rsvp', $private), ['status' => 'going'])
             ->assertForbidden();
+    }
+
+    public function test_a_full_game_offers_the_waitlist_and_an_invite_stays_an_invite(): void
+    {
+        $host = User::factory()->create();
+        $player = User::factory()->create();
+        $filler = User::factory()->create();
+
+        $full = Event::factory()->create([
+            'user_id' => $host->id,
+            'title' => 'Full tomorrow',
+            'visibility' => 'public',
+            'event_date' => now()->addDay(),
+            'max_participants' => 1,
+        ]);
+        $full->participants()->attach($filler->id, ['status' => 'going']);
+        $full->participants()->attach($player->id, ['status' => 'maybe']);
+
+        $this->actingAs($player)
+            ->from(route('my-games.index', ['tab' => 'playing']))
+            ->get(route('my-games.index', ['tab' => 'playing']))
+            ->assertOk()
+            ->assertSee('Join the waitlist')
+            ->assertDontSee("I'm in");
+
+        $this->post(route('events.rsvp', $full), ['status' => 'waitlist'])
+            ->assertRedirect(route('my-games.index', ['tab' => 'playing']));
+
+        $this->assertSame('waitlist', $full->fresh()->getUserStatus($player));
+
+        $this->get(route('my-games.index', ['tab' => 'playing']))
+            ->assertOk()
+            ->assertSee('Waitlist')
+            ->assertDontSee('Join the waitlist')
+            ->assertDontSee("I'm in");
+
+        $invited = Event::factory()->create([
+            'user_id' => $host->id,
+            'title' => 'Invited bowls',
+            'visibility' => 'public',
+            'event_date' => now()->addDays(2),
+            'max_participants' => 4,
+        ]);
+        $invited->participants()->attach($player->id, ['status' => 'invited']);
+
+        $this->get(route('my-games.index', ['tab' => 'playing']))
+            ->assertOk()
+            ->assertSee('Invited')
+            ->assertSee("I'm in")
+            ->assertDontSee('Requested');
     }
 }

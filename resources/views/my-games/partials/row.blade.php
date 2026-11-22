@@ -1,11 +1,13 @@
 @php
     $mine = $event->participants->first();
     $status = $tab === 'playing' ? $mine?->pivot->status : null;
+    $past = $event->event_date?->isPast() ?? false;
     $chip = match ($status) {
         'going' => "You're in",
         'maybe' => 'Maybe',
         'waitlist' => 'Waitlist',
-        'requested', 'invited' => 'Requested',
+        'requested' => 'Requested',
+        'invited' => 'Invited',
         'not_going' => "Can't make it",
         default => 'Hosting',
     };
@@ -14,6 +16,19 @@
         'waitlist', 'requested', 'invited' => 'warn',
         default => 'neutral',
     };
+    $rsvp = null;
+
+    if ($tab === 'playing' && ! $event->isPoll() && ! $past && $status !== 'requested') {
+        if ($status === 'going') {
+            $rsvp = ['value' => 'not_going', 'label' => "Can't make it", 'variant' => 'secondary'];
+        } elseif ($event->isFull()) {
+            if ($status !== 'waitlist') {
+                $rsvp = ['value' => 'waitlist', 'label' => 'Join the waitlist', 'variant' => 'primary'];
+            }
+        } else {
+            $rsvp = ['value' => 'going', 'label' => "I'm in", 'variant' => 'primary'];
+        }
+    }
 @endphp
 
 <x-ui.card class="space-y-4">
@@ -47,16 +62,12 @@
                 <x-ui.button type="submit" variant="danger" block>Cancel game</x-ui.button>
             </form>
         @else
-            @unless ($event->isPoll())
+            @if ($rsvp)
                 <form method="POST" action="{{ route('events.rsvp', $event) }}">
                     @csrf
-                    @if ($status === 'going')
-                        <x-ui.button type="submit" name="status" value="not_going" variant="secondary" block>Can't make it</x-ui.button>
-                    @else
-                        <x-ui.button type="submit" name="status" value="going" block>I'm in</x-ui.button>
-                    @endif
+                    <x-ui.button type="submit" name="status" value="{{ $rsvp['value'] }}" :variant="$rsvp['variant']" block>{{ $rsvp['label'] }}</x-ui.button>
                 </form>
-            @endunless
+            @endif
             <x-ui.button variant="secondary" :href="route('events.show', $event)" block>Open</x-ui.button>
         @endif
     </div>
