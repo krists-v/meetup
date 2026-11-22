@@ -3,4 +3,5 @@
     <a class="inline-flex min-h-11 items-center font-medium text-ink-muted hover:text-ink" href="{{ route('how-it-works') }}">How it works</a>
     <a class="inline-flex min-h-11 items-center font-medium text-ink-muted hover:text-ink" href="{{ route('privacy') }}">Privacy</a>
     <a class="inline-flex min-h-11 items-center font-medium text-ink-muted hover:text-ink" href="{{ route('terms') }}">Terms</a>
+    <a class="inline-flex min-h-11 items-center font-medium text-ink-muted hover:text-ink" href="mailto:{{ config('app.contact_email') ?: 'hello@example.com' }}">Send feedback</a>
 </footer>

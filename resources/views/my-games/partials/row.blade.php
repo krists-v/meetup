@@ -38,6 +38,9 @@
                 <x-ui.badge :tone="$tone" class="shrink-0">{{ $chip }}</x-ui.badge>
             </div>
             <p class="text-base text-ink-muted">{{ $event->sportLabel() }}</p>
+            @if ($event->come_solo)
+                <x-ui.badge tone="neutral" class="mt-2">Come solo</x-ui.badge>
+            @endif
         </div>
     </div>
 

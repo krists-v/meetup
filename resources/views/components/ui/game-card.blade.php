@@ -18,6 +18,9 @@
         <div class="flex items-start justify-between gap-3">
             <a href="{{ route('events.show', $event) }}" class="min-w-0">
                 <h3 class="text-xl font-bold tracking-tight text-ink">{{ $event->title }}</h3>
+                @if ($event->come_solo)
+                    <x-ui.badge tone="neutral" class="mt-2">Come solo</x-ui.badge>
+                @endif
             </a>
             @if ($event->spotsLeftLabel())
                 <x-ui.badge class="shrink-0" :tone="$event->isFull() || $event->isPoll() ? 'warn' : 'pitch'">{{ $event->spotsLeftLabel() }}</x-ui.badge>
@@ -37,11 +40,21 @@
 
         <div class="border-t border-line pt-4">
             <div class="flex items-center justify-between gap-3">
-                <p class="text-base text-ink-muted">Hosted by {{ $event->creator->name }}</p>
+                <p class="text-base text-ink-muted">{{ $event->hostShowUpLabel() ?? 'Hosted by '.$event->creator->name }}</p>
                 @if ($event->priceLabel())
                     <p class="text-base font-bold text-ink">{{ $event->priceLabel() }}</p>
                 @endif
             </div>
+            @if ($event->relationLoaded('goingParticipants') && $event->goingParticipants->isNotEmpty())
+                <div class="mt-3 flex items-center gap-1">
+                    @foreach ($event->goingParticipants->take(4) as $player)
+                        <x-ui.avatar :name="$player->name" :user="$player" size="meta" />
+                    @endforeach
+                    @if ($event->goingCount() > 4)
+                        <span class="pl-1 text-sm font-medium text-ink-muted">+{{ $event->goingCount() - 4 }}</span>
+                    @endif
+                </div>
+            @endif
             <x-ui.button :href="route('events.show', $event)" block class="mt-4">I'm in</x-ui.button>
         </div>
     </div>

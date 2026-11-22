@@ -10,13 +10,16 @@
     </head>
     <body class="bg-canvas font-sans text-ink antialiased">
         <x-ui.shell>
+            @include('games.partials.starting-soon', ['stripClass' => 'mx-auto w-full max-w-5xl px-4 pt-8'])
+
             <div class="mx-auto grid w-full max-w-5xl items-center gap-12 px-4 py-16 lg:grid-cols-2 lg:py-24">
                 <div class="space-y-6">
                     <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">Bored at home? Go play.</h1>
                     <p class="text-xl text-ink-muted">Less scrolling, more playing.</p>
                     <p class="max-w-md text-lg text-ink-muted">See what's on near you. Padel, tennis, bowling, climbing. Then go.</p>
                     <div class="grid gap-3">
-                        <x-ui.button :href="route('games.index')">See what's on</x-ui.button>
+                        <x-ui.button :href="route('bored')">Bored?</x-ui.button>
+                        <x-ui.button variant="secondary" :href="route('games.index')">See what's on</x-ui.button>
                         <x-ui.button variant="secondary" :href="route('register')">Start a game</x-ui.button>
                     </div>
                 </div>
@@ -31,7 +34,7 @@
                         </div>
                         <div class="space-y-4 px-5 pb-5 pt-4">
                             <div class="flex items-start justify-between gap-3">
-                                <p class="text-xl font-bold text-ink">Thursday padel</p>
+                                <p class="text-xl font-bold text-ink">Saturday padel</p>
                                 <x-ui.badge class="shrink-0">2 spots left</x-ui.badge>
                             </div>
                             <div class="space-y-3">

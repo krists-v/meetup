@@ -34,12 +34,18 @@ class Event extends Model
         'level',
         'photo_path',
         'price',
+        'come_solo',
+    ];
+
+    protected $attributes = [
+        'come_solo' => true,
     ];
 
     protected $casts = [
         'event_date' => 'datetime',
         'max_participants' => 'integer',
         'price' => 'decimal:2',
+        'come_solo' => 'boolean',
     ];
 
     protected static function boot()
@@ -245,6 +251,29 @@ class Event extends Model
         return ! $this->isPoll()
             && $this->max_participants !== null
             && $this->goingCount() >= $this->max_participants;
+    }
+
+    public function startsInLabel(): string
+    {
+        $minutes = (int) ceil(max(0, $this->event_date->getTimestamp() - now()->getTimestamp()) / 60);
+        $minutes = max(1, $minutes);
+
+        if ($minutes < 60) {
+            return 'in '.$minutes.' min';
+        }
+
+        return 'in '.max(1, (int) round($minutes / 60)).' h';
+    }
+
+    public function hostShowUpLabel(): ?string
+    {
+        $host = $this->creator;
+
+        if ($host === null || $host->attendance()['total'] < 3) {
+            return null;
+        }
+
+        return $host->name.' · '.strtolower($host->attendanceLabel());
     }
 
     public function attendanceLabel(): string

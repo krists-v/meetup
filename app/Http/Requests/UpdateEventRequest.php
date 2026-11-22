@@ -68,6 +68,7 @@ class UpdateEventRequest extends FormRequest
             'max_participants' => ['nullable', 'integer', 'min:2'],
             'description' => ['nullable', 'string', 'max:1000'],
             'visibility' => ['required', 'in:public,private'],
+            'come_solo' => ['sometimes', 'boolean'],
             'setting' => ['nullable', 'in:indoor,outdoor'],
             'level' => ['nullable', 'in:'.implode(',', array_keys(Event::LEVELS))],
             'price' => ['nullable', 'numeric', 'min:0', 'max:100000'],

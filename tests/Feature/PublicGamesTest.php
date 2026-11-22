@@ -173,12 +173,16 @@ class PublicGamesTest extends TestCase
             ->assertSee('Today football')
             ->assertDontSee('Saturday padel');
 
-        $this->get(route('games.index', ['when' => 'weekend']))
+        $weekend = $this->get(route('games.index', ['when' => 'weekend']))
             ->assertOk()
             ->assertSee('Saturday padel')
             ->assertSee('Sunday tennis')
             ->assertDontSee('Friday hockey')
-            ->assertDontSee('Today football');
+            ->assertSee('Today football');
+
+        $weekendCards = $this->listedCards($weekend->getContent());
+        $this->assertStringContainsString('Saturday padel', $weekendCards);
+        $this->assertStringNotContainsString('Today football', $weekendCards);
 
         $this->get(route('games.index', ['when' => 'week']))
             ->assertOk()
@@ -186,14 +190,16 @@ class PublicGamesTest extends TestCase
             ->assertSee('Saturday padel')
             ->assertDontSee('Next week football');
 
-        $this->get(route('games.index', ['sport' => 'padel', 'where' => 'Riga']))
+        $padel = $this->get(route('games.index', ['sport' => 'padel', 'where' => 'Riga']))
             ->assertOk()
             ->assertSee('Saturday padel')
             ->assertDontSee('Sunday tennis')
-            ->assertDontSee('Today football')
+            ->assertSee('Today football')
             ->assertDontSee('My private padel')
             ->assertSee('sport=padel', false)
             ->assertSee('where=Riga', false);
+
+        $this->assertStringNotContainsString('Today football', $this->listedCards($padel->getContent()));
 
         $this->get(route('games.index', ['where' => 'riga%']))
             ->assertOk()
@@ -350,5 +356,12 @@ class PublicGamesTest extends TestCase
         ])->assertRedirect(route('events.show', $event));
 
         $this->assertSame('going', $event->fresh()->getUserStatus($player));
+    }
+
+    private function listedCards(string $html): string
+    {
+        preg_match_all('/<article\\b.*?<\/article>/s', $html, $cards);
+
+        return implode("\n", $cards[0]);
     }
 }

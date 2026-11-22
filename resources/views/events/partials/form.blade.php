@@ -135,6 +135,11 @@
             <p class="text-base text-ink-muted">Anyone can find a public game. A private one opens with the link.</p>
             <x-ui.error :messages="$errors->get('visibility')" />
         </fieldset>
+
+        <div class="space-y-2">
+            <input type="hidden" name="come_solo" value="0">
+            <x-ui.checkbox name="come_solo" value="1" :checked="(string) old('come_solo', $editing ? (int) $event->come_solo : 1) === '1'">Solo players welcome</x-ui.checkbox>
+        </div>
     </x-ui.card>
 
     <x-ui.card class="space-y-4">

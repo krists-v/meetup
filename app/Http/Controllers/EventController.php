@@ -13,6 +13,7 @@ use App\Support\AvatarStore;
 use App\Support\GameCalendar;
 use App\Support\GameFilters;
 use App\Support\LinkPreview;
+use App\Support\OpenGames;
 use App\Support\PendingJoin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,16 +29,18 @@ class EventController extends Controller
             return redirect()->route('dashboard');
         }
 
-        $weekendGames = (new GameFilters(null, 'weekend', null, null, null, null))
-            ->apply(Event::query())
-            ->with('creator')
-            ->withCount(['goingParticipants', 'timeOptions'])
+        $weekendGames = OpenGames::withCards(
+            (new GameFilters(null, 'weekend', null, null, null, null))->apply(Event::query())
+        )
             ->orderBy('event_date')
             ->limit(6)
             ->get();
 
+        OpenGames::hydrate($weekendGames);
+
         return view('welcome', [
             'weekendGames' => $weekendGames,
+            'startingSoon' => OpenGames::startingSoon(),
         ]);
     }
 
@@ -49,6 +52,7 @@ class EventController extends Controller
             ->upcoming()
             ->with([
                 'creator',
+                'goingParticipants' => fn ($query) => $query->orderByPivot('id'),
                 'participants' => function ($query) use ($user) {
                     $query->where('users.id', $user->id);
                 },
@@ -80,12 +84,12 @@ class EventController extends Controller
 
         $filters = GameFilters::fromRequest($request);
 
-        $openGames = $filters->apply(Event::query())
-            ->with('creator')
-            ->withCount(['goingParticipants', 'timeOptions'])
+        $openGames = OpenGames::withCards($filters->apply(Event::query()))
             ->whereNotIn('id', $involved->pluck('id'))
             ->orderBy('event_date')
             ->get();
+
+        OpenGames::hydrate($involved->concat($openGames));
 
         return view('dashboard', [
             'nextGame' => $nextGame,
@@ -102,20 +106,45 @@ class EventController extends Controller
         $filters = GameFilters::fromRequest($request);
         $level = $filters->levelFromProfile($request);
 
+        $bored = $request->boolean('bored');
+
         if ($level !== null) {
-            return redirect()->route('games.index', $filters->parameters(['level' => $level]));
+            $parameters = $filters->parameters(['level' => $level]);
+
+            if ($bored) {
+                $parameters['bored'] = '1';
+            }
+
+            return redirect()->route('games.index', $parameters);
         }
 
-        $events = $filters->apply(Event::query())
-            ->with('creator')
-            ->withCount(['goingParticipants', 'timeOptions'])
-            ->orderBy('event_date')
-            ->get();
+        $events = $bored
+            ? collect()
+            : OpenGames::withCards($filters->apply(Event::query()))
+                ->orderBy('event_date')
+                ->get();
+
+        if (! $bored) {
+            OpenGames::hydrate($events);
+        }
 
         return view('games.index', [
             'events' => $events,
             'filters' => $filters,
+            'bored' => $bored,
+            'startingSoon' => OpenGames::startingSoon(),
         ]);
+    }
+
+    public function bored(Request $request): RedirectResponse
+    {
+        $event = OpenGames::soonest($request->user());
+
+        if ($event !== null) {
+            return redirect()->route('events.show', $event);
+        }
+
+        return redirect()->route('games.index', ['bored' => 1]);
     }
 
     public function join(Request $request, Event $event): RedirectResponse
@@ -161,6 +190,11 @@ class EventController extends Controller
     public function store(StoreEventRequest $request): RedirectResponse
     {
         $data = $request->safe()->except(['options', 'photo', 'remove_photo']);
+
+        if (! array_key_exists('come_solo', $data)) {
+            $data['come_solo'] = true;
+        }
+
         $scheduleType = $data['schedule_type'] ?? 'fixed';
         $data['schedule_type'] = $scheduleType;
         $data['user_id'] = $request->user()->id;

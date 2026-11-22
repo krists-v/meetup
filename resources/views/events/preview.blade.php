@@ -17,6 +17,9 @@
             </div>
             <div class="space-y-4 px-5 pb-5 pt-4">
                 <h2 class="text-xl font-bold tracking-tight text-ink">{{ $event->title }}</h2>
+                @if ($event->come_solo)
+                    <x-ui.badge tone="neutral">Come solo</x-ui.badge>
+                @endif
                 <div class="space-y-3 text-lg">
                     @unless ($event->isPoll())
                         <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
