@@ -453,6 +453,10 @@ class EventController extends Controller
                 continue;
             }
 
+            if (Block::separates($voter->id, $event->user_id)) {
+                continue;
+            }
+
             if ($event->hasReachedCapacity()) {
                 break;
             }

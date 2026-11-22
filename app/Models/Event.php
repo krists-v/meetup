@@ -439,6 +439,10 @@ class Event extends Model
                 break;
             }
 
+            if (Block::separates($waiting->id, $this->user_id)) {
+                continue;
+            }
+
             $this->participants()->updateExistingPivot($waiting->id, [
                 'status' => 'going',
             ]);

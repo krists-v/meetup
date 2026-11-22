@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Report;
 use App\Models\User;
 use App\Notifications\PlayerReported;
+use App\Notifications\PromotedFromWaitlist;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Mail\Events\MessageSending;
@@ -350,6 +351,77 @@ class ReportBlockTest extends TestCase
             ->assertOk()
             ->assertSee('This is you.')
             ->assertDontSee(route('players.report', $viewer), false);
+    }
+
+    public function test_locking_a_time_skips_a_player_blocked_from_the_host(): void
+    {
+        $host = User::factory()->create();
+        $blocked = User::factory()->create();
+        $clear = User::factory()->create();
+        $starts = now()->addDays(2)->startOfMinute();
+
+        $event = Event::factory()->create([
+            'user_id' => $host->id,
+            'schedule_type' => 'poll',
+            'event_date' => $starts,
+            'visibility' => 'public',
+            'max_participants' => 1,
+        ]);
+        $option = $event->timeOptions()->create([
+            'starts_at' => $starts,
+            'position' => 0,
+        ]);
+
+        $this->actingAs($blocked)->post(route('events.options.vote', [$event, $option]), ['vote' => 'yes']);
+        $this->actingAs($clear)->post(route('events.options.vote', [$event, $option]), ['vote' => 'yes']);
+
+        Block::query()->create([
+            'blocker_id' => $blocked->id,
+            'blocked_id' => $host->id,
+        ]);
+
+        $this->actingAs($host)
+            ->post(route('events.options.lock', [$event, $option]))
+            ->assertRedirect();
+
+        $event->refresh();
+        $this->assertNull($event->getUserStatus($blocked));
+        $this->assertSame('going', $event->getUserStatus($clear));
+    }
+
+    public function test_a_blocked_waiter_is_not_promoted_into_the_game(): void
+    {
+        Notification::fake();
+
+        $host = User::factory()->create();
+        $going = User::factory()->create();
+        $blocked = User::factory()->create();
+        $next = User::factory()->create();
+        $event = Event::factory()->create([
+            'user_id' => $host->id,
+            'visibility' => 'public',
+            'max_participants' => 1,
+            'event_date' => now()->addDay(),
+        ]);
+
+        $event->participants()->attach($going->id, ['status' => 'going']);
+        $event->participants()->attach($blocked->id, ['status' => 'waitlist']);
+        $event->participants()->attach($next->id, ['status' => 'waitlist']);
+
+        Block::query()->create([
+            'blocker_id' => $host->id,
+            'blocked_id' => $blocked->id,
+        ]);
+
+        $this->actingAs($going)
+            ->post(route('events.rsvp', $event), ['status' => 'not_going'])
+            ->assertSessionHasNoErrors();
+
+        $event->refresh();
+        $this->assertSame('waitlist', $event->getUserStatus($blocked));
+        $this->assertSame('going', $event->getUserStatus($next));
+        Notification::assertNotSentTo($blocked, PromotedFromWaitlist::class);
+        Notification::assertSentTo($next, PromotedFromWaitlist::class);
     }
 
     private function game(User $host): Event
