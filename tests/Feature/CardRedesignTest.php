@@ -208,6 +208,13 @@ class CardRedesignTest extends TestCase
 
     public function test_the_picture_has_one_sport_pill_and_the_place_stays_in_the_row(): void
     {
+        $home = $this->get('/');
+        $home->assertOk();
+        $this->assertSame(1, substr_count($home->getContent(), 'data-image-pill'));
+        $home->assertSee('Padel')
+            ->assertSee('Riga · Mežaparks Tennis Courts')
+            ->assertDontSee('>Mežaparks<', false);
+
         $event = Event::factory()->create([
             'title' => 'Hall game',
             'sport' => 'other',
@@ -230,13 +237,6 @@ class CardRedesignTest extends TestCase
         $list->assertSee('Kurling')
             ->assertSee('Arena hall')
             ->assertDontSee('bottom-3 left-6', false);
-
-        $home = $this->get('/');
-        $home->assertOk();
-        $this->assertSame(1, substr_count($home->getContent(), 'data-image-pill'));
-        $home->assertSee('Padel')
-            ->assertSee('Riga · Mežaparks Tennis Courts')
-            ->assertDontSee('>Mežaparks<', false);
 
         $this->actingAs($event->creator)
             ->get(route('events.show', $event))
