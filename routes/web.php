@@ -4,6 +4,7 @@ use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventPhotoController;
+use App\Http\Controllers\MyGamesController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RosterController;
@@ -33,6 +34,7 @@ Route::get('/invite/{token}', [EventController::class, 'invite'])
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [EventController::class, 'dashboard'])->name('dashboard');
+    Route::get('/my-games', [MyGamesController::class, 'index'])->name('my-games.index');
 
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
     Route::post('/events', [EventController::class, 'store'])

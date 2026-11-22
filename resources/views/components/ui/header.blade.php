@@ -10,6 +10,7 @@
         @auth
             <nav class="hidden items-center gap-1 sm:flex" aria-label="Primary">
                 <a href="{{ route('dashboard') }}" @class([$current => request()->routeIs('dashboard'), $link => ! request()->routeIs('dashboard')])>Games</a>
+                <a href="{{ route('my-games.index') }}" @class([$current => request()->routeIs('my-games.index'), $link => ! request()->routeIs('my-games.index')])>My games</a>
                 <a href="{{ route('games.index') }}" @class([$current => request()->routeIs('games.index'), $link => ! request()->routeIs('games.index')])>What's on</a>
                 <a href="{{ route('events.create') }}" @class([$current => request()->routeIs('events.create'), $link => ! request()->routeIs('events.create')])>Start a game</a>
             </nav>

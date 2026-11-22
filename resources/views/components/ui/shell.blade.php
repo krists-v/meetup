@@ -11,11 +11,15 @@
 
     @auth
         <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-canvas sm:hidden" style="padding-bottom: env(safe-area-inset-bottom)" aria-label="Mobile">
-            <div class="relative grid grid-cols-4" x-data="motionIndicator" data-indicator="mobile-nav" data-indicator-mode="bar">
+            <div class="relative grid grid-cols-5" x-data="motionIndicator" data-indicator="mobile-nav" data-indicator-mode="bar">
                 <span class="motion-slide pointer-events-none absolute top-0 h-0.5 rounded-full bg-ink" x-ref="indicator" hidden aria-hidden="true"></span>
                 <a href="{{ route('dashboard') }}" data-active="{{ request()->routeIs('dashboard') ? '1' : '0' }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('dashboard') ? 'text-ink' : 'text-ink-muted' }}">
                     <x-ui.icon name="home" />
                     Games
+                </a>
+                <a href="{{ route('my-games.index') }}" data-active="{{ request()->routeIs('my-games.index') ? '1' : '0' }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('my-games.index') ? 'text-ink' : 'text-ink-muted' }}">
+                    <x-ui.icon name="list" />
+                    My games
                 </a>
                 <a href="{{ route('games.index') }}" data-active="{{ request()->routeIs('games.index') ? '1' : '0' }}" class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium {{ request()->routeIs('games.index') ? 'text-ink' : 'text-ink-muted' }}">
                     <x-ui.icon name="calendar" />
