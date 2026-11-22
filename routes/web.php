@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventPhotoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RosterController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [EventController::class, 'home'])->name('home');
@@ -43,6 +44,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/events/{event}', [EventController::class, 'destroy'])
         ->middleware('throttle:writes')
         ->name('events.destroy');
+    Route::post('/events/{event}/roster/{user}/confirm', [RosterController::class, 'confirm'])
+        ->middleware('throttle:writes')
+        ->name('events.roster.confirm');
+    Route::post('/events/{event}/roster/{user}/decline', [RosterController::class, 'decline'])
+        ->middleware('throttle:writes')
+        ->name('events.roster.decline');
+    Route::delete('/events/{event}/roster/{user}', [RosterController::class, 'remove'])
+        ->middleware('throttle:writes')
+        ->name('events.roster.remove');
+    Route::post('/events/{event}/roster/{user}/attendance', [RosterController::class, 'attendance'])
+        ->middleware('throttle:writes')
+        ->name('events.roster.attendance');
     Route::post('/events/{event}/rsvp', [EventController::class, 'rsvp'])
         ->middleware('throttle:writes')
         ->name('events.rsvp');

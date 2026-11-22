@@ -41,6 +41,11 @@ class EventPolicy
         return $event->user_id === $user->id;
     }
 
+    public function roster(User $user, Event $event): bool
+    {
+        return $event->user_id === $user->id;
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

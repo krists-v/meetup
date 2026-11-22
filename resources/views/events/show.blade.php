@@ -214,6 +214,10 @@
             @endif
         </x-ui.card>
 
+        @if ($event->isCreator(auth()->user()))
+            @include('events.partials.roster')
+        @endif
+
         @include('events.partials.share')
 
         @include('events.partials.comments')
