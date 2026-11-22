@@ -1,5 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img">
-  <rect width="800" height="480" fill="#f4f4f5"/>
-  <rect x="48" y="36" width="704" height="408" rx="36" fill="#ececef"/>
-  <circle cx="400" cy="240" r="80" fill="none" stroke="#3f3f46" stroke-width="10"/><path d="M320 240h160M400 160v160M345 185c30 30 30 80 0 110M455 185c-30 30-30 80 0 110" fill="none" stroke="#8a8a8e" stroke-width="8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="Basketball">
+  <rect width="800" height="480" fill="#FAEADE"/>
+  <g transform="translate(500 214)" fill="none" stroke="#7A3410" stroke-width="10" stroke-linecap="round">
+    <circle r="118" fill="#E8873A" stroke="none"/>
+    <circle r="118"/>
+    <path d="M-118 0h236M0 -118v236"/>
+    <path d="M-84 -84C-24 -36 -24 36 -84 84"/>
+    <path d="M84 -84C24 -36 24 36 84 84"/>
+  </g>
+  <rect x="40" y="300" width="176" height="48" rx="24" fill="#ffffff"/>
+  <text x="128" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#7A3410">Basketball</text>
 </svg>

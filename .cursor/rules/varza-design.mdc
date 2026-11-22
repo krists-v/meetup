@@ -117,7 +117,7 @@ Use these Blade components instead of restyling raw elements.
 | `x-illustrations.sport` | Unused on the game card. A game shows its photo, or `public/images/sports/{sport}.svg`. |
 | `x-illustrations.empty` | Empty states. Variants: `games`, `public`, `invites`, `votes`. |
 
-Game photos are the host's upload, or the grey picture in `public/images/sports/`. Empty states stay inline SVG. No stock photos, no hotlinked images.
+Game photos are the host's upload. With no upload, the card uses `public/images/sports/{sport}.svg`: a soft pastel tile in that activity's color, a large centered drawing of the ball or object, and the sport name in a corner. `generic.svg` is the fallback. Empty states stay inline SVG. No stock photos, no hotlinked images, no emoji.
 
 ## Checklist
 

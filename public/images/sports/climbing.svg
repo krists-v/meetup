@@ -1,5 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img">
-  <rect width="800" height="480" fill="#f4f4f5"/>
-  <rect x="48" y="36" width="704" height="408" rx="36" fill="#ececef"/>
-  <path d="M300 340l80-180 40 90 80-40" fill="none" stroke="#3f3f46" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><circle cx="380" cy="170" r="10" fill="#8a8a8e"/><circle cx="500" cy="210" r="10" fill="#8a8a8e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="Climbing">
+  <rect width="800" height="480" fill="#E8EAE4"/>
+  <g transform="translate(500 214)">
+    <path d="M-20 96C-90 86-130 20-108 -36C-92 -78 -30 -112 18 -86C62 -118 128 -78 124 -16C156 28 112 92 48 86C28 118 -2 112 -20 96Z" fill="#6E7668"/>
+    <circle cx="8" cy="-4" r="16" fill="#E8EAE4"/>
+    <circle cx="8" cy="-4" r="6" fill="#484E46"/>
+  </g>
+  <rect x="40" y="300" width="154" height="48" rx="24" fill="#ffffff"/>
+  <text x="117" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#484E46">Climbing</text>
 </svg>

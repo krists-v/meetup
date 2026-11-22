@@ -48,6 +48,24 @@ class CardRedesignTest extends TestCase
 
         $event->sport = 'not-a-sport';
         $this->assertSame('other', $event->defaultPhotoSlug());
+
+        $backgrounds = [];
+
+        foreach (Event::SPORTS as $slug => $label) {
+            $svg = file_get_contents(public_path('images/sports/'.$slug.'.svg'));
+            $this->assertIsString($svg);
+            $this->assertStringContainsString('>'.$label.'<', $svg);
+            $this->assertStringNotContainsString('#f4f4f5', $svg);
+            preg_match('/<rect width="800" height="480" fill="(#[0-9A-Fa-f]{6})"/', $svg, $fill);
+            $this->assertArrayHasKey(1, $fill);
+            $backgrounds[] = strtolower($fill[1]);
+        }
+
+        $this->assertSame($backgrounds, array_values(array_unique($backgrounds)));
+
+        $generic = file_get_contents(public_path('images/sports/generic.svg'));
+        $this->assertIsString($generic);
+        $this->assertStringContainsString('>Game<', $generic);
     }
 
     public function test_a_host_can_add_a_photo_and_a_cost_and_a_bad_file_is_refused(): void

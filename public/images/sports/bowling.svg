@@ -1,5 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img">
-  <rect width="800" height="480" fill="#f4f4f5"/>
-  <rect x="48" y="36" width="704" height="408" rx="36" fill="#ececef"/>
-  <circle cx="360" cy="250" r="28" fill="none" stroke="#3f3f46" stroke-width="8"/><circle cx="420" cy="250" r="28" fill="none" stroke="#8a8a8e" stroke-width="8"/><circle cx="480" cy="250" r="28" fill="none" stroke="#3f3f46" stroke-width="8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="Bowling">
+  <rect width="800" height="480" fill="#F8ECDC"/>
+  <g transform="translate(440 228)">
+    <path d="M0-124c30 0 32 34 22 60 24 16 30 48 16 82-8 28-14 46-14 62h-48c0-16-6-34-14-62-14-34-8-66 16-82-10-26-8-60 22-60z" fill="#ffffff" stroke="#80481C" stroke-width="6"/>
+    <path d="M-20-16h40M-24 4h48" fill="none" stroke="#80481C" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="86" cy="58" r="46" fill="#80481C"/>
+    <circle cx="72" cy="44" r="7" fill="#F8ECDC"/>
+    <circle cx="94" cy="50" r="7" fill="#F8ECDC"/>
+    <circle cx="82" cy="68" r="7" fill="#F8ECDC"/>
+  </g>
+  <rect x="40" y="300" width="146" height="48" rx="24" fill="#ffffff"/>
+  <text x="113" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#80481C">Bowling</text>
 </svg>

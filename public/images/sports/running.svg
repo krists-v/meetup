@@ -1,5 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img">
-  <rect width="800" height="480" fill="#f4f4f5"/>
-  <rect x="48" y="36" width="704" height="408" rx="36" fill="#ececef"/>
-  <circle cx="430" cy="170" r="18" fill="none" stroke="#3f3f46" stroke-width="8"/><path d="M360 320l40-70 30 20 40-50M400 250l50 80" fill="none" stroke="#3f3f46" stroke-width="12" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="Running">
+  <rect width="800" height="480" fill="#FAE8E2"/>
+  <g transform="translate(500 230)">
+    <path d="M-120 20V-8C-120-52-62-58-16-46L8-62H78C124-62 140-16 136 12L128 20Z" fill="#ffffff"/>
+    <path d="M-132 20H142c10 0 12 16-4 20H-126c-12 0-16-8-6-20Z" fill="#8C4030"/>
+    <path d="M4-46L-4-24M28-50L18-26M52-44L44-22" fill="none" stroke="#8C4030" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <rect x="40" y="300" width="140" height="48" rx="24" fill="#ffffff"/>
+  <text x="110" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#8C4030">Running</text>
 </svg>
