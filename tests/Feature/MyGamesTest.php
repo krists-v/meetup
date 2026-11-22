@@ -19,6 +19,7 @@ class MyGamesTest extends TestCase
         Event::factory()->create([
             'user_id' => $user->id,
             'title' => 'Hosted tomorrow',
+            'sport' => 'tennis',
             'visibility' => 'private',
             'location' => 'Park pitch',
             'event_date' => now()->addDay(),
@@ -58,6 +59,8 @@ class MyGamesTest extends TestCase
             ->assertSee('Edit')
             ->assertSee('Cancel game')
             ->assertSee('Park pitch')
+            ->assertSee('Tennis')
+            ->assertSee('data-image-pill', false)
             ->assertDontSee('Joined tomorrow')
             ->assertDontSee('Requested bowls')
             ->assertDontSee('Not mine');
