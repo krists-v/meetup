@@ -54,7 +54,8 @@ class CardRedesignTest extends TestCase
         foreach (Event::SPORTS as $slug => $label) {
             $svg = file_get_contents(public_path('images/sports/'.$slug.'.svg'));
             $this->assertIsString($svg);
-            $this->assertStringContainsString('>'.$label.'<', $svg);
+            $this->assertStringNotContainsString('<text', $svg);
+            $this->assertStringNotContainsString('>'.$label.'<', $svg);
             $this->assertStringNotContainsString('#f4f4f5', $svg);
             preg_match('/<rect width="800" height="480" fill="(#[0-9A-Fa-f]{6})"/', $svg, $fill);
             $this->assertArrayHasKey(1, $fill);
@@ -65,7 +66,8 @@ class CardRedesignTest extends TestCase
 
         $generic = file_get_contents(public_path('images/sports/generic.svg'));
         $this->assertIsString($generic);
-        $this->assertStringContainsString('>Game<', $generic);
+        $this->assertStringNotContainsString('<text', $generic);
+        $this->assertStringNotContainsString('>Game<', $generic);
     }
 
     public function test_a_host_can_add_a_photo_and_a_cost_and_a_bad_file_is_refused(): void
@@ -202,5 +204,46 @@ class CardRedesignTest extends TestCase
             ->assertSee('Start a game')
             ->assertSee('See what\'s on. Then go play.', false)
             ->assertDontSee('Sign up');
+    }
+
+    public function test_the_picture_has_one_sport_pill_and_the_place_stays_in_the_row(): void
+    {
+        $event = Event::factory()->create([
+            'title' => 'Hall game',
+            'sport' => 'other',
+            'custom_sport' => 'Kurling',
+            'location' => 'Riga, Arena hall',
+            'visibility' => 'public',
+            'event_date' => now()->addDay(),
+        ]);
+
+        $preview = $this->get(route('events.show', $event));
+        $preview->assertOk();
+        $this->assertSame(1, substr_count($preview->getContent(), 'data-image-pill'));
+        $preview->assertSee('Kurling')
+            ->assertSee('Arena hall')
+            ->assertDontSee('bottom-3 left-6', false);
+
+        $list = $this->get(route('games.index'));
+        $list->assertOk();
+        $this->assertSame(1, substr_count($list->getContent(), 'data-image-pill'));
+        $list->assertSee('Kurling')
+            ->assertSee('Arena hall')
+            ->assertDontSee('bottom-3 left-6', false);
+
+        $home = $this->get('/');
+        $home->assertOk();
+        $this->assertSame(1, substr_count($home->getContent(), 'data-image-pill'));
+        $home->assertSee('Padel')
+            ->assertSee('Riga · Mežaparks Tennis Courts')
+            ->assertDontSee('>Mežaparks<', false);
+
+        $this->actingAs($event->creator)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee('data-image-pill', false)
+            ->assertSee('Kurling')
+            ->assertSee('Arena hall')
+            ->assertDontSee('bottom-3 left-6', false);
     }
 }

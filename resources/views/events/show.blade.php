@@ -40,9 +40,11 @@
 
     <div class="mt-6 space-y-4">
         <article class="overflow-hidden rounded-card border border-line bg-white shadow-card" style="--vt-name: game-{{ $event->id }}">
-            <div class="relative px-3 pt-3">
-                <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-56 w-full rounded-2xl object-cover" />
-                <span class="absolute bottom-3 left-6 rounded-full bg-white px-3 py-1 text-sm font-medium text-ink">{{ $event->areaLabel() }}</span>
+            <div class="px-3 pt-3">
+                <div class="relative overflow-hidden rounded-2xl">
+                    <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-56 w-full object-cover" />
+                    <x-ui.image-pill :label="$event->sportLabel()" />
+                </div>
             </div>
             <div class="space-y-4 p-5 sm:p-6">
                 <div class="flex items-start justify-between gap-3">

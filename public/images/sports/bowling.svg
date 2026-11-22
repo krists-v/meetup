@@ -8,6 +8,4 @@
     <circle cx="94" cy="50" r="7" fill="#F8ECDC"/>
     <circle cx="82" cy="68" r="7" fill="#F8ECDC"/>
   </g>
-  <rect x="40" y="300" width="146" height="48" rx="24" fill="#ffffff"/>
-  <text x="113" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#80481C">Bowling</text>
 </svg>
