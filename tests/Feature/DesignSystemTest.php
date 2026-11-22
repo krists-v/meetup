@@ -76,28 +76,28 @@ class DesignSystemTest extends TestCase
             ->assertSee('href="/games"', false)
             ->assertSee('motion-press', false)
             ->assertSee('bg-transparent', false)
-            ->assertSee('w-fit', false);
+            ->assertSee('w-full', false)
+            ->assertDontSee('w-fit', false);
     }
 
-    public function test_primary_buttons_fill_a_card_and_a_phone(): void
+    public function test_every_button_is_full_width(): void
     {
-        $this->blade('<x-ui.button>I\'m in</x-ui.button>')
-            ->assertSee('w-full', false)
-            ->assertSee('sm:w-fit', false)
-            ->assertSee('bg-ink', false);
-
-        $blocked = (string) $this->blade('<x-ui.button block>Save</x-ui.button>');
-        $this->assertStringContainsString('w-full', $blocked);
-        $this->assertStringNotContainsString('sm:w-fit', $blocked);
-
-        $secondary = (string) $this->blade('<x-ui.button variant="secondary">Confirm</x-ui.button>');
-        $this->assertStringContainsString('w-fit', $secondary);
-        $this->assertStringNotContainsString('w-full', $secondary);
+        foreach (['primary' => 'I\'m in', 'secondary' => 'Confirm', 'ghost' => 'Cancel', 'danger' => 'Cancel game'] as $variant => $label) {
+            $html = (string) $this->blade('<x-ui.button variant="'.$variant.'">'.$label.'</x-ui.button>');
+            $this->assertStringContainsString('w-full', $html);
+            $this->assertStringNotContainsString('w-fit', $html);
+            $this->assertStringNotContainsString('sm:w-fit', $html);
+        }
 
         $this->get(route('login'))
             ->assertOk()
             ->assertSee('Log in')
             ->assertDontSee('sm:w-fit', false);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('sm:w-fit', false)
+            ->assertDontSee('sm:min-w-44', false);
     }
 
     public function test_badges_render_the_presets(): void
@@ -303,5 +303,51 @@ class DesignSystemTest extends TestCase
         $this->assertStringContainsString('text-ink', $highlight);
         $this->assertStringContainsString('bg-ink', $highlight);
         $this->assertStringContainsString("I'm in", $highlight);
+    }
+
+    public function test_game_page_actions_fill_the_row(): void
+    {
+        $host = User::factory()->create();
+        $player = User::factory()->create();
+        $event = Event::factory()->create([
+            'user_id' => $host->id,
+            'title' => 'Thursday padel',
+            'sport_type' => 'tennis',
+            'schedule_type' => 'fixed',
+            'visibility' => 'public',
+        ]);
+        $event->participants()->attach($player->id, ['status' => 'requested']);
+
+        $show = $this->actingAs($host)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee('Edit game')
+            ->assertSee('Cancel game')
+            ->assertSee('Copy link')
+            ->assertSee('Add a note')
+            ->assertSee('grid grid-cols-2', false);
+
+        $html = $show->getContent();
+        foreach (['Edit game', 'Cancel game', 'Copy link', 'Confirm', 'Add a note'] as $label) {
+            $this->assertStringContainsString('w-full', $this->openingTagBefore($html, $label), $label);
+        }
+        $this->assertDoesNotMatchRegularExpression('/Edit game[\s\S]{0,500}sm:flex-row/', $html);
+
+        $edit = $this->get(route('events.edit', $event))->assertOk()->getContent();
+        $this->assertStringContainsString('w-full', $this->openingTagBefore($edit, 'Cancel'));
+
+        $create = $this->get(route('events.create'))->assertOk()->getContent();
+        $this->assertStringContainsString('w-full', $this->openingTagBefore($create, 'Cancel'));
+    }
+
+    private function openingTagBefore(string $html, string $label): string
+    {
+        $matched = preg_match('/'.preg_quote($label, '/').'\s*</', $html, $found, PREG_OFFSET_CAPTURE);
+        $this->assertSame(1, $matched, $label);
+        $pos = $found[0][1];
+        $start = strrpos(substr($html, 0, $pos), '<');
+        $this->assertNotFalse($start);
+
+        return substr($html, $start, $pos - $start);
     }
 }
