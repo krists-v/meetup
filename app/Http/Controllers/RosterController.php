@@ -59,6 +59,12 @@ class RosterController extends Controller
         abort_unless($event->getUserStatus($user) === 'going', 404);
         abort_if($event->isCreator($user), 403);
 
+        if (! $event->isPoll() && $event->event_date->lte(now())) {
+            return back()->withErrors([
+                'roster' => 'The game has started.',
+            ]);
+        }
+
         $event->participants()->updateExistingPivot($user->id, [
             'status' => 'not_going',
             'attended' => null,

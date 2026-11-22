@@ -57,7 +57,7 @@
                                 @endif
                             </span>
                             <span class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                                @unless ($event->isCreator($person))
+                                @unless ($started || $event->isCreator($person))
                                     <form method="POST" action="{{ route('events.roster.remove', [$event, $person]) }}">
                                         @csrf
                                         @method('DELETE')

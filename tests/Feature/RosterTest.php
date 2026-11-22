@@ -98,6 +98,41 @@ class RosterTest extends TestCase
         Notification::assertSentTo($waiting, PromotedFromWaitlist::class);
     }
 
+    public function test_removing_a_player_after_the_game_starts_does_not_free_the_spot(): void
+    {
+        Notification::fake();
+        $host = User::factory()->create();
+        $going = User::factory()->create();
+        $waiting = User::factory()->create();
+        $event = Event::factory()->create([
+            'user_id' => $host->id,
+            'event_date' => now()->subHour(),
+            'visibility' => 'public',
+            'max_participants' => 1,
+        ]);
+        $event->participants()->attach($going->id, [
+            'status' => 'going',
+            'attended' => false,
+        ]);
+        $event->participants()->attach($waiting->id, ['status' => 'waitlist']);
+
+        $this->actingAs($host)
+            ->get(route('events.show', $event))
+            ->assertOk()
+            ->assertDontSee(route('events.roster.remove', [$event, $going]).'"', false);
+
+        $this->actingAs($host)
+            ->delete(route('events.roster.remove', [$event, $going]))
+            ->assertRedirect()
+            ->assertSessionHasErrors('roster');
+
+        $fresh = $event->fresh();
+        $this->assertSame('going', $fresh->getUserStatus($going));
+        $this->assertSame('waitlist', $fresh->getUserStatus($waiting));
+        $this->assertFalse($fresh->participants()->where('users.id', $going->id)->first()->pivot->attended);
+        Notification::assertNothingSent();
+    }
+
     public function test_the_host_marks_attendance_only_after_the_game_starts(): void
     {
         $host = User::factory()->create();
