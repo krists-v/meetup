@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class EventUser extends Pivot
@@ -10,6 +11,18 @@ class EventUser extends Pivot
 
     public $incrementing = true;
 
+    public $timestamps = true;
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * @return array<string, string>
      */
@@ -17,6 +30,7 @@ class EventUser extends Pivot
     {
         return [
             'attended' => 'boolean',
+            'expiry_notified_at' => 'datetime',
         ];
     }
 }
