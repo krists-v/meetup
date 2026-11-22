@@ -34,7 +34,7 @@ class GameReminders
 
     private static function remind(Event $event): int
     {
-        $people = $event->goingParticipants
+        $people = collect($event->goingParticipants->all())
             ->push($event->creator)
             ->filter(fn ($person) => $person instanceof User)
             ->unique('id')

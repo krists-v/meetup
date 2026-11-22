@@ -36,8 +36,7 @@ class GameReminderTest extends TestCase
             return $mail->subject === $event->title.' is on soon'
                 && $mail->greeting === 'Three hours. Then you play.'
                 && $this->linesContain($mail, $event->location)
-                && $this->linesContain($mail, 'Alex Host is hosting.')
-                && $this->linesContain($mail, 'Sam Player')
+                && $notice->whoLine($player) === 'Alex Host is hosting. 2 / 4 players: Alex Host and Sam Player'
                 && $mail->actionText === 'See the game';
         });
         Notification::assertSentTo($host, GameReminder::class, function (GameReminder $notice) use ($host): bool {
@@ -58,7 +57,10 @@ class GameReminderTest extends TestCase
         $past = User::factory()->create();
         $left = User::factory()->create();
         $waiting = User::factory()->create();
-        $quiet = User::factory()->create(['game_reminders' => false]);
+        $quiet = User::factory()->create([
+            'name' => 'Quiet Quinn',
+            'game_reminders' => false,
+        ]);
 
         $tooSoon = $this->game($host, now()->addHours(3)->addMinute());
         $tooSoon->participants()->attach($later->id, ['status' => 'going']);
@@ -87,7 +89,10 @@ class GameReminderTest extends TestCase
 
         $this->artisan('games:remind')->assertSuccessful();
 
-        Notification::assertSentTo($host, GameReminder::class, fn (GameReminder $notice) => $notice->event->is($due));
+        Notification::assertSentTo($host, GameReminder::class, function (GameReminder $notice) use ($due, $host): bool {
+            return $notice->event->is($due)
+                && $notice->whoLine($host) === 'You\'re hosting. 1 / 4 players: Quiet Quinn';
+        });
         Notification::assertSentToTimes($host, GameReminder::class, 1);
         Notification::assertNotSentTo($later, GameReminder::class);
         Notification::assertNotSentTo($past, GameReminder::class);
