@@ -1,10 +1,10 @@
 @php
     $url = fn (array $overrides = []) => route($route, $filters->parameters($overrides));
     $chip = 'relative z-10 inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold transition duration-150';
-    $on = 'bg-pitch-700 text-white';
+    $on = 'bg-ink text-white';
     $off = 'bg-white text-ink ring-1 ring-line';
     $track = 'relative flex flex-wrap gap-2';
-    $indicator = 'motion-slide pointer-events-none absolute rounded-full ring-2 ring-pitch-800';
+    $indicator = 'motion-slide pointer-events-none absolute rounded-full ring-2 ring-ink';
     $sheetId = 'filters-'.str_replace('.', '-', $route);
     $count = $filters->count();
 @endphp
@@ -16,7 +16,7 @@
 >
     <button
         type="button"
-        class="filters-trigger motion-press min-h-11 items-center gap-2 rounded-control bg-white px-4 py-2.5 text-sm font-semibold text-ink ring-1 ring-line hover:bg-pitch-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pitch-600 focus-visible:ring-offset-2"
+        class="filters-trigger motion-press min-h-11 items-center gap-2 rounded-control bg-white px-4 py-2.5 text-sm font-bold text-ink ring-1 ring-line hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
         x-ref="trigger"
         @click="show()"
         :aria-expanded="open.toString()"
@@ -26,7 +26,7 @@
         <x-ui.icon name="sliders" />
         Filters
         @if ($count > 0)
-            <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-pitch-700 px-1.5 text-xs font-semibold text-white" data-filter-count="{{ $count }}">{{ $count }}</span>
+            <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ink px-1.5 text-xs font-semibold text-white" data-filter-count="{{ $count }}">{{ $count }}</span>
         @endif
     </button>
 
@@ -45,7 +45,7 @@
     >
         <div class="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
             <h2 id="{{ $sheetId }}-title" class="text-lg font-semibold text-ink">Filters</h2>
-            <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-control text-ink hover:bg-pitch-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pitch-600" x-ref="close" @click="close()" aria-label="Close">
+            <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-control text-ink hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink" x-ref="close" @click="close()" aria-label="Close">
                 <x-ui.icon name="x" />
             </button>
         </div>

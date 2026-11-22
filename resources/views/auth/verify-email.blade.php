@@ -1,11 +1,11 @@
 <x-guest-layout title="Confirm your email" description="Open the link we sent so we know this address is yours.">
     <div class="space-y-1">
-        <h1 class="text-2xl font-semibold tracking-tight">Confirm your email</h1>
-        <p class="text-sm text-ink-muted">We sent a link. Open it so we know this address is yours. If it's missing, we can send another.</p>
+        <h1 class="text-3xl font-bold tracking-tight">Confirm your email</h1>
+        <p class="text-base text-ink-muted">We sent a link. Open it so we know this address is yours. If it's missing, we can send another.</p>
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <p class="mt-4 text-sm font-medium text-pitch-700">
+        <p class="mt-4 text-sm font-medium text-success">
             A new link is on its way.
         </p>
     @endif

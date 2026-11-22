@@ -13,7 +13,7 @@
             $mine = $option->votes->firstWhere('user_id', $userId);
             $isBest = $best && $best->is($option);
         @endphp
-        <x-ui.card @class(['space-y-3 p-4', 'outline outline-2 outline-pitch-600' => $isBest, 'motion-pop' => (int) session('voted') === $option->id])>
+        <x-ui.card @class(['space-y-3 p-4', 'outline outline-2 outline-success' => $isBest, 'motion-pop' => (int) session('voted') === $option->id])>
             <div class="flex items-start justify-between gap-3">
                 <div>
                     <h3 class="font-semibold text-ink">{{ $option->starts_at->format('D j M, H:i') }}</h3>
@@ -35,7 +35,7 @@
                         </span>
                         <span @class([
                             'text-xs font-semibold uppercase tracking-wide',
-                            'text-pitch-700' => $vote->vote === 'yes',
+                            'text-success' => $vote->vote === 'yes',
                             'text-warn' => $vote->vote === 'maybe',
                             'text-ink-faint' => $vote->vote === 'no',
                         ])>{{ $vote->vote }}</span>

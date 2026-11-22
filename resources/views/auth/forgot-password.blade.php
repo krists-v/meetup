@@ -1,7 +1,7 @@
 <x-guest-layout title="Forgot your password?" description="We'll send a link to choose a new one.">
     <div class="space-y-1">
-        <h1 class="text-2xl font-semibold tracking-tight">Forgot your password?</h1>
-        <p class="text-sm text-ink-muted">Tell us your email. We'll send a link to choose a new one.</p>
+        <h1 class="text-3xl font-bold tracking-tight">Forgot your password?</h1>
+        <p class="text-base text-ink-muted">Tell us your email. We'll send a link to choose a new one.</p>
     </div>
 
     <x-auth-session-status class="mt-4" :status="session('status')" />
@@ -19,6 +19,6 @@
     </form>
 
     <p class="mt-4 text-sm">
-        <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('login') }}">Back to log in</a>
+        <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('login') }}">Back to log in</a>
     </p>
 </x-guest-layout>

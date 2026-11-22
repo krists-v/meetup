@@ -54,6 +54,13 @@ return [
             'report' => false,
         ],
 
+        'photos' => [
+            'driver' => 'local',
+            'root' => env('PHOTO_ROOT', storage_path('app/public/photos')),
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -51,9 +51,10 @@ class PublicGamesTest extends TestCase
             ->assertSee('What\'s on')
             ->assertSee('Thursday five-a-side')
             ->assertSee('Football')
-            ->assertSee($public->event_date->format('D j M, H:i'))
+            ->assertSee($public->whenLabel())
             ->assertSee('Mezaparks pitch')
-            ->assertSee('1 of 8 going · 7 spots left')
+            ->assertSee('1 / 8 players')
+            ->assertSee('7 spots left')
             ->assertSee('https://www.google.com/maps/search/?api=1&query=Mezaparks%20pitch')
             ->assertDontSee('Secret padel')
             ->assertDontSee('Last week');
@@ -99,22 +100,22 @@ class PublicGamesTest extends TestCase
 
         $this->get(route('games.index'))
             ->assertOk()
-            ->assertSee('1 of 1 going · 0 spots left')
+            ->assertSee('1 / 1 players')
             ->assertSee('Full')
-            ->assertSee('2 going')
+            ->assertSee('2 players')
             ->assertDontSee('2 going ·');
 
         $this->actingAs(User::factory()->create())
             ->get(route('events.show', $full))
             ->assertOk()
-            ->assertSee('1 of 1 going · 0 spots left')
+            ->assertSee('1 / 1 players')
             ->assertSee('Full')
             ->assertSee('https://www.google.com/maps/search/?api=1&query=Hall');
 
         $this->actingAs(User::factory()->create())
             ->get(route('events.show', $open))
             ->assertOk()
-            ->assertSee('2 going')
+            ->assertSee('2 players')
             ->assertDontSee('spots left');
     }
 

@@ -17,11 +17,11 @@
             @if ($user->avatarUrl())
                 <x-ui.avatar :name="$user->name" :user="$user" class="h-16 w-16 text-lg" />
                 <label class="flex min-h-11 items-center gap-2 text-sm text-ink">
-                    <input type="checkbox" name="remove_avatar" value="1" class="rounded border-line text-pitch-700 focus:ring-pitch-600" @checked(old('remove_avatar')) />
+                    <input type="checkbox" name="remove_avatar" value="1" class="rounded border-line text-ink focus:ring-ink" @checked(old('remove_avatar')) />
                     Remove photo
                 </label>
             @endif
-            <input id="avatar" name="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="block w-full text-sm text-ink file:me-3 file:min-h-11 file:rounded-control file:border-0 file:bg-pitch-700 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white" />
+            <input id="avatar" name="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="block w-full text-sm text-ink file:me-3 file:min-h-11 file:rounded-control file:border-0 file:bg-mist file:px-4 file:py-2.5 file:text-sm file:font-bold file:text-ink" />
             <p class="text-sm text-ink-muted">Optional. A square photo works best.</p>
             <x-ui.error :messages="$errors->get('avatar')" />
         </div>
@@ -41,13 +41,13 @@
                 <div>
                     <p class="text-sm text-ink">
                         We still need to confirm your email.
-                        <button form="send-verification" class="font-medium text-pitch-700 underline">
+                        <button form="send-verification" class="font-medium text-ink underline underline-offset-2">
                             Send it again.
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 text-sm font-medium text-pitch-700">
+                        <p class="mt-2 text-sm font-medium text-success">
                             A new link is on its way.
                         </p>
                     @endif
@@ -81,7 +81,7 @@
                                 class="peer sr-only"
                                 @checked(in_array($value, $selectedSports, true))
                             />
-                            <label for="favorite-{{ $value }}" class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-line transition duration-150 peer-checked:bg-pitch-700 peer-checked:text-white peer-checked:ring-pitch-700 peer-focus-visible:ring-2 peer-focus-visible:ring-pitch-600 peer-focus-visible:ring-offset-2">{{ $label }}</label>
+                            <label for="favorite-{{ $value }}" class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-line transition duration-150 peer-checked:bg-ink peer-checked:text-white peer-checked:ring-ink peer-focus-visible:ring-2 peer-focus-visible:ring-ink peer-focus-visible:ring-offset-2">{{ $label }}</label>
                         </div>
                         <div class="min-w-40 flex-1 sm:flex-none">
                             <x-ui.label :for="'sport-level-'.$value" value="{{ $label }} level" class="sr-only" />

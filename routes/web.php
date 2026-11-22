@@ -3,6 +3,7 @@
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventPhotoController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,8 @@ Route::view('/terms', 'legal.terms')->name('terms');
 Route::get('/games', [EventController::class, 'index'])->name('games.index');
 
 Route::get('/avatars/{user}', [AvatarController::class, 'show'])->name('avatars.show');
+
+Route::get('/games/{event}/photo', [EventPhotoController::class, 'show'])->name('events.photo');
 
 Route::post('/events/{event}/join', [EventController::class, 'join'])
     ->middleware('throttle:writes')

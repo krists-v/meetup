@@ -1,7 +1,7 @@
 <x-guest-layout title="Confirm it is you" description="Enter your password to continue.">
     <div class="space-y-1">
-        <h1 class="text-2xl font-semibold tracking-tight">Confirm it is you</h1>
-        <p class="text-sm text-ink-muted">Enter your password to continue.</p>
+        <h1 class="text-3xl font-bold tracking-tight">Confirm it is you</h1>
+        <p class="text-base text-ink-muted">Enter your password to continue.</p>
     </div>
 
     <form method="POST" action="{{ route('password.confirm') }}" class="mt-6 space-y-4">

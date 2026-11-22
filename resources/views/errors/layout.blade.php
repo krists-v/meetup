@@ -4,20 +4,18 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title') · Varza</title>
-        <meta name="theme-color" content="#1c633b">
+        <meta name="theme-color" content="#ffffff">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-pitch-wash font-sans text-ink antialiased">
-        <div class="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-6">
-            <x-ui.wordmark href="{{ url('/') }}" />
-
-            <main class="mt-8">
+    <body class="bg-white font-sans text-ink antialiased">
+        <x-ui.shell>
+            <main class="mx-auto w-full max-w-md px-4 py-8">
                 <x-ui.card class="space-y-4 px-5 py-6">
-                    <h1 class="text-2xl font-semibold tracking-tight">@yield('title')</h1>
+                    <h1 class="text-3xl font-bold tracking-tight">@yield('title')</h1>
                     <p class="text-sm text-ink-muted">@yield('message')</p>
                     <x-ui.button :href="url('/')">Back home</x-ui.button>
                 </x-ui.card>
             </main>
-        </div>
+        </x-ui.shell>
     </body>
 </html>

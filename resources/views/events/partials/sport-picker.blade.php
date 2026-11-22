@@ -18,7 +18,7 @@
                     @checked($selectedSport === $value)
                     required
                 />
-                <label for="sport-{{ $value }}" class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-line transition duration-150 peer-checked:bg-pitch-700 peer-checked:text-white peer-checked:ring-pitch-700 peer-focus-visible:ring-2 peer-focus-visible:ring-pitch-600 peer-focus-visible:ring-offset-2">
+                <label for="sport-{{ $value }}" class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-line transition duration-150 peer-checked:bg-ink peer-checked:text-white peer-checked:ring-ink peer-focus-visible:ring-2 peer-focus-visible:ring-ink peer-focus-visible:ring-offset-2">
                     <x-ui.icon :name="App\Models\Event::activityIcon($value)" class="h-4 w-4" />
                     {{ $label }}
                 </label>

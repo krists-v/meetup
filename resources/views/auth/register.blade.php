@@ -1,7 +1,7 @@
 <x-guest-layout title="Create an account" description="An account takes a minute. Then say you're in, or start a game.">
     <div class="space-y-1">
-        <h1 class="text-2xl font-semibold tracking-tight">Come play</h1>
-        <p class="text-sm text-ink-muted">An account takes a minute. Then say you're in, or start a game.</p>
+        <h1 class="text-3xl font-bold tracking-tight">Come play</h1>
+        <p class="text-base text-ink-muted">An account takes a minute. Then say you're in, or start a game.</p>
     </div>
 
     <form method="POST" action="{{ route('register') }}" class="mt-6 space-y-4">
@@ -33,9 +33,9 @@
 
         <p class="text-sm text-ink-muted">
             By creating an account you agree to the
-            <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('terms') }}">terms</a>
+            <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('terms') }}">terms</a>
             and the
-            <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('privacy') }}">privacy policy</a>.
+            <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('privacy') }}">privacy policy</a>.
         </p>
 
         <x-ui.button type="submit" class="w-full">Create an account</x-ui.button>
@@ -43,6 +43,6 @@
 
     <p class="mt-4 text-sm text-ink-muted">
         Already playing?
-        <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('login') }}">Log in</a>
+        <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('login') }}">Log in</a>
     </p>
 </x-guest-layout>

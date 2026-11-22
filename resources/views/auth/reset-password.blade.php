@@ -1,7 +1,7 @@
 <x-guest-layout title="Choose a new password" description="Make it long, and don't reuse it.">
     <div class="space-y-1">
-        <h1 class="text-2xl font-semibold tracking-tight">Choose a new password</h1>
-        <p class="text-sm text-ink-muted">Make it long, and don't reuse it.</p>
+        <h1 class="text-3xl font-bold tracking-tight">Choose a new password</h1>
+        <p class="text-base text-ink-muted">Make it long, and don't reuse it.</p>
     </div>
 
     <form method="POST" action="{{ route('password.store') }}" class="mt-6 space-y-4">
@@ -31,6 +31,6 @@
     </form>
 
     <p class="mt-4 text-sm">
-        <a class="font-medium text-pitch-700 hover:text-pitch-800" href="{{ route('login') }}">Back to log in</a>
+        <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('login') }}">Back to log in</a>
     </p>
 </x-guest-layout>

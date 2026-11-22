@@ -33,6 +33,7 @@ export default {
                 },
                 canvas: 'rgb(var(--canvas) / <alpha-value>)',
                 line: 'rgb(var(--line) / <alpha-value>)',
+                mist: 'rgb(var(--mist) / <alpha-value>)',
                 sand: 'rgb(var(--sand) / <alpha-value>)',
                 success: {
                     DEFAULT: 'rgb(var(--success) / <alpha-value>)',

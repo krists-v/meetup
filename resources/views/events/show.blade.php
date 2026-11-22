@@ -37,35 +37,39 @@
     :url="$preview->url"
 >
     <div class="space-y-4">
-        <article class="motion-view overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line" style="--vt-name: game-{{ $event->id }}">
-            <div class="flex items-center justify-between gap-3 px-4 py-3 {{ \App\Models\Event::accentClasses($event->sportSelection()) }}">
-                <x-ui.chip :sport="$event->sportSelection()" :label="$event->sportLabel()" />
-                <span class="text-sm font-semibold">{{ $event->isIndoor() ? 'Indoors' : 'Outdoors' }}</span>
+        <article class="overflow-hidden rounded-card border border-line bg-white" style="--vt-name: game-{{ $event->id }}">
+            <div class="relative px-3 pt-3">
+                <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-56 w-full rounded-2xl object-cover" />
+                <span class="absolute bottom-3 left-6 rounded-full bg-white/75 px-3 py-1 text-sm font-medium text-ink backdrop-blur-md">{{ $event->areaLabel() }}</span>
             </div>
-            <x-illustrations.sport :sport="$event->sportSelection()" class="h-44 w-full" />
-            <div class="space-y-4 p-4 sm:p-6">
-                <h1 class="text-2xl font-semibold tracking-tight text-ink">{{ $event->title }}</h1>
+            <div class="space-y-4 p-5 sm:p-6">
+                <div class="flex items-start justify-between gap-3">
+                    <h1 class="text-3xl font-bold tracking-tight text-ink">{{ $event->title }}</h1>
+                    @if ($event->spotsLeftLabel())
+                        <x-ui.badge class="shrink-0" :tone="$event->isFull() || $event->isPoll() ? 'warn' : 'pitch'">{{ $event->spotsLeftLabel() }}</x-ui.badge>
+                    @endif
+                </div>
                 @if ($event->isPoll())
-                    <x-ui.info-row variant="time" label="When">People are still picking a time</x-ui.info-row>
+                    <x-ui.info-row variant="time" label="When">{{ $event->whenLabel() }}</x-ui.info-row>
                 @else
-                    <x-ui.info-row variant="date" label="Date">{{ $event->event_date->timezone(config('app.timezone'))->format('D j M') }}</x-ui.info-row>
-                    <x-ui.info-row variant="time" label="Time">{{ $event->event_date->timezone(config('app.timezone'))->format('H:i') }}</x-ui.info-row>
+                    <x-ui.info-row variant="date" label="When">{{ $event->whenLabel() }}</x-ui.info-row>
                 @endif
                 <x-ui.info-row variant="place" label="Where" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
-                <x-ui.info-row variant="spots" label="Spots">
-                    @if ($event->isPoll())
+                <x-ui.info-row variant="spots" label="Players">
+                    <span @class(['motion-tick' => $justJoined])>{{ $event->playersLabel() }}</span>
+                </x-ui.info-row>
+                @if ($event->priceLabel())
+                    <p class="text-lg font-bold text-ink">{{ $event->priceLabel() }}</p>
+                @endif
+                @if ($event->isPoll())
+                    <x-ui.info-row variant="spots" label="Spots">
                         @if ($event->max_participants)
                             Up to {{ $event->max_participants }} can play, once a time is set
                         @else
                             No limit, once a time is set
                         @endif
-                    @else
-                        <span @class(['motion-tick' => $justJoined])>{{ $event->attendanceLabel() }}</span>
-                        @if ($event->isFull())
-                            <x-ui.badge preset="full" />
-                        @endif
-                    @endif
-                </x-ui.info-row>
+                    </x-ui.info-row>
+                @endif
                 <x-ui.activity-facts :event="$event" />
                 <x-ui.badge :tone="$event->visibility === 'public' ? 'pitch' : 'neutral'">
                     {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
@@ -96,7 +100,7 @@
                 <form id="rsvp-form" method="POST" action="{{ route('events.rsvp', $event) }}" class="space-y-2">
                     @csrf
                     @if ($rsvpSettled)
-                        <div @class(['relative hidden min-h-11 items-center justify-center gap-2 rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white sm:flex', 'motion-pop motion-joined' => $justJoined]) role="status">
+                        <div @class(['relative hidden min-h-11 items-center justify-center gap-2 rounded-control bg-success-soft px-4 text-sm font-bold text-success sm:flex', 'motion-pop motion-joined' => $justJoined]) role="status">
                             @if ($rsvpLabel === "You're in")
                                 @if ($justJoined)
                                     <span class="motion-burst {{ \App\Models\Event::accentInk($event->sportSelection()) }}" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
@@ -126,7 +130,7 @@
 
             <div class="sticky-action fixed inset-x-0 z-40 border-t border-line bg-white p-3 sm:hidden" style="bottom: calc(3.5rem + env(safe-area-inset-bottom))">
                 @if ($rsvpSettled)
-                    <div @class(['relative flex min-h-11 w-full items-center justify-center gap-2 rounded-control bg-pitch-700 px-4 text-sm font-semibold text-white', 'motion-pop motion-joined' => $justJoined]) role="status">
+                    <div @class(['relative flex min-h-11 w-full items-center justify-center gap-2 rounded-control bg-success-soft px-4 text-sm font-bold text-success', 'motion-pop motion-joined' => $justJoined]) role="status">
                         @if ($rsvpLabel === "You're in")
                             @if ($justJoined)
                                 <span class="motion-burst {{ \App\Models\Event::accentInk($event->sportSelection()) }}" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
