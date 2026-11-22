@@ -45,6 +45,8 @@ return [
         'event_date' => 'date and time',
         'favorite_sports' => 'sports',
         'level' => 'level',
+        'sport_levels' => 'level',
+        'sport_levels.*' => 'level',
         'location' => 'place',
         'max_participants' => 'number of spots',
         'name' => 'name',

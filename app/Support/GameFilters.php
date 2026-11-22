@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Event;
+use App\Models\User;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class GameFilters
         public ?string $setting,
         public ?string $level,
         public ?string $category,
+        public bool $anyLevel = false,
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -35,12 +37,26 @@ class GameFilters
         $setting = is_string($setting) && in_array($setting, ['indoor', 'outdoor'], true) ? $setting : null;
 
         $level = $request->query('level');
-        $level = is_string($level) && (array_key_exists($level, Event::LEVELS) || $level === 'all') ? $level : null;
+        $anyLevel = $level === 'any';
+        $level = $anyLevel
+            ? null
+            : (is_string($level) && (array_key_exists($level, Event::LEVELS) || $level === 'all') ? $level : null);
 
         $category = $request->query('category');
         $category = is_string($category) && array_key_exists($category, Event::CATEGORIES) ? $category : null;
 
-        return new self($sport, $when, $where, $setting, $level, $category);
+        return new self($sport, $when, $where, $setting, $level, $category, $anyLevel);
+    }
+
+    public function levelFromProfile(Request $request): ?string
+    {
+        $user = $request->user();
+
+        if (! $user instanceof User || $this->sport === null || $request->has('level')) {
+            return null;
+        }
+
+        return $user->sportLevel($this->sport);
     }
 
     public function active(): bool
@@ -68,7 +84,7 @@ class GameFilters
         $when = array_key_exists('when', $overrides) ? $overrides['when'] : $this->when;
         $where = array_key_exists('where', $overrides) ? $overrides['where'] : $this->where;
         $setting = array_key_exists('setting', $overrides) ? $overrides['setting'] : $this->setting;
-        $level = array_key_exists('level', $overrides) ? $overrides['level'] : $this->level;
+        $level = array_key_exists('level', $overrides) ? $overrides['level'] : ($this->anyLevel ? 'any' : $this->level);
         $category = array_key_exists('category', $overrides) ? $overrides['category'] : $this->category;
 
         return array_filter([

@@ -95,9 +95,14 @@ class EventController extends Controller
         ]);
     }
 
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $filters = GameFilters::fromRequest($request);
+        $level = $filters->levelFromProfile($request);
+
+        if ($level !== null) {
+            return redirect()->route('games.index', $filters->parameters(['level' => $level]));
+        }
 
         $events = $filters->apply(Event::query())
             ->with('creator')
