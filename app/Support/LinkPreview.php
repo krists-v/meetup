@@ -16,7 +16,7 @@ class LinkPreview
     public static function page(?string $title = null, ?string $description = null, ?string $url = null): self
     {
         return new self(
-            title: $title ?: 'Ejam',
+            title: $title ?: 'EJAM',
             description: $description ?: 'Bored at home? See what\'s on near you and go play.',
             image: self::image('default'),
             url: $url ?: url()->current(),

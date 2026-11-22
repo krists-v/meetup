@@ -8,7 +8,7 @@
         <x-ui.icon name="home" class="mt-0.5 text-ink-faint" />
         <div>
             <h2 class="text-lg font-bold text-ink">Get off the couch</h2>
-            <p class="mt-1">Ejam is for a rainy Saturday when you are bored at home. See what is on nearby, go play, and meet someone new.</p>
+            <p class="mt-1">EJAM is for a rainy Saturday when you are bored at home. See what is on nearby, go play, and meet someone new.</p>
         </div>
     </div>
 
@@ -56,8 +56,8 @@
         <x-ui.icon name="help" class="mt-0.5 text-ink-faint" />
         <div class="space-y-2">
             <h2 class="text-lg font-bold text-ink">A few questions</h2>
-            <p>Is it free? Yes. Ejam does not charge you to find a game or to host one.</p>
-            <p>Who do I pay? If a game has a cost, you pay the host. Ejam never takes that money.</p>
+            <p>Is it free? Yes. EJAM does not charge you to find a game or to host one.</p>
+            <p>Who do I pay? If a game has a cost, you pay the host. EJAM never takes that money.</p>
             <p>What if plans change? Say you can't make it. If you are hosting, cancel the game so people can make another plan.</p>
         </div>
     </div>

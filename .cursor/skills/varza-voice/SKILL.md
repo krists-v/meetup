@@ -1,11 +1,11 @@
 ---
 name: varza-voice
-description: "Ejam brand voice and copy. Use before writing or editing any user-facing text: headlines, buttons, empty states, errors, emails, notices, share messages, link-preview and OG text, homepage, and marketing. Triggers on copy, tone, microcopy, labels, flash messages, and 'what should this say'."
+description: "EJAM brand voice and copy. Use before writing or editing any user-facing text: headlines, buttons, empty states, errors, emails, notices, share messages, link-preview and OG text, homepage, and marketing. Triggers on copy, tone, microcopy, labels, flash messages, and 'what should this say'."
 ---
 
-# Ejam voice
+# EJAM voice
 
-Ejam gets people off the couch to play more, socialize, and meet someone new. It is a rainy Saturday, you are bored at home, you open Ejam, see what is on nearby, and go. Padel, tennis, bowling, climbing, anything.
+EJAM gets people off the couch to play more, socialize, and meet someone new. It is a rainy Saturday, you are bored at home, you open EJAM, see what is on nearby, and go. Padel, tennis, bowling, climbing, anything.
 
 Write about people and the plan, not the product. Warm, social, a bit cheeky. Second person. Plain English. Short.
 
@@ -116,7 +116,7 @@ Share and previews:
 
 - Before: "Thursday five-a-side. Football, Thu 10 Dec, 18:00, Park pitch. {url}" After: "Thursday five-a-side, this Thursday at 18:00, Park pitch. Come play. {url}"
 - Before, OG description: "Get the crew together. Pick a time, lock the pitch, play." After: "Bored at home? See what's on near you and go play."
-- Before, private preview: "You're invited to a game on Ejam. Log in to see the sport, the time, and the place." After: "Someone wants you in a game. Log in to see when and where."
+- Before, private preview: "You're invited to a game on EJAM. Log in to see the sport, the time, and the place." After: "Someone wants you in a game. Log in to see when and where."
 
 ## Checklist
 

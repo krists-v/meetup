@@ -7,5 +7,5 @@
         <circle cx="16" cy="16" r="3.25" fill="none" stroke="#f5f5f7" stroke-width="1.5" />
         <path d="M16 7v18M6 16h20" stroke="#f5f5f7" stroke-width="1.5" />
     </svg>
-    <span class="text-lg font-bold tracking-tight text-ink">Ejam</span>
+    <span class="text-lg font-bold tracking-tight text-ink">EJAM</span>
 </a>
