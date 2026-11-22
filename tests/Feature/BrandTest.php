@@ -15,7 +15,7 @@ class BrandTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('Varza')
+            ->assertSee('EJAM')
             ->assertSee('Bored at home? Go play.')
             ->assertSee('Less scrolling, more playing.');
     }
@@ -27,7 +27,7 @@ class BrandTest extends TestCase
         $this->actingAs($user)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('Varza')
+            ->assertSee('EJAM')
             ->assertSee('Nothing on yet.')
             ->assertSee('Open near you');
     }
@@ -39,9 +39,9 @@ class BrandTest extends TestCase
 
         $html = $mail->render();
 
-        $this->assertSame('Reset your Varza password', $mail->subject);
-        $this->assertStringContainsString('Varza', $mail->introLines[0]);
-        $this->assertStringContainsString('Varza', $html);
+        $this->assertSame('Reset your EJAM password', $mail->subject);
+        $this->assertStringContainsString('EJAM', $mail->introLines[0]);
+        $this->assertStringContainsString('EJAM', $html);
         $this->assertStringContainsString('#1c633b', $html);
         $this->assertStringContainsString('Choose a new password', $html);
     }

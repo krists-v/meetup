@@ -1,5 +1,5 @@
 @php
-    $previewTitle = $title ?? 'Varza';
+    $previewTitle = $title ?? 'EJAM';
     $previewDescription = $description ?? \App\Support\LinkPreview::page()->description;
     $previewImage = $image ?? \App\Support\LinkPreview::image('default');
     $previewUrl = $url ?? url()->current();
@@ -10,7 +10,7 @@
 <title>{{ $previewTitle }}</title>
 <meta name="description" content="{{ $previewDescription }}">
 <meta name="theme-color" content="#F5F5F7">
-<meta property="og:site_name" content="Varza">
+<meta property="og:site_name" content="EJAM">
 <meta property="og:title" content="{{ $previewTitle }}">
 <meta property="og:description" content="{{ $previewDescription }}">
 <meta property="og:image" content="{{ $previewImage }}">

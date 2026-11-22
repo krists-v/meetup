@@ -17,6 +17,7 @@ Route::view('/privacy', 'legal.privacy')->name('privacy');
 Route::view('/terms', 'legal.terms')->name('terms');
 
 Route::get('/games', [EventController::class, 'index'])->name('games.index');
+Route::get('/bored', [EventController::class, 'bored'])->name('bored');
 
 Route::get('/avatars/{user}', [AvatarController::class, 'show'])->name('avatars.show');
 

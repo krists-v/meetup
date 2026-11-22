@@ -29,6 +29,7 @@ class EventFactory extends Factory
             'description' => fake()->optional()->sentence(),
             'visibility' => 'public',
             'invite_token' => Str::random(32),
+            'come_solo' => true,
         ];
     }
 

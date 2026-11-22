@@ -15,8 +15,8 @@ class LinkPreviewTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('property="og:site_name" content="Varza"', false)
-            ->assertSee('property="og:title" content="Varza"', false)
+            ->assertSee('property="og:site_name" content="EJAM"', false)
+            ->assertSee('property="og:title" content="EJAM"', false)
             ->assertSee('property="og:description" content="Bored at home? See what&#039;s on near you and go play."', false)
             ->assertSee('property="og:image" content="'.asset('images/og/default.png').'"', false)
             ->assertSee('property="og:url" content="'.url('/').'"', false)
@@ -44,7 +44,7 @@ class LinkPreviewTest extends TestCase
             ->get(route('events.show', $event))
             ->assertOk()
             ->assertSee('property="og:title" content="Sunday football"', false)
-            ->assertSee('property="og:site_name" content="Varza"', false)
+            ->assertSee('property="og:site_name" content="EJAM"', false)
             ->assertSee('Football, '.$when.', Park pitch. Come play. 0 of 10 going · 10 spots left.', false)
             ->assertSee('property="og:image" content="'.asset('images/og/football.png').'"', false)
             ->assertSee('name="twitter:card" content="summary_large_image"', false);

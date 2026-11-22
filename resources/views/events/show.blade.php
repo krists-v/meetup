@@ -92,6 +92,9 @@
                     <x-ui.badge tone="neutral">
                         {{ $event->visibility === 'public' ? 'Public game' : 'Private game' }}
                     </x-ui.badge>
+                    @if ($event->come_solo)
+                        <x-ui.badge tone="neutral">Come solo</x-ui.badge>
+                    @endif
                     @if ($event->description)
                         <p class="whitespace-pre-line text-base text-ink">{{ $event->description }}</p>
                     @endif

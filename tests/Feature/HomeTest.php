@@ -119,19 +119,30 @@ class HomeTest extends TestCase
 
         $response = $this->get('/')
             ->assertOk()
-            ->assertSee('Saturday padel')
             ->assertSee('Sunday climb')
             ->assertDontSee('Nothing on this weekend.')
-            ->assertDontSee('Weekday football')
+            ->assertSee('Weekday football')
             ->assertDontSee('Next week run')
             ->assertDontSee('Secret hike')
             ->assertDontSee('Last weekend bowls');
+
+        $cards = $this->listedCards($response->getContent());
+        $this->assertStringContainsString('Saturday padel', $cards);
+        $this->assertStringContainsString('Sunday climb', $cards);
+        $this->assertStringNotContainsString('Weekday football', $cards);
 
         foreach (range(1, 4) as $slot) {
             $response->assertSee('Weekend slot '.$slot);
         }
 
         $response->assertDontSee('Weekend slot 5');
+    }
+
+    private function listedCards(string $html): string
+    {
+        preg_match_all('/<article\\b.*?<\/article>/s', $html, $cards);
+
+        return implode("\n", $cards[0]);
     }
 
     public function test_signed_in_visitor_skips_the_homepage(): void

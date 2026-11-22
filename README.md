@@ -1,8 +1,8 @@
-# Varza
+# EJAM
 
-Varza is a small web app for organising sports with friends. A group can create a padel, basketball, football, tennis, hockey, volleyball, or other event, paste one invite link into WhatsApp, and collect Going / Maybe / Not going replies. It is meant to be used on a phone.
+EJAM is a small web app for organising sports with friends. A group can create a padel, basketball, football, tennis, hockey, volleyball, or other event, paste one invite link into WhatsApp, and collect Going / Maybe / Not going replies. It is meant to be used on a phone.
 
-The default app name is Varza. If a host still has `APP_NAME` set to an older value, change it to `Varza`.
+The default app name is EJAM. If a host still has `APP_NAME` set to an older value, change it to `EJAM`.
 
 Public events show up for every logged-in user. Private events are visible only to the creator and to people who open the invite link or join.
 
@@ -68,13 +68,13 @@ Set these variables on the service:
 | `APP_ENV` | `production` |
 | `APP_DEBUG` | `false` |
 | `APP_URL` | the public https URL Railway gives the service |
-| `APP_NAME` | `Varza` |
+| `APP_NAME` | `EJAM` |
 | `APP_TIMEZONE` | `Europe/Riga`. Calendar files and Google Calendar links use this zone. |
 | `QUEUE_CONNECTION` | `sync`. The image already sets this. Do not add a queue worker. |
 | `MAIL_MAILER` | `resend` |
 | `RESEND_API_KEY` | API key from Resend. Leave it empty and mail is written to the log instead of failing. |
 | `MAIL_FROM_ADDRESS` | a sender address on a domain you have verified in Resend |
-| `MAIL_FROM_NAME` | `Varza` |
+| `MAIL_FROM_NAME` | `EJAM` |
 | `CONTACT_EMAIL` | address on the privacy and terms pages. Player reports are emailed here when it is set. Leave it blank and the report is still saved. |
 | `LOG_CHANNEL` | `stderr` in production, so logs show up in Railway. The image sets this, and `docker/entrypoint.sh` falls back to stderr when it is unset. Local `.env` keeps `stack` / `single`, which writes `storage/logs/laravel.log`. |
 | `SENTRY_LARAVEL_DSN` | optional. Leave it empty and Sentry stays off: the app still boots and serves requests, and it does not call Sentry. |
@@ -83,11 +83,11 @@ Set these variables on the service:
 
 `APP_URL` is what invite links and password-reset links use, so set it before sharing links. In production the app forces HTTPS URLs and marks the session cookie secure. Railway's proxy headers are trusted, so that HTTPS check sees the original request.
 
-Password reset emails use the Varza mail theme. Private games are shared with a link, not an email address, so Varza does not send an invite email.
+Password reset emails use the EJAM mail theme. Private games are shared with a link, not an email address, so EJAM does not send an invite email.
 
 ### SQLite on a volume
 
-Leave `DATABASE_URL` unset. The container stores the database at `/data/database.sqlite`, profile photos at `/data/avatars`, and game photos at `/data/photos`. In the Railway service, add a volume mounted at `/data` so they survive deploys and restarts. Profile photos are limited to 2 MB. When PHP GD is available, Varza resizes them to 256 pixels and turns phone photos upright. Use one instance. SQLite does not suit multiple replicas writing at once.
+Leave `DATABASE_URL` unset. The container stores the database at `/data/database.sqlite`, profile photos at `/data/avatars`, and game photos at `/data/photos`. In the Railway service, add a volume mounted at `/data` so they survive deploys and restarts. Profile photos are limited to 2 MB. When PHP GD is available, EJAM resizes them to 256 pixels and turns phone photos upright. Use one instance. SQLite does not suit multiple replicas writing at once.
 
 ### Postgres
 

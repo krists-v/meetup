@@ -1,15 +1,15 @@
 ---
-description: Varza visual language and product direction. Follow on every UI change.
+description: EJAM visual language and product direction. Follow on every UI change.
 alwaysApply: true
 ---
 
-# Varza design
+# EJAM design
 
-Varza gets people off the couch to play, socialize, and meet someone new. Rainy Saturday, bored at home, open Varza, see what is on nearby, go. The look is calm and quiet: light grey page, white cards, soft grey borders, big type. Color is for status only. Every page uses the same header and footer.
+EJAM gets people off the couch to play, socialize, and meet someone new. Rainy Saturday, bored at home, open EJAM, see what is on nearby, go. The look is calm and quiet: light grey page, white cards, soft grey borders, big type. Color is for status only. Every page uses the same header and footer.
 
 Copy: follow the `varza-voice` skill before any user-facing text. Screen structure: follow the `varza-ux` skill. A new activity: follow the `varza-new-activity` skill.
 
-Do not describe Varza as a tool for ten friends, a small crew, or a WhatsApp replacement. Do not mention WhatsApp on the homepage. The share button inside a game may still say "Share on WhatsApp".
+Do not describe EJAM as a tool for ten friends, a small crew, or a WhatsApp replacement. Do not mention WhatsApp on the homepage. The share button inside a game may still say "Share on WhatsApp".
 
 ## Voice
 
@@ -90,7 +90,7 @@ Use these Blade components instead of restyling raw elements.
 | Component | Use |
 | --- | --- |
 | `x-ui.shell` | The one chrome: `x-ui.header`, the page, `x-ui.footer`, and the logged-in mobile nav. Every layout uses it. |
-| `x-ui.wordmark` | The mark plus the word Varza. Link it home. |
+| `x-ui.wordmark` | The mark plus the word EJAM. Link it home. |
 | `x-ui.page-header` | The title of a screen, with optional subtitle and `actions` slot. |
 | `x-ui.section` | A labeled group on a page. |
 | `x-ui.card` | A white surface for a form, a detail block, or a poll option. Padding is `p-4 sm:p-6`. Pass `highlight` for the soft green best-time card. |

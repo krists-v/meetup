@@ -54,7 +54,7 @@ class GameCalendar
         $lines = [
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
-            'PRODID:-//Varza//Games//EN',
+            'PRODID:-//EJAM//Games//EN',
             'CALSCALE:GREGORIAN',
             'METHOD:PUBLISH',
         ];

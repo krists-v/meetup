@@ -2,7 +2,7 @@
 {{-- Header --}}
 <x-slot:header>
 <x-mail::header :url="config('app.url')">
-Varza
+EJAM
 </x-mail::header>
 </x-slot:header>
 
@@ -21,7 +21,7 @@ Varza
 {{-- Footer --}}
 <x-slot:footer>
 <x-mail::footer>
-Varza. Pick a time, lock the pitch, play.
+EJAM. Pick a time, lock the pitch, play.
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>

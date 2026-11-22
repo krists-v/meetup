@@ -9,7 +9,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.meta', [
-            'title' => $title.' · Varza',
+            'title' => $title.' · EJAM',
             'description' => $description,
         ])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
