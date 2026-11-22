@@ -27,8 +27,8 @@
             </div>
 
             <div class="flex justify-end gap-3">
-                <x-ui.button type="button" variant="secondary" x-on:click="$dispatch('close')">Cancel</x-ui.button>
-                <x-ui.button type="submit" variant="danger">Delete account</x-ui.button>
+                <x-ui.button type="button" variant="secondary" compact x-on:click="$dispatch('close')">Cancel</x-ui.button>
+                <x-ui.button type="submit" variant="danger" compact>Delete account</x-ui.button>
             </div>
         </form>
     </x-ui.modal>

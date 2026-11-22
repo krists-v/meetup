@@ -25,7 +25,7 @@
                             <form method="POST" action="{{ route('players.unblock', $person) }}">
                                 @csrf
                                 @method('DELETE')
-                                <x-ui.button type="submit" variant="secondary">Unblock</x-ui.button>
+                                <x-ui.button type="submit" variant="secondary" compact>Unblock</x-ui.button>
                             </form>
                         </li>
                     @endforeach

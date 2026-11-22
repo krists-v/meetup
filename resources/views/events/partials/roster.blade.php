@@ -20,16 +20,16 @@
                                 <x-ui.avatar :name="$person->name" :user="$person"  />
                                 {{ $person->name }}
                             </span>
-                            <span class="flex flex-col gap-2 sm:flex-row">
+                            <div class="grid grid-cols-2 gap-2">
                                 <form method="POST" action="{{ route('events.roster.confirm', [$event, $person]) }}">
                                     @csrf
-                                    <x-ui.button type="submit" variant="secondary">Confirm</x-ui.button>
+                                    <x-ui.button type="submit" variant="secondary" block>Confirm</x-ui.button>
                                 </form>
                                 <form method="POST" action="{{ route('events.roster.decline', [$event, $person]) }}">
                                     @csrf
-                                    <x-ui.button type="submit" variant="danger">Decline</x-ui.button>
+                                    <x-ui.button type="submit" variant="danger" block>Decline</x-ui.button>
                                 </form>
-                            </span>
+                            </div>
                         </li>
                     @endforeach
                 </ul>
@@ -56,22 +56,22 @@
                                     <x-ui.badge tone="warn">No-show</x-ui.badge>
                                 @endif
                             </span>
-                            <span class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                            <div class="grid gap-2">
                                 @unless ($started || $event->isCreator($person))
                                     <form method="POST" action="{{ route('events.roster.remove', [$event, $person]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <x-ui.button type="submit" variant="danger">Remove</x-ui.button>
+                                        <x-ui.button type="submit" variant="danger" block>Remove</x-ui.button>
                                     </form>
                                 @endunless
                                 @if ($started)
-                                    <form method="POST" action="{{ route('events.roster.attendance', [$event, $person]) }}" class="flex flex-col gap-2 sm:flex-row">
+                                    <form method="POST" action="{{ route('events.roster.attendance', [$event, $person]) }}" class="grid grid-cols-2 gap-2">
                                         @csrf
-                                        <x-ui.button type="submit" name="attended" value="1" variant="secondary">Showed up</x-ui.button>
-                                        <x-ui.button type="submit" name="attended" value="0" variant="secondary">No-show</x-ui.button>
+                                        <x-ui.button type="submit" name="attended" value="1" variant="secondary" block>Showed up</x-ui.button>
+                                        <x-ui.button type="submit" name="attended" value="0" variant="secondary" block>No-show</x-ui.button>
                                     </form>
                                 @endif
-                            </span>
+                            </div>
                         </li>
                     @endforeach
                 </ul>

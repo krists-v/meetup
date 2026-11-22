@@ -71,7 +71,7 @@
                 <template x-for="(time, index) in times" :key="index">
                     <x-ui.input type="datetime-local" x-model="times[index]" x-bind:name="'options[' + index + ']'" />
                 </template>
-                <x-ui.button type="button" variant="ghost" x-on:click="times.push('')">Add another time</x-ui.button>
+                <x-ui.button type="button" variant="ghost" block x-on:click="times.push('')">Add another time</x-ui.button>
                 <p class="text-base text-ink-muted">Add at least two different times.</p>
                 <x-ui.error :messages="$errors->get('options')" />
             </div>
@@ -159,6 +159,6 @@
                 <x-ui.button type="submit" block>Start the game</x-ui.button>
             </div>
         @endif
-        <x-ui.button variant="ghost" :href="$editing ? route('events.show', $event) : route('dashboard')">Cancel</x-ui.button>
+        <x-ui.button variant="ghost" :href="$editing ? route('events.show', $event) : route('dashboard')" block>Cancel</x-ui.button>
     </div>
 </form>

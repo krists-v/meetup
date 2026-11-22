@@ -3,6 +3,7 @@
     'href' => null,
     'type' => 'button',
     'block' => false,
+    'compact' => false,
 ])
 
 @php
@@ -12,7 +13,11 @@
         'danger' => 'bg-white text-danger ring-1 ring-danger/30 hover:bg-danger-soft',
         default => 'bg-ink text-white hover:bg-ink/90',
     };
-    $width = $block ? 'w-full' : ($variant === 'primary' ? 'w-full sm:w-fit' : 'w-fit');
+    $width = match (true) {
+        $compact => 'w-fit',
+        $block || $variant !== 'primary' => 'w-full',
+        default => 'w-full sm:w-fit',
+    };
     $classes = "motion-press inline-flex min-h-11 items-center justify-center gap-2 rounded-control px-4 py-2.5 text-sm font-bold transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 {$width} {$tone}";
 @endphp
 

@@ -29,8 +29,8 @@
             </div>
         @else
             <div class="flex items-center gap-2">
-                <x-ui.button variant="ghost" :href="route('login')">Log in</x-ui.button>
-                <x-ui.button variant="secondary" :href="route('register')">Sign up</x-ui.button>
+                <x-ui.button variant="ghost" :href="route('login')" compact>Log in</x-ui.button>
+                <x-ui.button variant="secondary" :href="route('register')" compact>Sign up</x-ui.button>
             </div>
         @endauth
     </div>
