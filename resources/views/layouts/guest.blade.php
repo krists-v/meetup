@@ -1,3 +1,5 @@
+@props(['title' => null, 'description' => null, 'image' => null, 'url' => null, 'plain' => false])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -11,11 +13,17 @@
     </head>
     <body class="bg-canvas font-sans text-ink antialiased">
         <x-ui.shell>
-            <main class="mx-auto w-full max-w-md px-4 py-12">
-                <x-ui.card class="px-6 py-8">
+            @if ($plain)
+                <main class="mx-auto w-full max-w-content px-4 py-6 sm:px-6">
                     {{ $slot }}
-                </x-ui.card>
-            </main>
+                </main>
+            @else
+                <main class="mx-auto w-full max-w-md px-4 py-12">
+                    <x-ui.card>
+                        {{ $slot }}
+                    </x-ui.card>
+                </main>
+            @endif
         </x-ui.shell>
     </body>
 </html>

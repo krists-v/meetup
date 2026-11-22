@@ -166,18 +166,6 @@
     display: block;
 }
 
-.bg-pitch-wash,
-.bg-pitch-mesh,
-.bg-pitch-band,
-.glass-card {
-    background: var(--color-canvas);
-    color: var(--color-ink);
-    box-shadow: none;
-}
-
-.bg-grain::after {
-    content: none;
-}
 
 @keyframes motion-pop {
     from { transform: scale(0.96); }

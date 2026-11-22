@@ -7,7 +7,7 @@
         {{ $slot }}
     </div>
 
-    <x-ui.footer @class(['mx-auto w-full max-w-5xl px-4 pt-2', 'pb-24 sm:pb-8' => auth()->check(), 'pb-8' => auth()->guest()]) />
+    <x-ui.footer @class(['mx-auto w-full max-w-content px-4 pt-2 sm:px-6', 'pb-24 sm:pb-8' => auth()->check(), 'pb-8' => auth()->guest()]) />
 
     @auth
         <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-canvas sm:hidden" style="padding-bottom: env(safe-area-inset-bottom)" aria-label="Mobile">

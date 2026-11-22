@@ -125,15 +125,17 @@ class DesignSystemTest extends TestCase
         foreach (Event::SPORTS as $sport => $label) {
             $this->blade('<x-ui.chip :sport="$sport" />', ['sport' => $sport])
                 ->assertSee($label)
-                ->assertSee('bg-mist', false)
-                ->assertSee('border-line', false)
+                ->assertSee('bg-white', false)
+                ->assertSee('ring-line', false)
+                ->assertSee('min-h-11', false)
                 ->assertSee('text-ink', false);
         }
 
         $this->blade('<x-ui.chip sport="curling" />')
             ->assertSee('Other')
-            ->assertSee('bg-mist', false)
-            ->assertSee('border-line', false);
+            ->assertSee('bg-white', false)
+            ->assertSee('ring-line', false)
+            ->assertSee('min-h-11', false);
     }
 
     public function test_empty_state_offers_a_next_step(): void
@@ -240,11 +242,12 @@ class DesignSystemTest extends TestCase
         $this->actingAs($user)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('When')
             ->assertSee('Thursday, 10 December')
             ->assertSee('18:00')
-            ->assertSee('Where')
-            ->assertSee('Players')
+            ->assertSee('Park pitch')
+            ->assertSee('Hosted by '.$user->name)
+            ->assertSee('Public game')
+            ->assertSee($event->levelLabel())
             ->assertSee('https://www.google.com/maps/search/?api=1&amp;query=Park%20pitch', false)
             ->assertSee('images/sports/padel.svg', false);
     }
@@ -256,6 +259,8 @@ class DesignSystemTest extends TestCase
         $this->assertIsString($css);
         $this->assertStringContainsString('--canvas: 245 245 247;', $css);
         $this->assertStringContainsString('--mist: 229 229 234;', $css);
+        $this->assertStringContainsString('--highlight: 240 250 243;', $css);
+        $this->assertStringContainsString('--highlight-line: 197 232 208;', $css);
 
         $this->get('/')
             ->assertOk()
@@ -266,10 +271,14 @@ class DesignSystemTest extends TestCase
         $this->blade('<x-ui.card>Thursday padel</x-ui.card>')
             ->assertSee('bg-white', false)
             ->assertSee('border-line', false)
-            ->assertSee('shadow-card', false);
+            ->assertSee('shadow-card', false)
+            ->assertSee('p-4', false);
 
-        $this->assertStringContainsString('--highlight: 240 250 243;', $css);
-        $this->assertStringContainsString('--highlight-line: 197 232 208;', $css);
+        $this->blade('<x-ui.card highlight>Best time</x-ui.card>')
+            ->assertSee('bg-highlight', false)
+            ->assertSee('border-highlight-line', false)
+            ->assertDontSee('shadow-card', false)
+            ->assertDontSee('outline-2', false);
     }
 
     public function test_the_highlight_card_has_one_green_edge(): void

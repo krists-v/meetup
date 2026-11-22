@@ -1,29 +1,27 @@
 <x-app-layout title="You" description="This is the name people see when you show up.">
-    <x-slot name="header">
-        <x-ui.page-header title="You" subtitle="This is the name people see when you show up." />
-    </x-slot>
+    <x-ui.page-header title="You" subtitle="This is the name people see when you show up." />
 
-    <div class="space-y-4">
-        <x-ui.card class="p-4 sm:p-6">
+    <div class="mt-6 space-y-4">
+        <x-ui.card >
             @include('profile.partials.update-profile-information-form')
         </x-ui.card>
 
-        <x-ui.card class="p-4 sm:p-6">
+        <x-ui.card >
             @include('profile.partials.update-password-form')
         </x-ui.card>
 
-        <x-ui.card class="space-y-3 p-4 sm:p-6">
+        <x-ui.card class="space-y-3">
             <header>
-                <h2 class="text-lg font-semibold text-ink">Blocked</h2>
-                <p class="mt-1 text-sm text-ink-muted">People you block stay off your games, and their notes stay hidden.</p>
+                <h2 class="text-lg font-bold text-ink">Blocked</h2>
+                <p class="mt-1 text-base text-ink-muted">People you block stay off your games, and their notes stay hidden.</p>
             </header>
             @if ($blocked->isEmpty())
-                <p class="text-sm text-ink-muted">No one is blocked.</p>
+                <p class="text-base text-ink-muted">No one is blocked.</p>
             @else
                 <ul class="space-y-2">
                     @foreach ($blocked as $person)
                         <li class="flex min-h-11 items-center justify-between gap-3">
-                            <a href="{{ route('players.show', $person) }}" class="truncate text-sm font-medium text-ink">{{ $person->name }}</a>
+                            <a href="{{ route('players.show', $person) }}" class="truncate text-base font-medium text-ink">{{ $person->name }}</a>
                             <form method="POST" action="{{ route('players.unblock', $person) }}">
                                 @csrf
                                 @method('DELETE')
@@ -35,7 +33,7 @@
             @endif
         </x-ui.card>
 
-        <x-ui.card class="p-4 sm:p-6">
+        <x-ui.card >
             @include('profile.partials.delete-user-form')
         </x-ui.card>
 

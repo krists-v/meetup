@@ -30,7 +30,7 @@
         <x-ui.button type="submit" block>Save</x-ui.button>
     </form>
 
-    <p class="mt-4 text-sm">
+    <p class="mt-4 text-base">
         <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('login') }}">Back to log in</a>
     </p>
 </x-guest-layout>

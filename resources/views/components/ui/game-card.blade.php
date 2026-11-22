@@ -11,7 +11,7 @@
         <a href="{{ route('events.show', $event) }}" class="block overflow-hidden rounded-2xl">
             <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-48 w-full object-cover" />
         </a>
-        <span class="absolute bottom-3 left-6 rounded-full bg-white/75 px-3 py-1 text-sm font-medium text-ink backdrop-blur-md">{{ $event->areaLabel() }}</span>
+        <span class="absolute bottom-3 left-6 rounded-full bg-white px-3 py-1 text-sm font-medium text-ink">{{ $event->areaLabel() }}</span>
     </div>
 
     <div class="space-y-4 px-5 pb-5 pt-4">
@@ -37,7 +37,7 @@
 
         <div class="border-t border-line pt-4">
             <div class="flex items-center justify-between gap-3">
-                <p class="text-sm text-ink-muted">Hosted by {{ $event->creator->name }}</p>
+                <p class="text-base text-ink-muted">Hosted by {{ $event->creator->name }}</p>
                 @if ($event->priceLabel())
                     <p class="text-base font-bold text-ink">{{ $event->priceLabel() }}</p>
                 @endif

@@ -21,6 +21,6 @@
     };
 @endphp
 
-<span {{ $attributes->merge(['class' => "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold {$classes}"]) }}>
+<span {{ $attributes->merge(['class' => "inline-flex items-center rounded-full px-2.5 py-1 text-sm font-semibold {$classes}"]) }}>
     {{ $presetLabel ?? $slot }}
 </span>

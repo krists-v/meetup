@@ -4,7 +4,7 @@
         <p class="text-base text-ink-muted">Log in, then see what's on.</p>
     </div>
 
-    <x-auth-session-status class="mt-4" :status="session('status')" />
+    <x-ui.status class="mt-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-4">
         @csrf
@@ -21,15 +21,12 @@
             <x-ui.error :messages="$errors->get('password')" />
         </div>
 
-        <label for="remember_me" class="flex min-h-11 items-center gap-2">
-            <input id="remember_me" type="checkbox" class="rounded border-line text-ink focus:ring-ink" name="remember">
-            <span class="text-sm text-ink-muted">{{ __('Remember me') }}</span>
-        </label>
+        <x-ui.checkbox id="remember_me" name="remember">{{ __('Remember me') }}</x-ui.checkbox>
 
         <x-ui.button type="submit" block>{{ __('Log in') }}</x-ui.button>
     </form>
 
-    <p class="mt-4 flex items-center justify-between gap-3 text-sm">
+    <p class="mt-4 flex items-center justify-between gap-3 text-base">
         @if (Route::has('password.request'))
             <a class="font-medium text-ink underline underline-offset-2 hover:text-ink-muted" href="{{ route('password.request') }}">Forgot your password?</a>
         @endif

@@ -5,7 +5,7 @@
         <div>
             <h2 class="text-lg font-bold tracking-tight text-ink">{{ $title }}</h2>
             @if ($description)
-                <p class="mt-1 text-sm text-ink-muted">{{ $description }}</p>
+                <p class="mt-1 text-base text-ink-muted">{{ $description }}</p>
             @endif
         </div>
     @endif

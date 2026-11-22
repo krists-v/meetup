@@ -1,7 +1,7 @@
 <section>
     <header>
-        <h2 class="text-lg font-semibold text-ink">Your details</h2>
-        <p class="mt-1 text-sm text-ink-muted">This is the name people see when you show up.</p>
+        <h2 class="text-lg font-bold text-ink">Your details</h2>
+        <p class="mt-1 text-base text-ink-muted">This is the name people see when you show up.</p>
         <p class="mt-3">
             <x-ui.badge tone="neutral" data-attendance="{{ $user->attendanceLabel() }}">{{ $user->attendanceLabel() }}</x-ui.badge>
         </p>
@@ -18,14 +18,11 @@
         <div class="space-y-2">
             <x-ui.label for="avatar" value="Photo" />
             @if ($user->avatarUrl())
-                <x-ui.avatar :name="$user->name" :user="$user" class="h-16 w-16 text-lg" />
-                <label class="flex min-h-11 items-center gap-2 text-sm text-ink">
-                    <input type="checkbox" name="remove_avatar" value="1" class="rounded border-line text-ink focus:ring-ink" @checked(old('remove_avatar')) />
-                    Remove photo
-                </label>
+                <x-ui.avatar :name="$user->name" :user="$user" size="photo" />
+                <x-ui.checkbox name="remove_avatar" value="1" :checked="(bool) old('remove_avatar')">Remove photo</x-ui.checkbox>
             @endif
-            <input id="avatar" name="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="block w-full text-sm text-ink file:me-3 file:min-h-11 file:rounded-control file:border-0 file:bg-mist file:px-4 file:py-2.5 file:text-sm file:font-bold file:text-ink" />
-            <p class="text-sm text-ink-muted">Optional. A square photo works best.</p>
+            <x-ui.file id="avatar" name="avatar" accept="image/jpeg,image/png,image/webp,image/gif" />
+            <p class="text-base text-ink-muted">Optional. A square photo works best.</p>
             <x-ui.error :messages="$errors->get('avatar')" />
         </div>
 
@@ -42,7 +39,7 @@
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div>
-                    <p class="text-sm text-ink">
+                    <p class="text-base text-ink">
                         We still need to confirm your email.
                         <button form="send-verification" class="font-medium text-ink underline underline-offset-2">
                             Send it again.
@@ -50,7 +47,7 @@
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 text-sm font-medium text-success">
+                        <p class="mt-2 text-base font-medium text-success">
                             A new link is on its way.
                         </p>
                     @endif
@@ -59,8 +56,8 @@
         </div>
 
         <fieldset class="space-y-3">
-            <legend class="text-sm font-medium text-ink">Sports you play</legend>
-            <p class="text-sm text-ink-muted">Add your level if you want. People see it when you show up.</p>
+            <legend class="text-base font-medium text-ink">Sports you play</legend>
+            <p class="text-base text-ink-muted">Add your level if you want. People see it when you show up.</p>
             @php($selectedSports = old('favorite_sports', $user->favorite_sports ?? []))
             @php($savedLevels = old('sport_levels', $user->sport_levels ?? []))
             @if (collect($user->sport_levels ?? [])->filter(fn ($level, $sport) => $user->sportLevel($sport))->isNotEmpty())
@@ -84,7 +81,7 @@
                                 class="peer sr-only"
                                 @checked(in_array($value, $selectedSports, true))
                             />
-                            <label for="favorite-{{ $value }}" class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-line transition duration-150 peer-checked:bg-ink peer-checked:text-white peer-checked:ring-ink peer-focus-visible:ring-2 peer-focus-visible:ring-ink peer-focus-visible:ring-offset-2">{{ $label }}</label>
+                            <x-ui.chip :for="'favorite-'.$value">{{ $label }}</x-ui.chip>
                         </div>
                         <div class="min-w-40 flex-1 sm:flex-none">
                             <x-ui.label :for="'sport-level-'.$value" value="{{ $label }} level" class="sr-only" />
@@ -108,11 +105,8 @@
         <div class="space-y-2">
             <x-ui.label for="game_reminders" value="Reminders" />
             <input type="hidden" name="game_reminders" value="0">
-            <label for="game_reminders" class="flex min-h-11 items-center gap-2 text-sm text-ink">
-                <input id="game_reminders" type="checkbox" name="game_reminders" value="1" class="rounded border-line text-ink focus:ring-ink" @checked(old('game_reminders', $user->game_reminders)) />
-                Remind me before a game
-            </label>
-            <p class="text-sm text-ink-muted">About three hours before. You'll get the time, the place, and who's in.</p>
+            <x-ui.checkbox id="game_reminders" name="game_reminders" value="1" :checked="filter_var(old('game_reminders', $user->game_reminders), FILTER_VALIDATE_BOOLEAN)">Remind me before a game</x-ui.checkbox>
+            <p class="text-base text-ink-muted">About three hours before. You'll get the time, the place, and who's in.</p>
         </div>
 
         <div class="space-y-3">
@@ -124,7 +118,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-ink-muted"
+                    class="text-base text-ink-muted"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>
