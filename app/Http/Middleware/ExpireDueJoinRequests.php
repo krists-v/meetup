@@ -14,7 +14,7 @@ class ExpireDueJoinRequests
      */
     public function handle(Request $request, Closure $next): Response
     {
-        JoinRequestExpiry::expire();
+        JoinRequestExpiry::markDue();
 
         return $next($request);
     }

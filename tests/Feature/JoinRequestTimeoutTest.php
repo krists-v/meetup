@@ -3,12 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\Event;
+use App\Models\EventUser;
 use App\Models\User;
 use App\Notifications\PlayerNotice;
 use App\Notifications\PromotedFromWaitlist;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Support\Facades\Event as EventFacade;
 use Illuminate\Support\Facades\Notification;
+use RuntimeException;
 use Tests\TestCase;
 
 class JoinRequestTimeoutTest extends TestCase
@@ -103,6 +107,9 @@ class JoinRequestTimeoutTest extends TestCase
             ->assertSee('I\'m in');
 
         $this->assertSame('expired', $event->fresh()->getUserStatus($player));
+        Notification::assertNothingSent();
+
+        $this->artisan('join-requests:expire')->assertSuccessful();
         Notification::assertSentTo($player, PlayerNotice::class);
 
         $this->actingAs($host)
@@ -115,6 +122,35 @@ class JoinRequestTimeoutTest extends TestCase
             ->assertRedirect();
 
         $this->assertSame('going', $event->fresh()->getUserStatus($player));
+    }
+
+    public function test_a_failed_expiry_notice_is_sent_on_the_next_run(): void
+    {
+        $host = User::factory()->create();
+        $player = User::factory()->create();
+        $event = $this->game($host, now()->addDays(2));
+        $this->request($event, $player, now()->subHours(25));
+
+        EventFacade::listen(MessageSending::class, function (): void {
+            throw new RuntimeException('Mail is down.');
+        });
+
+        try {
+            $this->artisan('join-requests:expire')->assertSuccessful();
+        } finally {
+            EventFacade::forget(MessageSending::class);
+        }
+
+        $this->assertSame('expired', $event->fresh()->getUserStatus($player));
+        $this->assertNull(EventUser::query()->where('user_id', $player->id)->value('expiry_notified_at'));
+
+        Notification::fake();
+        $this->artisan('join-requests:expire')->assertSuccessful();
+        Notification::assertSentToTimes($player, PlayerNotice::class, 1);
+        $this->assertNotNull(EventUser::query()->where('user_id', $player->id)->value('expiry_notified_at'));
+
+        $this->artisan('join-requests:expire')->assertSuccessful();
+        Notification::assertSentToTimes($player, PlayerNotice::class, 1);
     }
 
     public function test_join_requests_expire_every_minute(): void

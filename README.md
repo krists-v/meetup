@@ -58,7 +58,7 @@ Laravel Boost is a dev dependency for Cursor. Its generated guidelines are in `A
 
 The repo includes a `Dockerfile` and `railway.toml`. Railway builds the image, runs `php artisan migrate --force` on each boot, and serves the app on Railway's `PORT`.
 
-Railway does not run cron. On boot the container also starts `php artisan schedule:work`, so `join-requests:expire` runs every minute beside the web server. Each web request runs the same expiry, so a missed tick still clears a due request before the page renders. A pending request expires 24 hours after it was made, or 2 hours before the game starts, whichever comes first. A poll has no start time yet, so only the 24 hour limit applies. The player sees "Request expired" and gets the same kind of mail as the other roster notices.
+Railway does not run cron. On boot the container also starts `php artisan schedule:work`, so `join-requests:expire` runs every minute beside the web server. That command sends the mail. A web request only clears a due request so the page can say "Request expired"; it does not call the mailer. If a send fails, the row stays unmarked and the next minute tries again. A pending request expires 24 hours after it was made, or 2 hours before the game starts, whichever comes first. A poll has no start time yet, so only the 24 hour limit applies.
 
 Set these variables on the service:
 

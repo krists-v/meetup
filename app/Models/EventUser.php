@@ -30,6 +30,7 @@ class EventUser extends Pivot
     {
         return [
             'attended' => 'boolean',
+            'expiry_notified_at' => 'datetime',
         ];
     }
 }
