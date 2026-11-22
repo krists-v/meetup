@@ -15,7 +15,7 @@
             @else
                 <ul class="space-y-3">
                     @foreach ($requests as $person)
-                        <li class="flex flex-col gap-3 border-t border-line pt-3 first:border-t-0 first:pt-0 sm:flex-row sm:items-center sm:justify-between" data-roster-request="{{ $person->id }}">
+                        <li class="flex flex-col gap-3 border-t border-line pt-3 first:border-t-0 first:pt-0" data-roster-request="{{ $person->id }}">
                             <span class="flex min-h-11 items-center gap-2 text-base text-ink">
                                 <x-ui.avatar :name="$person->name" :user="$person"  />
                                 {{ $person->name }}
