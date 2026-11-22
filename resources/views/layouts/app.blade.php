@@ -10,10 +10,10 @@
         <script>document.documentElement.classList.add('js');</script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-white font-sans text-ink antialiased">
+    <body class="bg-canvas font-sans text-ink antialiased">
         <x-ui.shell>
             @isset($header)
-                <div class="border-b border-line bg-white">
+                <div class="border-b border-line bg-canvas">
                     <div class="mx-auto max-w-content px-4 py-5 sm:px-6">
                         {{ $header }}
                     </div>

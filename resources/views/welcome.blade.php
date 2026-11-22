@@ -8,7 +8,7 @@
         ])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-white font-sans text-ink antialiased">
+    <body class="bg-canvas font-sans text-ink antialiased">
         <x-ui.shell>
             <div class="mx-auto grid w-full max-w-5xl items-center gap-12 px-4 py-16 lg:grid-cols-2 lg:py-24">
                 <div class="space-y-6">
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="mx-auto w-full max-w-sm" aria-hidden="true">
-                    <div class="overflow-hidden rounded-card border border-line bg-white">
+                    <div class="overflow-hidden rounded-card border border-line bg-white shadow-card">
                         <div class="relative px-3 pt-3">
                             <img src="{{ asset('images/sports/padel.svg') }}" alt="" class="h-48 w-full rounded-2xl object-cover" />
                             <span class="absolute bottom-3 left-6 rounded-full bg-white/75 px-3 py-1 text-sm font-medium text-ink">Mežaparks</span>
@@ -43,7 +43,7 @@
                                     <p class="text-sm text-ink-muted">Hosted by Alex</p>
                                     <p class="text-base font-bold text-ink">€5 / person</p>
                                 </div>
-                                <span class="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-control bg-mist text-sm font-bold text-ink">I'm in</span>
+                                <span class="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-control bg-ink text-sm font-bold text-white">I'm in</span>
                             </div>
                         </div>
                     </div>
@@ -90,17 +90,17 @@
                 <section class="mx-auto w-full max-w-5xl px-4 pb-16">
                     <h2 class="text-3xl font-bold tracking-tight">How it works</h2>
                     <ol class="mt-6 grid gap-4 sm:grid-cols-3">
-                        <li class="rounded-card border border-line bg-white p-6">
+                        <li class="rounded-card border border-line bg-white p-6 shadow-card">
                             <x-ui.icon name="map-pin" class="h-6 w-6 text-ink-faint" />
                             <h3 class="mt-4 text-lg font-bold">Find a game</h3>
                             <p class="mt-1 text-sm text-ink-muted">See what's on near you.</p>
                         </li>
-                        <li class="rounded-card border border-line bg-white p-6">
+                        <li class="rounded-card border border-line bg-white p-6 shadow-card">
                             <x-ui.icon name="check" class="h-6 w-6 text-ink-faint" />
                             <h3 class="mt-4 text-lg font-bold">Tap I'm in</h3>
                             <p class="mt-1 text-sm text-ink-muted">One tap, and you're on the list.</p>
                         </li>
-                        <li class="rounded-card border border-line bg-white p-6">
+                        <li class="rounded-card border border-line bg-white p-6 shadow-card">
                             <x-ui.icon name="users" class="h-6 w-6 text-ink-faint" />
                             <h3 class="mt-4 text-lg font-bold">Show up and play</h3>
                             <p class="mt-1 text-sm text-ink-muted">Meet someone new and play.</p>

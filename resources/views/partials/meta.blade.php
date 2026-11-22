@@ -9,7 +9,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>{{ $previewTitle }}</title>
 <meta name="description" content="{{ $previewDescription }}">
-<meta name="theme-color" content="#1c633b">
+<meta name="theme-color" content="#F5F5F7">
 <meta property="og:site_name" content="Varza">
 <meta property="og:title" content="{{ $previewTitle }}">
 <meta property="og:description" content="{{ $previewDescription }}">

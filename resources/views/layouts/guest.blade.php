@@ -9,7 +9,7 @@
         ])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-white font-sans text-ink antialiased">
+    <body class="bg-canvas font-sans text-ink antialiased">
         <x-ui.shell>
             <main class="mx-auto w-full max-w-md px-4 py-12">
                 <x-ui.card class="px-6 py-8">

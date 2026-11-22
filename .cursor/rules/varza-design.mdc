@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Varza design
 
-Varza gets people off the couch to play, socialize, and meet someone new. Rainy Saturday, bored at home, open Varza, see what is on nearby, go. The look is calm and quiet: white page, soft grey borders, big type. Color is for status only. Every page uses the same header and footer.
+Varza gets people off the couch to play, socialize, and meet someone new. Rainy Saturday, bored at home, open Varza, see what is on nearby, go. The look is calm and quiet: light grey page, white cards, soft grey borders, big type. Color is for status only. Every page uses the same header and footer.
 
 Copy: follow the `varza-voice` skill before any user-facing text. Screen structure: follow the `varza-ux` skill. A new activity: follow the `varza-new-activity` skill.
 
@@ -21,17 +21,18 @@ Locked strings, until a copy change updates the tests too: "Your next game", "Op
 
 ## Color
 
-Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. The page is white (`canvas`), text is near-black (`ink`), secondary text is grey (`ink-muted`, `ink-faint`), fills are `mist`, and borders are `line`. `success` and `success-soft` are the only green, and only for status. Do not color a link, a button, a logo, or a page with pitch green.
+Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. The page is light grey (`canvas`, `#F5F5F7`), text is near-black (`ink`), secondary text is grey (`ink-muted`, `ink-faint`), soft fills are `mist` (a step darker than the page), and borders are `line`. `success` and `success-soft` are the only green, and only for status. Do not color a link, a button, a logo, or a page with pitch green.
 
-- The page is white. Cards are white with a 1px `line` border and a large radius. No heavy shadow, no gradient, no mesh.
+- The page, header, and mobile nav use `canvas`. The header keeps a bottom `line` border and `shadow-card` so the bar still reads on the grey. Cards, sheets, menus, and inputs stay white with a 1px `line` border, a large radius, and `shadow-card`. No heavy shadow, no gradient, no mesh.
 - Pitch green is for status only: spots left, you're in, a warning, a danger. It is not a button color.
-- Primary buttons are `bg-mist` with bold ink text. Hover is `bg-line`. Focus rings are ink.
+- Primary buttons, including "I'm in", are `bg-ink` with white text. Hover is `bg-ink/90`. Secondary buttons are `bg-mist` with ink text and a `line` ring, so they read on both the grey page and a white card. Focus rings are ink.
+- Chips are `bg-mist` with a `line` border and ink text. Neutral badges are white with a `line` ring and ink text. Status badges stay on `success-soft` or `warn-soft`. Each of these has to stay visible on `canvas` and on white.
 - Neutrals: `canvas` page background, `ink` text, `ink-muted` secondary text, `ink-faint` placeholders, `line` borders, `sand` inside illustrations.
 - Status: `success` (same green family), `warn`, `danger`, each with a `soft` background.
-- Activity chips are neutral `bg-mist`. Do not color a chip, a button, or a page with an activity accent.
+- Do not color a chip, a button, or a page with an activity accent.
 - Do not use Tailwind's default rainbow classes (`indigo`, `orange`, `sky`, `rose`, and the rest). Extra hues go through an `--activity-*` token.
 
-Logged-in screens use canvas and white cards. No mesh, grain, or glass there.
+Logged-in screens use the grey canvas and white cards. No mesh, grain, or glass there.
 
 ## Marketing pages
 
@@ -52,7 +53,7 @@ Use the 4px scale: 1, 2, 3, 4, 6, 8, 12, 16 (`--space-*`). Stack related items w
 - `rounded-control` (14px) on inputs, buttons, and chips.
 - `rounded-card` (28px) on cards. Photos inside a card are `rounded-2xl`.
 - `rounded-full` on badges, avatars, and activity chips.
-- No drop shadow on cards or buttons. A 1px `line` border is the edge. `shadow-card` and `shadow-lift` are empty.
+- `shadow-card` is a faint lift on white cards and the header. `shadow-lift` is for menus and dialogs. A 1px `line` border is still the edge. Buttons have no shadow.
 
 ## Icons
 
@@ -91,7 +92,7 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
 | `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, What's on, Start a game, account menu. |
 | `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. |
-| `x-ui.chip` | Activity name on a neutral mist chip. |
+| `x-ui.chip` | Activity name on a mist chip with a line border. |
 | `x-ui.label` | Every control's label. |
 | `x-ui.input` | Text, email, password, number, date. |
 | `x-ui.select` | A native select when there are many short options and chips would wrap into a mess. |
@@ -110,4 +111,4 @@ Game photos are the host's upload, or the grey picture in `public/images/sports/
 
 ## Checklist
 
-Point at the one primary action. Facts are info rows. White page, grey border, color only for status. Then run the `varza-voice` and `varza-ux` checklists.
+Point at the one primary action. Facts are info rows. Grey page, white cards, near-black primary, color only for status. Then run the `varza-voice` and `varza-ux` checklists.

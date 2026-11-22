@@ -16,7 +16,7 @@
 
     $classes = match ($tone) {
         'warn' => 'bg-warn-soft text-warn',
-        'neutral' => 'bg-canvas text-ink-muted ring-1 ring-line',
+        'neutral' => 'bg-white text-ink ring-1 ring-line',
         default => 'bg-success-soft text-success',
     };
 @endphp

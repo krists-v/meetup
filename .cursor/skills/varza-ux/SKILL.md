@@ -9,13 +9,13 @@ One screen, one next step. The person should know what to do and where to look w
 
 Visual tokens, the icon set, and the motion kit are in `.cursor/rules/varza-design.mdc`. Copy is in the `varza-voice` skill. Follow both.
 
-Every page is the same quiet page: white, 1px grey borders, big type, mist buttons. No mesh, grain, glass, gradient, or hero entrance. Color is for status only. One header and one footer, from `x-ui.shell`.
+Every page is the same quiet page: light grey canvas, white cards, 1px grey borders, big type. The main button is near-black with white text. No mesh, grain, glass, gradient, or hero entrance. Color is for status only. One header and one footer, from `x-ui.shell`.
 
 ## Hierarchy
 
 - One primary action per screen. Everything else is `secondary`, `ghost`, or a text link.
 - Page title first, then the primary action, then supporting facts.
-- Do not make two filled buttons compete. The sticky mobile action and the in-page primary are the same action, not two different ones. Primary buttons are mist with bold ink text.
+- Do not make two filled buttons compete. The sticky mobile action and the in-page primary are the same action, not two different ones. Primary buttons are near-black with white text. Secondary buttons are soft grey.
 - Marketing headlines are `text-5xl` or `text-6xl font-bold`. App page titles are `text-3xl font-bold`.
 
 ## Info row
@@ -42,7 +42,7 @@ Same anatomy on every game card. White, 1px grey border, big radius, generous ty
 2. Bold title on the left. Status chip on the right, soft green when there are spots left (`2 spots left`).
 3. Grey line icons and larger text: calendar `Saturday, 21 November · 12:00`, map pin for the place, users `2 / 4 players`, bar chart for the level.
 4. A thin divider. `Hosted by Alex` in muted grey on the left. Bold `€5 / person` on the right when there is a cost. `Free` when the cost is 0. Hide it when there is no cost.
-5. One full-width mist button, bold black text: `I'm in`. The map link sits outside the title link.
+5. One full-width near-black button, white text: `I'm in`. The map link sits outside the title link.
 
 Do not invent a second card shape for public games, the dashboard, or "this weekend".
 
@@ -66,7 +66,7 @@ Use `x-ui.empty-state`. Title, one sentence, one action. The action is the next 
 
 ## Accessibility
 
-- Primary button text is ink on mist. Danger text is white on the danger fill. Muted text stays `ink-muted` on white.
+- Primary button text is white on near-black. Secondary text is ink on mist. Danger text stays on the white danger button. Muted text stays `ink-muted` on white.
 - Focus rings stay `ring-ink` with an offset. Do not remove them.
 - Icon-only buttons need an accessible name. Decorative icons are `aria-hidden`.
 - Status banners use `role="status"`.

@@ -3,7 +3,7 @@
     $current = 'rounded-control bg-mist px-3 py-2 text-sm font-semibold text-ink';
 @endphp
 
-<header data-app-header class="sticky top-0 z-30 border-b border-line bg-white">
+<header data-app-header class="sticky top-0 z-30 border-b border-line bg-canvas shadow-card">
     <div class="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4 sm:px-6">
         <x-ui.wordmark href="{{ url('/') }}" />
 
@@ -19,7 +19,7 @@
                     <x-ui.avatar :name="auth()->user()->name" :user="auth()->user()" />
                     <span class="hidden max-w-32 truncate text-sm font-medium sm:inline">{{ auth()->user()->name }}</span>
                 </button>
-                <div x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open = false" class="absolute end-0 mt-2 w-48 rounded-card border border-line bg-white py-1" role="menu">
+                <div x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open = false" class="absolute end-0 mt-2 w-48 rounded-card border border-line bg-white py-1 shadow-lift" role="menu">
                     <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 text-sm text-ink hover:bg-mist" role="menuitem">Profile</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
