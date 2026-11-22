@@ -33,15 +33,13 @@
 
 <x-ui.card class="space-y-4">
     <div class="flex items-start gap-3">
-        <div class="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl">
-            <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-full w-full object-cover" />
-            <x-ui.image-pill :label="$event->sportLabel()" />
-        </div>
+        <img src="{{ $event->photoUrl() }}" alt="" class="h-16 w-16 shrink-0 rounded-2xl object-cover" />
         <div class="min-w-0 flex-1">
             <div class="flex items-start justify-between gap-2">
                 <h2 class="text-lg font-bold text-ink">{{ $event->title }}</h2>
                 <x-ui.badge :tone="$tone" class="shrink-0">{{ $chip }}</x-ui.badge>
             </div>
+            <p class="text-base text-ink-muted">{{ $event->sportLabel() }}</p>
         </div>
     </div>
 

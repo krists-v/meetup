@@ -60,7 +60,7 @@ class MyGamesTest extends TestCase
             ->assertSee('Cancel game')
             ->assertSee('Park pitch')
             ->assertSee('Tennis')
-            ->assertSee('data-image-pill', false)
+            ->assertDontSee('data-image-pill', false)
             ->assertDontSee('Joined tomorrow')
             ->assertDontSee('Requested bowls')
             ->assertDontSee('Not mine');
