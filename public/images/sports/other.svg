@@ -1,5 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img">
-  <rect width="800" height="480" fill="#f4f4f5"/>
-  <rect x="48" y="36" width="704" height="408" rx="36" fill="#ececef"/>
-  <circle cx="400" cy="240" r="16" fill="#3f3f46"/><circle cx="350" cy="240" r="10" fill="#8a8a8e"/><circle cx="450" cy="240" r="10" fill="#8a8a8e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="Other">
+  <rect width="800" height="480" fill="#ECF0ED"/>
+  <defs>
+    <clipPath id="other-seam">
+      <circle r="110"/>
+    </clipPath>
+  </defs>
+  <g transform="translate(500 214)">
+    <circle r="118" fill="#ffffff"/>
+    <path d="M-78 -120C-8 -20 -8 20 -78 120" fill="none" stroke="#34443C" stroke-width="12" stroke-linecap="butt" clip-path="url(#other-seam)"/>
+    <circle r="118" fill="none" stroke="#34443C" stroke-width="10"/>
+  </g>
+  <rect x="40" y="300" width="116" height="48" rx="24" fill="#ffffff"/>
+  <text x="98" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#34443C">Other</text>
 </svg>

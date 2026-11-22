@@ -1,5 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img">
-  <rect width="800" height="480" fill="#f4f4f5"/>
-  <rect x="48" y="36" width="704" height="408" rx="36" fill="#ececef"/>
-  <circle cx="400" cy="240" r="80" fill="none" stroke="#3f3f46" stroke-width="10"/><path d="M340 200c40 20 80 20 120 0M340 280c40-20 80-20 120 0M400 160v160" fill="none" stroke="#8a8a8e" stroke-width="8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="Volleyball">
+  <rect width="800" height="480" fill="#F6E8DC"/>
+  <defs>
+    <clipPath id="volleyball-face">
+      <circle cx="0" cy="0" r="112"/>
+    </clipPath>
+  </defs>
+  <circle cx="510" cy="214" r="118" fill="#ffffff"/>
+  <g transform="translate(510 214)" clip-path="url(#volleyball-face)" fill="none" stroke="#703E1C" stroke-width="12" stroke-linecap="round">
+    <path d="M0 -150C60 -50 60 50 0 150"/>
+    <path d="M-140 -80C-20 -30 40 60 120 140"/>
+    <path d="M140 -80C20 -30 -40 60 -120 140"/>
+  </g>
+  <circle cx="510" cy="214" r="118" fill="none" stroke="#703E1C" stroke-width="10"/>
+  <rect x="40" y="300" width="168" height="48" rx="24" fill="#ffffff"/>
+  <text x="124" y="331" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600" fill="#703E1C">Volleyball</text>
 </svg>
