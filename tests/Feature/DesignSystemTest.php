@@ -51,7 +51,7 @@ class DesignSystemTest extends TestCase
             ->assertSee('4 spots left')
             ->assertSee('M16 21v-2', false)
             ->assertSee('Beginners welcome')
-            ->assertSee('M22 4v16', false)
+            ->assertSee('M18 17V9', false)
             ->assertSee('Outdoors')
             ->assertSee('M12 2v2', false)
             ->assertSee('Indoors')
@@ -63,7 +63,7 @@ class DesignSystemTest extends TestCase
         $this->blade('<x-ui.button>I\'m in</x-ui.button>')
             ->assertSee('I\'m in', false)
             ->assertSee('motion-press', false)
-            ->assertSee('bg-pitch-700', false);
+            ->assertSee('bg-mist', false);
 
         $this->blade('<x-ui.button variant="secondary">See what\'s on</x-ui.button>')
             ->assertSee('motion-press', false)
@@ -98,12 +98,12 @@ class DesignSystemTest extends TestCase
         foreach (Event::SPORTS as $sport => $label) {
             $this->blade('<x-ui.chip :sport="$sport" />', ['sport' => $sport])
                 ->assertSee($label)
-                ->assertSee('bg-activity-'.$sport.'-soft', false);
+                ->assertSee('bg-mist', false);
         }
 
         $this->blade('<x-ui.chip sport="curling" />')
             ->assertSee('Other')
-            ->assertSee('bg-activity-other-soft', false);
+            ->assertSee('bg-mist', false);
     }
 
     public function test_empty_state_offers_a_next_step(): void
@@ -137,10 +137,11 @@ class DesignSystemTest extends TestCase
         $html = (string) $this->blade('<x-ui.game-card :event="$event" />', ['event' => $event]);
 
         $this->assertStringContainsString('Thursday padel', $html);
-        $this->assertStringContainsString('Padel', $html);
-        $this->assertStringContainsString('bg-activity-padel-soft', $html);
-        $this->assertStringContainsString('Thu 10 Dec, 18:00', $html);
-        $this->assertStringContainsString('0 of 4 going · 4 spots left', $html);
+        $this->assertStringContainsString('Thursday, 10 December · 18:00', $html);
+        $this->assertStringContainsString('4 spots left', $html);
+        $this->assertStringContainsString('0 / 4 players', $html);
+        $this->assertStringContainsString('images/sports/padel.svg', $html);
+        $this->assertStringContainsString("I'm in", $html);
         $this->assertStringContainsString('https://www.google.com/maps/search/?api=1&amp;query=Park%20pitch', $html);
 
         $show = strpos($html, route('events.show', $event));
@@ -166,7 +167,7 @@ class DesignSystemTest extends TestCase
         $event->participants()->attach($event->user_id, ['status' => 'going']);
 
         $this->blade('<x-ui.game-card :event="$event" />', ['event' => $event->fresh()])
-            ->assertSee('1 of 1 going · 0 spots left')
+            ->assertSee('1 / 1 players')
             ->assertSee('Full')
             ->assertSee('bg-warn-soft', false);
     }
@@ -188,7 +189,7 @@ class DesignSystemTest extends TestCase
         $this->blade('<x-ui.game-card :event="$event" />', ['event' => $event])
             ->assertSee('Pick a time')
             ->assertSee('2 times to pick')
-            ->assertDontSee('Thu 10 Dec, 18:00');
+            ->assertDontSee('Thursday, 10 December');
     }
 
     public function test_game_page_uses_info_rows_for_the_plan(): void
@@ -209,13 +210,12 @@ class DesignSystemTest extends TestCase
         $this->actingAs($user)
             ->get(route('events.show', $event))
             ->assertOk()
-            ->assertSee('Date')
-            ->assertSee('Thu 10 Dec')
-            ->assertSee('Time')
+            ->assertSee('When')
+            ->assertSee('Thursday, 10 December')
             ->assertSee('18:00')
             ->assertSee('Where')
-            ->assertSee('Spots')
+            ->assertSee('Players')
             ->assertSee('https://www.google.com/maps/search/?api=1&amp;query=Park%20pitch', false)
-            ->assertSee('bg-activity-padel-soft', false);
+            ->assertSee('images/sports/padel.svg', false);
     }
 }

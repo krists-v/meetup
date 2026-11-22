@@ -12,10 +12,10 @@
     <img
         src="{{ $user->avatarUrl() }}"
         alt="{{ $name }}"
-        {{ $attributes->merge(['class' => 'inline-flex h-8 w-8 shrink-0 rounded-full bg-pitch-700 object-cover']) }}
+        {{ $attributes->merge(['class' => 'inline-flex h-8 w-8 shrink-0 rounded-full bg-mist object-cover']) }}
     />
 @else
-<span {{ $attributes->merge(['class' => 'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-pitch-700 text-xs font-semibold text-white']) }} title="{{ $name }}">
+<span {{ $attributes->merge(['class' => 'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mist text-xs font-semibold text-ink']) }} title="{{ $name }}">
     <span aria-hidden="true">{{ $initials !== '' ? $initials : '?' }}</span>
     <span class="sr-only">{{ $name }}</span>
 </span>

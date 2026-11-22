@@ -5,6 +5,6 @@
     $text = $label ?? \App\Models\Event::SPORTS[$sport];
 @endphp
 
-<span {{ $attributes->merge(['class' => 'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold '.\App\Models\Event::accentClasses($sport)]) }}>
+<span {{ $attributes->merge(['class' => 'inline-flex items-center rounded-full bg-mist px-2.5 py-1 text-xs font-semibold text-ink ring-1 ring-line']) }}>
     {{ $text }}
 </span>

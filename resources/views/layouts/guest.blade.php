@@ -9,18 +9,13 @@
         ])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-pitch-wash font-sans text-ink antialiased">
-        <div class="flex min-h-screen flex-col px-4 py-6">
-            <div class="mx-auto w-full max-w-md">
-                <x-ui.wordmark href="/" />
-            </div>
-
-            <main class="mx-auto mt-8 w-full max-w-md flex-1">
+    <body class="bg-white font-sans text-ink antialiased">
+        <x-ui.shell>
+            <main class="mx-auto w-full max-w-md px-4 py-8">
                 <x-ui.card class="px-5 py-6 sm:px-6">
                     {{ $slot }}
                 </x-ui.card>
-                <x-ui.footer class="mt-4" />
             </main>
-        </div>
+        </x-ui.shell>
     </body>
 </html>

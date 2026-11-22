@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Varza design
 
-Varza gets people off the couch to play, socialize, and meet someone new. Rainy Saturday, bored at home, open Varza, see what is on nearby, go. Pitch green is the brand. The logged-in app stays calmer than the marketing pages.
+Varza gets people off the couch to play, socialize, and meet someone new. Rainy Saturday, bored at home, open Varza, see what is on nearby, go. The look is calm and quiet: white page, soft grey borders, big type. Color is for status only. Every page uses the same header and footer.
 
 Copy: follow the `varza-voice` skill before any user-facing text. Screen structure: follow the `varza-ux` skill. A new activity: follow the `varza-new-activity` skill.
 
@@ -23,25 +23,19 @@ Locked strings, until a copy change updates the tests too: "Your next game", "Op
 
 Tokens live in `resources/css/app.css` as CSS variables and are mapped in `tailwind.config.js`. Channel variables (`--pitch-700: 28 99 59`) feed Tailwind as `rgb(var(--pitch-700) / <alpha-value>)`, so opacity modifiers such as `bg-pitch-950/40` work. The `--color-*` variables are the same colors without an alpha, for plain CSS.
 
-- Pitch green scale `pitch-50`–`pitch-950`. Primary buttons, links, and focus rings use `pitch-700`. Hover uses `pitch-800`. Soft fills use `pitch-50` and `pitch-100`.
+- The page is white. Cards are white with a 1px `line` border and a large radius. No heavy shadow, no gradient, no mesh.
+- Pitch green is for status only: spots left, you're in, a warning, a danger. It is not a button color.
+- Primary buttons are `bg-mist` with bold ink text. Hover is `bg-line`. Focus rings are ink.
 - Neutrals: `canvas` page background, `ink` text, `ink-muted` secondary text, `ink-faint` placeholders, `line` borders, `sand` inside illustrations.
 - Status: `success` (same green family), `warn`, `danger`, each with a `soft` background.
-- Activity accents are allowed only on chips, tints, and illustrations. Name them as `--activity-*` channel tokens. One accent per activity. Never as a button, body text, or full-page background. Pitch green stays the primary button.
+- Activity chips are neutral `bg-mist`. Do not color a chip, a button, or a page with an activity accent.
 - Do not use Tailwind's default rainbow classes (`indigo`, `orange`, `sky`, `rose`, and the rest). Extra hues go through an `--activity-*` token.
 
 Logged-in screens use canvas and white cards. No mesh, grain, or glass there.
 
 ## Marketing pages
 
-Public and marketing pages only (the homepage, not the logged-in app):
-
-- A pitch-green gradient or mesh background: `.bg-pitch-mesh` (`.bg-pitch-wash` remains).
-- A subtle grain overlay: `.bg-grain`.
-- One dark `pitch-950` band: `.bg-pitch-band`.
-- Glassy cards: `.glass-card`.
-- Larger headlines than the app: `text-5xl` or `text-6xl`, still Inter, still `font-semibold tracking-tight`.
-
-One dark band, not a dark theme. The rest of the page stays light.
+The homepage uses the same white page, grey borders, and mist buttons as the app. No mesh, grain, dark band, or glass. Headlines may be `text-5xl` or `text-6xl`, still Inter, still `font-semibold tracking-tight`.
 
 ## Typography
 
@@ -56,9 +50,9 @@ Use the 4px scale: 1, 2, 3, 4, 6, 8, 12, 16 (`--space-*`). Stack related items w
 ## Radius and shadow
 
 - `rounded-control` (12px) on inputs, buttons, and chips.
-- `rounded-card` (16px) on cards, illustrations, and menus.
+- `rounded-card` (24px) on cards. Photos inside a card are `rounded-2xl`.
 - `rounded-full` on badges, avatars, and activity chips.
-- `shadow-card` for resting surfaces. `shadow-lift` for popovers and hovered cards. Prefer a `ring-1 ring-line` over a heavy shadow.
+- No drop shadow on cards or buttons. A 1px `line` border is the edge. `shadow-card` and `shadow-lift` are empty.
 
 ## Icons
 
@@ -66,7 +60,7 @@ One set: [Lucide](https://lucide.dev) (ISC). Outline, 24px viewBox, stroke 2, `c
 
 Render icons only as `<x-ui.icon name="..." />`. Paths in that component are Lucide. Do not add `blade-heroicons`, `blade-lucide-icons`, emoji, or one-off SVG icons in a page. Add a new Lucide path to `x-ui.icon` when a screen needs a new symbol.
 
-Info-row names the UX skill expects: `calendar`, `clock`, `map-pin`, `users`, `signal`, `sun`, `home`.
+Info-row names the UX skill expects: `calendar`, `clock`, `map-pin`, `users`, `bar-chart`, `sun`, `home`. Icon color is `ink-faint`.
 
 ## Motion
 
@@ -78,7 +72,7 @@ A small kit, CSS and Alpine only. No GSAP, Motion One, anime.js, AOS, or other a
 - Count tick: a number changes with a short vertical slide, about 200ms.
 - Skeleton pulse: `.motion-skeleton`, opacity only, about 1.2s, and only while loading.
 - View transitions: `.motion-view` opts one element in. Do not set it on two elements.
-- Hero entrance: marketing pages only, a short staggered fade-up, 400ms total.
+- No hero entrance. Keep feedback to the press scale.
 
 `prefers-reduced-motion: reduce` is handled globally in `app.css`. Do not override it. Under reduced motion: no transform, no pulse, no entrance, instant state. The logged-in app does not use the hero entrance.
 
@@ -88,15 +82,16 @@ Use these Blade components instead of restyling raw elements.
 
 | Component | Use |
 | --- | --- |
-| `x-ui.shell` | Logged-in chrome: wordmark, desktop links, account menu, mobile bottom nav. The app layout already wraps it. |
+| `x-ui.shell` | The one chrome: `x-ui.header`, the page, `x-ui.footer`, and the logged-in mobile nav. Every layout uses it. |
 | `x-ui.wordmark` | The mark plus the word Varza. Link it home. |
 | `x-ui.page-header` | The title of a screen, with optional subtitle and `actions` slot. |
 | `x-ui.section` | A labeled group on a page. |
 | `x-ui.card` | A white surface for a form, a detail block, or a poll option. |
 | `x-ui.button` | `primary`, `secondary`, `ghost`, `danger`. Pass `href` for a link. Primary is the one next step. Includes `.motion-press`. |
 | `x-ui.info-row` | Icon plus text. Variants: `date`, `time`, `place`, `spots`, `level`, `outdoor`, `indoor`. `place` takes `href` for the map. |
-| `x-ui.game-card` | One game: illustration, chip, title, info rows, map link outside the title link. |
-| `x-ui.chip` | Activity name with that activity's soft accent. |
+| `x-ui.header` | The one header. Logged out: wordmark, Log in, Sign up. Logged in: Games, What's on, Start a game, account menu. |
+| `x-ui.game-card` | Photo, title, status chip, info rows, host, price, I'm in. Map link sits outside the title link. |
+| `x-ui.chip` | Activity name on a neutral mist chip. |
 | `x-ui.label` | Every control's label. |
 | `x-ui.input` | Text, email, password, number, date. |
 | `x-ui.select` | A native select when there are many short options and chips would wrap into a mess. |
@@ -108,11 +103,11 @@ Use these Blade components instead of restyling raw elements.
 | `x-ui.empty-state` | A titled empty list with an illustration and an optional action. |
 | `x-ui.icon` | The Lucide set. |
 | `x-illustrations.hero` | Landing hero only. |
-| `x-illustrations.sport` | Event cards and the event page. Pass the activity key. |
+| `x-illustrations.sport` | Unused on the game card. A game shows its photo, or `public/images/sports/{sport}.svg`. |
 | `x-illustrations.empty` | Empty states. Variants: `games`, `public`, `invites`, `votes`. |
 
-Illustrations are inline SVG, flat. Pitch green, white, ink, sand, plus that activity's one accent. No stock photos, no hotlinked images.
+Game photos are the host's upload, or the grey picture in `public/images/sports/`. Empty states stay inline SVG. No stock photos, no hotlinked images.
 
 ## Checklist
 
-Point at the one primary action. Facts are info rows. Marketing flourishes stay off the logged-in app. Then run the `varza-voice` and `varza-ux` checklists.
+Point at the one primary action. Facts are info rows. White page, grey border, color only for status. Then run the `varza-voice` and `varza-ux` checklists.

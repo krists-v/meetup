@@ -39,6 +39,10 @@ class StoreEventRequest extends FormRequest
         if ($this->exists('level') && in_array($this->input('level'), ['', 'all'], true)) {
             $this->merge(['level' => null]);
         }
+
+        if ($this->exists('price') && $this->input('price') === '') {
+            $this->merge(['price' => null]);
+        }
     }
 
     /**
@@ -62,6 +66,8 @@ class StoreEventRequest extends FormRequest
             'visibility' => ['required', 'in:public,private'],
             'setting' => ['nullable', 'in:indoor,outdoor'],
             'level' => ['nullable', 'in:'.implode(',', array_keys(Event::LEVELS))],
+            'price' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:4096'],
         ];
     }
 

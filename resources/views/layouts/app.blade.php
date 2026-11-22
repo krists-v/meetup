@@ -10,7 +10,7 @@
         <script>document.documentElement.classList.add('js');</script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
+    <body class="bg-white font-sans text-ink antialiased">
         <x-ui.shell>
             @isset($header)
                 <div class="border-b border-line bg-white">

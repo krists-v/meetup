@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\EventTimeOption;
 use App\Models\EventTimeVote;
 use App\Models\User;
+use App\Support\AvatarStore;
 use App\Support\GameCalendar;
 use App\Support\GameFilters;
 use App\Support\LinkPreview;
@@ -158,7 +159,7 @@ class EventController extends Controller
 
     public function store(StoreEventRequest $request): RedirectResponse
     {
-        $data = $request->safe()->except(['options']);
+        $data = $request->safe()->except(['options', 'photo', 'remove_photo']);
         $scheduleType = $data['schedule_type'] ?? 'fixed';
         $data['schedule_type'] = $scheduleType;
         $data['user_id'] = $request->user()->id;
@@ -174,6 +175,7 @@ class EventController extends Controller
         }
 
         $event = Event::create($data);
+        $this->storePhoto($request, $event);
 
         if ($scheduleType === 'poll') {
             foreach ($options as $position => $startsAt) {
@@ -237,8 +239,9 @@ class EventController extends Controller
     {
         $previousLimit = $event->max_participants;
 
-        $event->update($request->validated());
+        $event->update(collect($request->validated())->except(['photo', 'remove_photo'])->all());
         $event->refresh();
+        $this->storePhoto($request, $event);
 
         $raised = $event->max_participants === null
             ? $previousLimit !== null
@@ -472,5 +475,33 @@ class EventController extends Controller
             'event' => $revealed ? $event : null,
             'joinToken' => $joinToken,
         ]);
+    }
+
+    private function storePhoto(Request $request, Event $event): void
+    {
+        if ($request->hasFile('photo')) {
+            $previous = $event->photo_path;
+
+            if (filled($previous) && Event::query()->where('photo_path', $previous)->whereKeyNot($event->id)->exists()) {
+                $previous = null;
+            }
+
+            $event->photo_path = app(AvatarStore::class)->storeOnDisk(
+                $request->file('photo'),
+                'photos',
+                (string) $event->id,
+                $previous,
+                1600,
+            );
+            $event->save();
+
+            return;
+        }
+
+        if ($request->boolean('remove_photo')) {
+            $event->deletePhotoFile();
+            $event->photo_path = null;
+            $event->save();
+        }
     }
 }

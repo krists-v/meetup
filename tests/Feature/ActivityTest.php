@@ -134,7 +134,8 @@ class ActivityTest extends TestCase
             ->assertSee('First ride')
             ->assertSee('Indoors')
             ->assertSee('Outdoors')
-            ->assertSee('Beginners welcome');
+            ->assertSee('All levels')
+            ->assertSee('Beginner');
     }
 
     public function test_games_can_be_filtered_by_setting_level_and_category(): void

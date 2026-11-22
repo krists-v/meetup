@@ -1,31 +1,42 @@
 @props(['event'])
 
-<article style="--vt-name: game-{{ $event->id }}" {{ $attributes->merge(['class' => 'motion-view overflow-hidden rounded-card bg-white shadow-card ring-1 ring-line transition duration-150 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.99]']) }}>
-    <a href="{{ route('events.show', $event) }}" class="block">
-        <x-illustrations.sport :sport="$event->sportSelection()" />
-        <div class="space-y-3 px-4 pt-4">
-            <div class="flex items-start justify-between gap-3">
-                <h3 class="font-semibold text-ink">{{ $event->title }}</h3>
-                <x-ui.chip :sport="$event->sportSelection()" :label="$event->sportLabel()" />
-            </div>
-            @if ($event->isPoll())
-                <x-ui.badge tone="warn">Pick a time</x-ui.badge>
-                <x-ui.info-row variant="time">{{ (int) $event->time_options_count === 1 ? '1 time to pick' : ((int) $event->time_options_count).' times to pick' }}</x-ui.info-row>
-            @else
-                <x-ui.info-row variant="date">{{ $event->event_date->format('D j M, H:i') }}</x-ui.info-row>
-            @endif
-            <x-ui.activity-facts :event="$event" />
-            @if ($event->attendanceLabel() !== '')
-                <x-ui.info-row variant="spots">
-                    <span>{{ $event->attendanceLabel() }}</span>
-                    @if ($event->isFull())
-                        <x-ui.badge preset="full" />
-                    @endif
-                </x-ui.info-row>
+<article style="--vt-name: game-{{ $event->id }}" {{ $attributes->merge(['class' => 'overflow-hidden rounded-card border border-line bg-white']) }}>
+    <div class="relative px-3 pt-3">
+        <a href="{{ route('events.show', $event) }}" class="block overflow-hidden rounded-2xl">
+            <img src="{{ $event->photoUrl() }}" alt="{{ $event->sportLabel() }}" class="h-48 w-full object-cover" />
+        </a>
+        <span class="absolute bottom-3 left-6 rounded-full bg-white/75 px-3 py-1 text-sm font-medium text-ink backdrop-blur-md">{{ $event->areaLabel() }}</span>
+    </div>
+
+    <div class="space-y-4 px-5 pb-5 pt-4">
+        <div class="flex items-start justify-between gap-3">
+            <a href="{{ route('events.show', $event) }}" class="min-w-0">
+                <h3 class="text-xl font-bold tracking-tight text-ink">{{ $event->title }}</h3>
+            </a>
+            @if ($event->spotsLeftLabel())
+                <x-ui.badge class="shrink-0" :tone="$event->isFull() || $event->isPoll() ? 'warn' : 'pitch'">{{ $event->spotsLeftLabel() }}</x-ui.badge>
             @endif
         </div>
-    </a>
-    <div class="px-4 pb-2">
-        <x-ui.info-row variant="place" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
+
+        <div class="space-y-3 text-lg">
+            @if ($event->isPoll())
+                <x-ui.info-row variant="time">{{ $event->whenLabel() }}</x-ui.info-row>
+            @else
+                <x-ui.info-row variant="date">{{ $event->whenLabel() }}</x-ui.info-row>
+            @endif
+            <x-ui.info-row variant="place" :href="$event->mapUrl()">{{ $event->location }}</x-ui.info-row>
+            <x-ui.info-row variant="spots">{{ $event->playersLabel() }}</x-ui.info-row>
+            <x-ui.info-row variant="level">{{ $event->levelLabel() }}</x-ui.info-row>
+        </div>
+
+        <div class="border-t border-line pt-4">
+            <div class="flex items-center justify-between gap-3">
+                <p class="text-sm text-ink-muted">Hosted by {{ $event->creator->name }}</p>
+                @if ($event->priceLabel())
+                    <p class="text-base font-bold text-ink">{{ $event->priceLabel() }}</p>
+                @endif
+            </div>
+            <x-ui.button :href="route('events.show', $event)" class="mt-4 w-full">I'm in</x-ui.button>
+        </div>
     </div>
 </article>

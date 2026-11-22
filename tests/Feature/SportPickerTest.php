@@ -51,18 +51,7 @@ class SportPickerTest extends TestCase
                 ->assertSee('Beginners welcome')
                 ->assertSee('images/og/'.$value.'.png', false);
 
-            $marks = [
-                'table-tennis' => '#e0f2f2',
-                'bowling' => '#80481c',
-                'climbing' => '#e8eae4',
-                'running' => '#8c4030',
-                'cycling' => '#305a48',
-                'hiking' => '#40582a',
-            ];
-
-            if (isset($marks[$value])) {
-                $show->assertSee($marks[$value], false);
-            }
+            $show->assertSee('images/sports/'.$value.'.svg', false);
 
             $this->actingAs($user)
                 ->get(route('dashboard'))

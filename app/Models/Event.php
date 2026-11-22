@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Event extends Model
@@ -31,11 +32,14 @@ class Event extends Model
         'schedule_type',
         'setting',
         'level',
+        'photo_path',
+        'price',
     ];
 
     protected $casts = [
         'event_date' => 'datetime',
         'max_participants' => 'integer',
+        'price' => 'decimal:2',
     ];
 
     protected static function boot()
@@ -46,6 +50,10 @@ class Event extends Model
             if (empty($event->invite_token)) {
                 $event->invite_token = Str::random(32);
             }
+        });
+
+        static::deleting(function (Event $event) {
+            $event->deletePhotoFile();
         });
 
         static::saving(function (Event $event) {
@@ -256,6 +264,126 @@ class Event extends Model
         $spots = $left === 1 ? '1 spot left' : $left.' spots left';
 
         return $going.' of '.$this->max_participants.' going · '.$spots;
+    }
+
+    public function spotsLeftLabel(): ?string
+    {
+        if ($this->isPoll()) {
+            return 'Pick a time';
+        }
+
+        if ($this->max_participants === null) {
+            return null;
+        }
+
+        if ($this->isFull()) {
+            return 'Full';
+        }
+
+        $left = max(0, $this->max_participants - $this->goingCount());
+
+        return $left === 1 ? '1 spot left' : $left.' spots left';
+    }
+
+    public function playersLabel(): string
+    {
+        $going = $this->goingCount();
+
+        if ($this->max_participants === null) {
+            return $going === 1 ? '1 player' : $going.' players';
+        }
+
+        return $going.' / '.$this->max_participants.' players';
+    }
+
+    public function whenLabel(): string
+    {
+        if ($this->isPoll()) {
+            $count = (int) ($this->time_options_count ?? $this->timeOptions()->count());
+
+            return $count === 1 ? '1 time to pick' : $count.' times to pick';
+        }
+
+        return $this->event_date->timezone(config('app.timezone'))->format('l, j F · H:i');
+    }
+
+    public function areaLabel(): string
+    {
+        $location = trim((string) $this->location);
+
+        foreach ([' · ', '·', ','] as $separator) {
+            if (! str_contains($location, $separator)) {
+                continue;
+            }
+
+            $parts = array_values(array_filter(array_map('trim', explode($separator, $location)), fn (string $part) => $part !== ''));
+
+            return $parts[count($parts) - 1] ?? $location;
+        }
+
+        return $location;
+    }
+
+    public function priceLabel(): ?string
+    {
+        if ($this->price === null) {
+            return null;
+        }
+
+        if ((float) $this->price === 0.0) {
+            return 'Free';
+        }
+
+        if ($this->max_participants === null || $this->max_participants < 1) {
+            return '€'.$this->money((float) $this->price).' total';
+        }
+
+        $each = round((float) $this->price / $this->max_participants, 2);
+
+        return '€'.$this->money($each).' / person';
+    }
+
+    public function photoUrl(): string
+    {
+        if (filled($this->photo_path)) {
+            return route('events.photo', $this).'?v='.$this->updated_at?->getTimestamp();
+        }
+
+        return asset('images/sports/'.$this->defaultPhotoSlug().'.svg');
+    }
+
+    public function defaultPhotoSlug(): string
+    {
+        $sport = $this->sportSelection();
+
+        return is_file(public_path('images/sports/'.$sport.'.svg')) ? $sport : 'generic';
+    }
+
+    public function deletePhotoFile(): void
+    {
+        if (blank($this->photo_path)) {
+            return;
+        }
+
+        $shared = static::query()
+            ->where('photo_path', $this->photo_path)
+            ->where('id', '!=', $this->id)
+            ->exists();
+
+        if (! $shared) {
+            Storage::disk('photos')->delete($this->photo_path);
+        }
+    }
+
+    public function money(float $amount): string
+    {
+        $rounded = round($amount, 2);
+
+        if (abs($rounded - floor($rounded)) < 0.001) {
+            return (string) (int) round($rounded);
+        }
+
+        return number_format($rounded, 2, '.', '');
     }
 
     public function mapUrl(): string

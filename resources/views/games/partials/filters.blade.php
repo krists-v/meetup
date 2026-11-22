@@ -1,7 +1,7 @@
 @php
     $url = fn (array $overrides = []) => route($route, $filters->parameters($overrides));
     $chip = 'relative z-10 inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold transition duration-150';
-    $on = 'bg-pitch-700 text-white';
+    $on = 'bg-ink text-white';
     $off = 'bg-white text-ink ring-1 ring-line';
     $track = 'relative flex flex-wrap gap-2';
     $indicator = 'motion-slide pointer-events-none absolute rounded-full ring-2 ring-pitch-800';
@@ -26,7 +26,7 @@
         <x-ui.icon name="sliders" />
         Filters
         @if ($count > 0)
-            <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-pitch-700 px-1.5 text-xs font-semibold text-white" data-filter-count="{{ $count }}">{{ $count }}</span>
+            <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ink px-1.5 text-xs font-semibold text-white" data-filter-count="{{ $count }}">{{ $count }}</span>
         @endif
     </button>
 

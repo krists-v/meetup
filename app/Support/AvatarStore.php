@@ -11,29 +11,34 @@ class AvatarStore
 {
     public function store(UploadedFile $file, User $user): string
     {
-        $name = $user->id.'-'.Str::lower(Str::random(16));
-        $resized = $this->jpeg($file);
+        return $this->storeOnDisk($file, 'avatars', (string) $user->id, $user->avatar_path, 256);
+    }
+
+    public function storeOnDisk(UploadedFile $file, string $disk, string $prefix, ?string $previous = null, int $maxEdge = 256): string
+    {
+        $name = $prefix.'-'.Str::lower(Str::random(16));
+        $resized = $this->jpeg($file, $maxEdge);
 
         if ($resized !== null) {
             $name .= '.jpg';
-            Storage::disk('avatars')->put($name, $resized);
+            Storage::disk($disk)->put($name, $resized);
         } else {
             $extension = strtolower((string) $file->guessExtension());
             if (! in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true)) {
                 $extension = 'jpg';
             }
             $name .= '.'.$extension;
-            $file->storeAs('', $name, 'avatars');
+            $file->storeAs('', $name, $disk);
         }
 
-        if (filled($user->avatar_path) && $user->avatar_path !== $name) {
-            Storage::disk('avatars')->delete($user->avatar_path);
+        if (filled($previous) && $previous !== $name) {
+            Storage::disk($disk)->delete($previous);
         }
 
         return $name;
     }
 
-    private function jpeg(UploadedFile $file): ?string
+    private function jpeg(UploadedFile $file, int $maxEdge): ?string
     {
         if (! function_exists('imagecreatefromstring') || ! function_exists('imagejpeg')) {
             return null;
@@ -53,7 +58,7 @@ class AvatarStore
 
         $width = imagesx($source);
         $height = imagesy($source);
-        $scale = min(256 / max($width, 1), 256 / max($height, 1), 1);
+        $scale = min($maxEdge / max($width, 1), $maxEdge / max($height, 1), 1);
         $targetWidth = max(1, (int) round($width * $scale));
         $targetHeight = max(1, (int) round($height * $scale));
         $target = imagecreatetruecolor($targetWidth, $targetHeight);

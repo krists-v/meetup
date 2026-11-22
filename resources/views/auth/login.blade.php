@@ -22,7 +22,7 @@
         </div>
 
         <label for="remember_me" class="flex min-h-11 items-center gap-2">
-            <input id="remember_me" type="checkbox" class="rounded border-line text-pitch-700 focus:ring-pitch-600" name="remember">
+            <input id="remember_me" type="checkbox" class="rounded border-line text-ink focus:ring-ink" name="remember">
             <span class="text-sm text-ink-muted">{{ __('Remember me') }}</span>
         </label>
 
